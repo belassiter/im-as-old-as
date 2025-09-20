@@ -1,0 +1,15 @@
+
+body {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
+
+main {
+    flex: 1;
+}
+
+#franchiseSelect {
+    max-height: 200px;
+    overflow-y: auto;
+}
