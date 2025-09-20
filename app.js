@@ -44,6 +44,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
 function performSearch(actors, productions, roles) {
     const searchInput = document.getElementById('searchInput').value.toLowerCase();
+    const searchTerms = searchInput.split(/[,;]/).map(term => term.trim()).filter(term => term.length > 0);
     const ageLowerInput = document.getElementById('ageLowerInput').value;
     const ageUpperInput = document.getElementById('ageUpperInput').value;
 
@@ -75,9 +76,16 @@ function performSearch(actors, productions, roles) {
 
         if (actor && production && actor['birthday (YYYY-MM-DD)'] && production.production_start) {
             // General search filter
-            if (searchInput) {
+            if (searchTerms.length > 0) {
                 const searchString = `${actor.name} ${role.character} ${production.franchise} ${production.title}`.toLowerCase();
-                if (!searchString.includes(searchInput)) {
+                let allTermsMatch = true;
+                for (const term of searchTerms) {
+                    if (!searchString.includes(term)) {
+                        allTermsMatch = false;
+                        break;
+                    }
+                }
+                if (!allTermsMatch) {
                     continue;
                 }
             }
@@ -142,7 +150,7 @@ function displayResults(results) {
     let html = '<ul class="list-group">';
     for (const result of results) {
         const ageDisplay = result.ageAtStart === result.ageAtEnd ? result.ageAtStart : `${result.ageAtStart}-${result.ageAtEnd}`;
-        html += `<li class="list-group-item"><strong>${result.actorName}</strong> was ${ageDisplay} years old as <em>${result.character}</em> in ${result.productionTitle}</li>`;
+        html += `<li class="list-group-item"><strong>${result.actorName}</strong> was ${ageDisplay} years old as ${result.character} in <em>${result.productionTitle}</em></li>`;
     }
     html += '</ul>';
     resultsDiv.innerHTML = html;
