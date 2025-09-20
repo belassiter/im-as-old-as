@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Actor Age Query</title>
+    <style>
+        body { font-family: sans-serif; margin: 2em; }
+        #results { margin-top: 1em; }
+    </style>
+</head>
+<body>
+    <h1>Actor Age Query</h1>
+    <p>Find actors of a specific age in a given franchise.</p>
+    <div>
+        <label for="ageLowerInput">Age Range:</label>
+        <input type="number" id="ageLowerInput" placeholder="Min age">
+        <input type="number" id="ageUpperInput" placeholder="Max age">
+    </div>
+    <div>
+        <label for="franchiseSelect">Franchise:</label>
+        <select id="franchiseSelect" multiple></select>
+    </div>
+    <button id="searchBtn">Search</button>
+    <div id="results"></div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', async () => {
+            const resultsDiv = document.getElementById('results');
+            resultsDiv.innerHTML = 'Loading data...';
+
+            try {
+                const [actorsRes, productionsRes, rolesRes] = await Promise.all([
+                    fetch('actors.csv'),
+                    fetch('productions.csv'),
+                    fetch('roles.csv')
+                ]);
+
+                const [actorsText, productionsText, rolesText] = await Promise.all([
+                    actorsRes.text(),
+                    productionsRes.text(),
+                    rolesRes.text()
+                ]);
+
+                const actors = parseCsv(actorsText);
+                const productions = parseCsv(productionsText);
+                const roles = parseCsv(rolesText);
+
+                populateFranchiseFilter(productions);
+                resultsDiv.innerHTML = '';
+
+                document.getElementById('searchBtn').addEventListener('click', () => {
+                    const ageLower = parseInt(document.getElementById('ageLowerInput').value) || 0;
+                    const ageUpper = parseInt(document.getElementById('ageUpperInput').value) || Infinity;
+
+                    const selectedFranchises = Array.from(document.getElementById('franchiseSelect').selectedOptions).map(opt => opt.value);
+
+                    const results = [];
+                    for (const role of roles) {
+                        const actor = actors.find(a => a.imdb_id === role.actor_imdb_id);
+                        const production = productions.find(p => p.imdb_id === role.production_imdb_id);
+
+                        if (actor && production && actor['birthday (YYYY-MM-DD)'] && production.production_start) {
+                            if (selectedFranchises.length > 0 && !selectedFranchises.includes(production.franchise)) {
+                                continue;
+                            }
+
+                            const birthday = new Date(actor['birthday (YYYY-MM-DD)']);
+                            const productionStart = new Date(production.production_start);
+                            const productionEnd = production.production_end ? new Date(production.production_end) : productionStart;
+
+                            const ageAtStart = calculateAge(birthday, productionStart);
+                            const ageAtEnd = calculateAge(birthday, productionEnd);
+
+                            if (ageLower <= ageAtEnd && ageAtStart <= ageUpper) {
+                                results.push({
+                                    actorName: role.actor_name,
+                                    productionTitle: role.production_title,
+                                    character: role.character,
+                                    franchise: production.franchise,
+                                    ageAtStart: ageAtStart,
+                                    ageAtEnd: ageAtEnd
+                                });
+                            }
+                        }
+                    }
+
+                    if (results.length === 0) {
+                        resultsDiv.innerHTML = 'No results found.';
+                        return;
+                    }
+
+                    let html = '<ul>';
+                    for (const result of results) {
+                        const ageDisplay = result.ageAtStart === result.ageAtEnd ? result.ageAtStart : `${result.ageAtStart}-${result.ageAtEnd}`;
+                        html += `<li>${result.actorName} (${ageDisplay}) in ${result.productionTitle} (${result.franchise}) as ${result.character}</li>`;
+                    }
+                    html += '</ul>';
+                    resultsDiv.innerHTML = html;
+                });
+
+            } catch (error) {
+                resultsDiv.innerHTML = 'Error loading or processing data.';
+                console.error(error);
+            }
+        });
+
+        function populateFranchiseFilter(productions) {
+            const franchiseSelect = document.getElementById('franchiseSelect');
+            const franchises = [...new Set(productions.map(p => p.franchise).filter(f => f))];
+            franchises.sort();
+            for (const franchise of franchises) {
+                const option = document.createElement('option');
+                option.value = franchise;
+                option.textContent = franchise;
+                option.selected = true;
+                franchiseSelect.appendChild(option);
+            }
+        }
+
+        function calculateAge(birthDate, otherDate) {
+            let age = otherDate.getFullYear() - birthDate.getFullYear();
+            const m = otherDate.getMonth() - birthDate.getMonth();
+            if (m < 0 || (m === 0 && otherDate.getDate() < birthDate.getDate())) {
+                age--;
+            }
+            return age;
+        }
+
+        function parseCsv(text) {
+            const lines = text.split('\n').filter(line => line.trim() !== '');
+            const header = lines[0].split(',').map(h => h.trim());
+            const rows = lines.slice(1).map(line => {
+                const values = line.split(/,(?=(?:(?:[^""]*\"){2})*[^\"]*$)/);
+                const row = {};
+                header.forEach((h, i) => {
+                    row[h] = values[i] ? values[i].trim().replace(/^"|"$/g, '') : '';
+                });
+                return row;
+            });
+            return rows;
+        }
+    </script>
+</body>
+</html>

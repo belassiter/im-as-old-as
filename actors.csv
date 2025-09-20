@@ -1,0 +1,43 @@
+imdb_id,tmdb_id,name,birthday (YYYY-MM-DD),notes
+nm0000434,1893,Mark Hamill,1951-09-25,Luke Skywalker
+nm0000148,3,Harrison Ford,1942-07-13,Han Solo
+nm0000402,116,Carrie Fisher,1956-10-21,Princess Leia
+nm0001850,,Billy Dee Williams,1937-04-06,Lando Calrissian
+nm0000355,,Anthony Daniels,1946-02-21,C-3PO
+nm0001190,,David Prowse,1935-07-01,Darth Vader (body)
+nm0048652,,Kenny Baker,1934-08-24,R2-D2
+nm0562679,,Peter Mayhew,1944-05-19,Chewbacca
+nm0001433,,Ian McDiarmid,1944-08-11,Emperor Palpatine
+nm0000553,,Liam Neeson,1952-06-07,Qui-Gon Jinn
+nm0001950,,Ewan McGregor,1971-03-31,Obi-Wan Kenobi
+nm0000204,,Natalie Portman,1981-06-09,Padmé Amidala
+nm0518257,,Jake Lloyd,1989-03-05,Anakin Skywalker
+nm0000638,,William Shatner,1931-03-22,James T. Kirk
+nm0000559,,Leonard Nimoy,1931-03-26,Spock
+nm0001420,,DeForest Kelley,1920-01-20,Dr. Leonard McCoy
+nm0001150,,James Doohan,1920-03-03,Montgomery Scott
+nm0001024,,Nichelle Nichols,1932-12-28,Nyota Uhura
+nm0001679,,George Takei,1937-04-20,Hikaru Sulu
+nm0001588,,Walter Koenig,1936-09-14,Pavel Chekov
+nm0001772,,Patrick Stewart,1940-07-13,Jean-Luc Picard
+nm0000408,,Jonathan Frakes,1952-08-19,William Riker
+nm0000653,,Brent Spiner,1949-02-02,Data
+nm0001117,,Michael Dorn,1952-12-01,Worf
+nm0001861,,Gates McFadden,1949-03-02,Beverly Crusher
+nm0000150,1894,Tom Hanks,1956-07-09,"Woody, Toy Story"
+nm0000659,1895,Tim Allen,1953-06-13,"Buzz Lightyear, Toy Story"
+nm0001654,1896,Don Rickles,1926-05-08,"Mr. Potato Head, Toy Story"
+nm0001784,1897,Jim Varney,1949-06-15,"Slinky Dog, Toy Story"
+nm0001713,1898,Wallace Shawn,1943-11-12,"Rex, Toy Story"
+nm0001448,1899,John Ratzenberger,1947-04-06,"Hamm, Toy Story / Bug's Life / Toy Story 2"
+nm0000725,1900,Annie Potts,1949-10-28,"Bo Peep, Toy Story"
+nm0000495,1901,Dave Foley,1959-01-04,"Flik, A Bug's Life"
+nm0000489,1902,Kevin Spacey,1959-07-26,"Hopper, A Bug's Life"
+nm0000510,1903,Julia Louis-Dreyfus,1961-01-13,"Atta, A Bug's Life"
+nm0000701,1904,Hayden Panettiere,1989-08-21,"Dot, A Bug's Life"
+nm0000497,1905,David Hyde Pierce,1959-04-03,"Slim, A Bug's Life"
+nm0000487,1906,Denis Leary,1957-08-18,"Francis, A Bug's Life"
+nm0000475,1907,Phyllis Diller,1917-07-17,"Queen, A Bug's Life"
+nm0000123,1908,Joan Cusack,1962-10-11,"Jessie, Toy Story 2"
+nm0000147,1909,Kelsey Grammer,1955-02-21,"Stinky Pete, Toy Story 2"
+nm0000181,1910,Wayne Knight,1955-08-07,"Al McWhiggin, Toy Story 2"
