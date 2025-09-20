@@ -1,8 +1,8 @@
 document.addEventListener('DOMContentLoaded', async () => {
     const resultsDiv = document.getElementById('results');
+    const searchInput = document.getElementById('searchInput');
     const ageLowerInput = document.getElementById('ageLowerInput');
     const ageUpperInput = document.getElementById('ageUpperInput');
-    const franchiseSelect = document.getElementById('franchiseSelect');
     const sortByKey = document.getElementById('sortByKey');
     const sortOrder = document.getElementById('sortOrder');
 
@@ -25,15 +25,14 @@ document.addEventListener('DOMContentLoaded', async () => {
         const productions = parseCsv(productionsText);
         const roles = parseCsv(rolesText);
 
-        populateFranchiseFilter(productions);
         hideLoading();
 
         // Initial search
         performSearch(actors, productions, roles);
 
+        searchInput.addEventListener('input', () => performSearch(actors, productions, roles));
         ageLowerInput.addEventListener('input', () => performSearch(actors, productions, roles));
         ageUpperInput.addEventListener('input', () => performSearch(actors, productions, roles));
-        franchiseSelect.addEventListener('change', () => performSearch(actors, productions, roles));
         sortByKey.addEventListener('change', () => performSearch(actors, productions, roles));
         sortOrder.addEventListener('change', () => performSearch(actors, productions, roles));
 
@@ -44,6 +43,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 });
 
 function performSearch(actors, productions, roles) {
+    const searchInput = document.getElementById('searchInput').value.toLowerCase();
     const ageLowerInput = document.getElementById('ageLowerInput').value;
     const ageUpperInput = document.getElementById('ageUpperInput').value;
 
@@ -63,21 +63,26 @@ function performSearch(actors, productions, roles) {
         ageUpper = Infinity;
     }
 
-    const selectedFranchises = Array.from(document.getElementById('franchiseSelect').selectedOptions).map(opt => opt.value);
     const sortByKey = document.getElementById('sortByKey').value;
     const sortOrder = document.getElementById('sortOrder').value;
 
-    let results = []; // Use let because we will sort it
-    const seenResults = new Set(); // To track unique results
+    let results = [];
+    const seenResults = new Set();
 
     for (const role of roles) {
         const actor = actors.find(a => a.imdb_id === role.actor_imdb_id);
         const production = productions.find(p => p.imdb_id === role.production_imdb_id);
 
         if (actor && production && actor['birthday (YYYY-MM-DD)'] && production.production_start) {
-            if (selectedFranchises.length > 0 && !selectedFranchises.includes(production.franchise)) {
-                continue;
+            // General search filter
+            if (searchInput) {
+                const searchString = `${actor.name} ${role.character} ${production.franchise} ${production.title}`.toLowerCase();
+                if (!searchString.includes(searchInput)) {
+                    continue;
+                }
             }
+
+            
 
             const birthday = new Date(actor['birthday (YYYY-MM-DD)']);
             const productionStart = new Date(production.production_start);
@@ -96,7 +101,6 @@ function performSearch(actors, productions, roles) {
                         actorName: role.actor_name,
                         productionTitle: role.production_title,
                         character: role.character,
-                        franchise: production.franchise,
                         ageAtStart: ageAtStart,
                         ageAtEnd: ageAtEnd
                     });
@@ -144,18 +148,7 @@ function displayResults(results) {
     resultsDiv.innerHTML = html;
 }
 
-function populateFranchiseFilter(productions) {
-    const franchiseSelect = document.getElementById('franchiseSelect');
-    const franchises = [...new Set(productions.map(p => p.franchise).filter(f => f))];
-    franchises.sort();
-    for (const franchise of franchises) {
-        const option = document.createElement('option');
-        option.value = franchise;
-        option.textContent = franchise;
-        option.selected = true;
-        franchiseSelect.appendChild(option);
-    }
-}
+
 
 function calculateAge(birthDate, otherDate) {
     let age = otherDate.getFullYear() - birthDate.getFullYear();

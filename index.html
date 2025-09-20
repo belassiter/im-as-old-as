@@ -9,7 +9,7 @@
 </head>
 <body>
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-        <div class="container">
+        <div class="container justify-content-center">
             <a class="navbar-brand" href="#">Wait, I'm As Old As?!?!</a>
         </div>
     </nav>
@@ -25,21 +25,22 @@
                     <div class="card-body">
                         <h5 class="card-title">Filters</h5>
                         <div class="mb-3">
+                            <label for="searchInput" class="form-label">Search</label>
+                            <input type="text" class="form-control" id="searchInput" placeholder="Actor, Character, Franchise, Production">
+                        </div>
+                        <div class="mb-3">
                             <label for="ageLowerInput" class="form-label">Age Range</label>
                             <div class="input-group">
                                 <input type="number" class="form-control" id="ageLowerInput" placeholder="Min">
                                 <input type="number" class="form-control" id="ageUpperInput" placeholder="Max">
                             </div>
                         </div>
-                        <div class="mb-3">
-                            <label for="franchiseSelect" class="form-label">Franchise</label>
-                            <select id="franchiseSelect" class="form-select" multiple></select>
-                        </div>
+                        
                         <div class="mb-3">
                             <label for="sortByKey" class="form-label">Sort By</label>
                             <select id="sortByKey" class="form-select">
+                                <option value="ageAtStart" selected>Actor Age</option>
                                 <option value="actorName">Actor Name</option>
-                                <option value="ageAtStart">Actor Age</option>
                                 <option value="character">Character Name</option>
                                 <option value="franchise">Franchise</option>
                             </select>
