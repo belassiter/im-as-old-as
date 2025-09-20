@@ -32,7 +32,6 @@ nm0001150,James Doohan,tt0084726,Star Trek II: The Wrath of Khan,Montgomery Scot
 nm0001024,Nichelle Nichols,tt0084726,Star Trek II: The Wrath of Khan,Nyota Uhura
 nm0001679,George Takei,tt0084726,Star Trek II: The Wrath of Khan,Hikaru Sulu
 nm0001588,Walter Koenig,tt0084726,Star Trek II: The Wrath of Khan,Pavel Chekov
-nm0000092,Ricardo Montalban,tt0084726,Star Trek II: The Wrath of Khan,Khan Noonien Singh
 nm0000434,Mark Hamill,tt0086190,Return of the Jedi,Luke Skywalker
 nm0000148,Harrison Ford,tt0086190,Return of the Jedi,Han Solo
 nm0000402,Carrie Fisher,tt0086190,Return of the Jedi,Princess Leia Organa
@@ -44,7 +43,6 @@ nm0001190,David Prowse,tt0086190,Return of the Jedi,Darth Vader (body)
 nm0001887,Frank Oz,tt0086190,Return of the Jedi,Yoda (voice)
 nm0001433,Ian McDiarmid,tt0086190,Return of the Jedi,Emperor Palpatine
 nm0001005,Jeremy Bulloch,tt0086190,Return of the Jedi,Boba Fett (actor)
-nm0001519,Peter Cushing,tt0086190,Return of the Jedi,(note: Tarkin appears in A New Hope only)
 nm0000638,William Shatner,tt0088170,Star Trek III: The Search for Spock,James T. Kirk
 nm0000559,Leonard Nimoy,tt0088170,Star Trek III: The Search for Spock,Spock
 nm0001420,DeForest Kelley,tt0088170,Star Trek III: The Search for Spock,Dr. Leonard McCoy
@@ -73,11 +71,8 @@ nm0001150,James Doohan,tt0098383,Star Trek VI: The Undiscovered Country,Montgome
 nm0001024,Nichelle Nichols,tt0098383,Star Trek VI: The Undiscovered Country,Nyota Uhura
 nm0001679,George Takei,tt0098383,Star Trek VI: The Undiscovered Country,Hikaru Sulu
 nm0001588,Walter Koenig,tt0098383,Star Trek VI: The Undiscovered Country,Pavel Chekov
-nm0001772,Patrick Stewart,tt0111280,Star Trek: Generations,Jean-Luc Picard
 nm0000408,Jonathan Frakes,tt0111280,Star Trek: Generations,William Riker
 nm0000638,William Shatner,tt0111280,Star Trek: Generations,James T. Kirk
-nm0000638,William Shatner,tt0111280,Star Trek: Generations,James T. Kirk
-nm0000559,Leonard Nimoy,tt0111280,Star Trek: Generations,Spock
 nm0001772,Patrick Stewart,tt0111280,Star Trek: Generations,Jean-Luc Picard
 nm0000408,Jonathan Frakes,tt0111280,Star Trek: Generations,William Riker
 nm0000653,Brent Spiner,tt0111280,Star Trek: Generations,Data
@@ -130,7 +125,7 @@ nm0000705,Thomas F. Wilson,tt0088763,Back to the Future,Biff Tannen
 nm0348523,Claudia Wells,tt0088763,Back to the Future,Jennifer Parker
 nm0943965,Marc McClure,tt0088763,Back to the Future,Dave McFly
 nm0849923,Wendie Jo Sperber,tt0088763,Back to the Future,Linda McFly
-nm0866033,George DiCenzo,tt0088763,Back to the Future,Sam Baines
+nm0001855,James Tolkan,tt0088763,Back to the Future,Marshal Strickland
 nm0000150,Michael J. Fox,tt0096874,Back to the Future Part II,Marty McFly
 nm0000502,Christopher Lloyd,tt0096874,Back to the Future Part II,Dr. Emmett Brown
 nm0000670,Lea Thompson,tt0096874,Back to the Future Part II,Lorraine
@@ -138,7 +133,7 @@ nm0000705,Thomas F. Wilson,tt0096874,Back to the Future Part II,Biff Tannen
 nm0000645,Elisabeth Shue,tt0096874,Back to the Future Part II,Jennifer
 nm0943965,Marc McClure,tt0096874,Back to the Future Part II,Dave McFly
 nm0849923,Wendie Jo Sperber,tt0096874,Back to the Future Part II,Linda McFly
-nm0001855,James Tolkan,tt0096874,Back to the Future Part II,Strickland
+nm0001855,James Tolkan,tt0096874,Back to the Future Part II,Marshal Strickland
 nm0000150,Michael J. Fox,tt0099088,Back to the Future Part III,Marty McFly
 nm0000502,Christopher Lloyd,tt0099088,Back to the Future Part III,Dr. Emmett Brown
 nm0000651,Mary Steenburgen,tt0099088,Back to the Future Part III,Clara Clayton
@@ -152,6 +147,7 @@ nm0001420,DeForest Kelley,tt0079945,Star Trek: The Motion Picture,Dr. McCoy
 nm0001150,James Doohan,tt0079945,Star Trek: The Motion Picture,Scott
 nm0001679,George Takei,tt0079945,Star Trek: The Motion Picture,Sulu
 nm0001588,Walter Koenig,tt0079945,Star Trek: The Motion Picture,Chekov
+nm0001024,Nichelle Nichols,tt0079945,Star Trek: The Motion Picture,Nyota Uhura
 nm0000191,Ewan McGregor,tt0121765,Star Wars: Episode II - Attack of the Clones,Obi-Wan Kenobi
 nm0000204,Natalie Portman,tt0121765,Star Wars: Episode II - Attack of the Clones,Padmé
 nm0001041,Hayden Christensen,tt0121765,Star Wars: Episode II - Attack of the Clones,Anakin Skywalker
@@ -222,11 +218,11 @@ nm0000261,Karen Allen,tt0367882,Indiana Jones and the Kingdom of the Crystal Sku
 nm0000148,Harrison Ford,tt1462764,Indiana Jones and the Dial of Destiny,Indiana Jones
 nm0908614,Phoebe Waller-Bridge,tt1462764,Indiana Jones and the Dial of Destiny,Helena
 nm0586565,Mads Mikkelsen,tt1462764,Indiana Jones and the Dial of Destiny,Dr. Voller
-nm0000216,Arnold Schwarzenegger,tt0088247,The Terminator,The Terminator
+nm0000216,Arnold Schwarzenegger,tt0088247,The Terminator,T-800
 nm0000107,Michael Biehn,tt0088247,The Terminator,Kyle Reese
 nm0000158,Linda Hamilton,tt0088247,The Terminator,Sarah Connor
 nm0001798,Paul Winfield,tt0088247,The Terminator,Lt. Ed Traxler
-nm0000216,Arnold Schwarzenegger,tt0103064,Terminator 2: Judgment Day,The Terminator
+nm0000216,Arnold Schwarzenegger,tt0103064,Terminator 2: Judgment Day,T-800
 nm0000158,Linda Hamilton,tt0103064,Terminator 2: Judgment Day,Sarah Connor
 nm0001241,Edward Furlong,tt0103064,Terminator 2: Judgment Day,John Connor
 nm0000597,Robert Patrick,tt0103064,Terminator 2: Judgment Day,T-1000
@@ -244,7 +240,7 @@ nm0000158,Linda Hamilton,tt6450804,Terminator: Dark Fate,Sarah Connor
 nm0000216,Arnold Schwarzenegger,tt6450804,Terminator: Dark Fate,T-800
 nm2231244,Mackenzie Davis,tt6450804,Terminator: Dark Fate,Grace
 nm0793418,Natalia Reyes,tt6450804,Terminator: Dark Fate,Dani Ramos
-nm0000295,John Belushi,tt0080455,The Blues Brothers,'Joliet' Jake Blues
+nm0000295,John Belushi,tt0080455,The Blues Brothers,Jake Blues
 nm0000101,Dan Aykroyd,tt0080455,The Blues Brothers,Elwood Blues
 nm0000402,Carrie Fisher,tt0080455,The Blues Brothers,Mystery Woman
 nm0000116,John Candy,tt0080455,The Blues Brothers,Burton Mercer
