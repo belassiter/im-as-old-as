@@ -1,0 +1,43 @@
+# This is a basic workflow to deploy your project to an FTP server.
+
+name: 🚀 Deploy website on push
+
+# Controls when the action will run.
+# This example runs on pushes to the "main" branch.
+on:
+  push:
+    branches: [ "main" ]
+
+# A workflow run is made up of one or more jobs that can run sequentially or in parallel
+jobs:
+  # This workflow contains a single job called "deploy"
+  deploy:
+    # The type of runner that the job will run on
+    runs-on: ubuntu-latest
+
+    # Steps represent a sequence of tasks that will be executed as part of the job
+    steps:
+    # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
+    - name: 🚚 Get latest code
+      uses: actions/checkout@v4
+
+    # 👇 This new step replaces the '/' in the repo name with a '-'
+    - name: 🛠️ Sanitize repository name
+      id: vars
+      run: echo "repo_name=$(echo ${{ github.repository }} | sed 's/\//-/g')" >> $GITHUB_OUTPUT
+
+    - name: 📂 Sync files to FTP server
+      uses: SamKirkland/FTP-Deploy-Action@v4.3.4
+      with:
+        server: ${{ secrets.FTP_SERVER }}
+        username: ${{ secrets.FTP_USERNAME }}
+        password: ${{ secrets.FTP_PASSWORD }}
+        server-dir: public_html/imasoldas/
+        # 👇 This now uses the sanitized repository name.
+        # This prevents the directory error.
+        state-name: .ftp-deploy-state-${{ steps.vars.outputs.repo_name }}.json
+        # 👇 This correctly excludes only the files you don't want to upload.
+        exclude: |
+          README.md
+          LICENSE
+          deploy.yml
