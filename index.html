@@ -19,47 +19,73 @@
     </div>
 
     <main class="container my-5">
-        <div class="row">
-            <div class="col-lg-4">
-                <div class="card">
-                    <div class="card-body">
-                        <h5 class="card-title">Filters</h5>
-                        <div class="mb-3">
-                            <label for="searchInput" class="form-label">Search</label>
-                            <input type="text" class="form-control" id="searchInput" placeholder="Actor, Character, Franchise, Production">
-                        </div>
-                        <div class="mb-3">
-                            <label for="ageLowerInput" class="form-label">Age Range</label>
-                            <div class="input-group">
-                                <input type="number" class="form-control" id="ageLowerInput" placeholder="Min">
-                                <input type="number" class="form-control" id="ageUpperInput" placeholder="Max">
+        <div class="btn-group mb-3" role="group" aria-label="Mode select">
+            <input type="radio" class="btn-check" name="mode" id="searchModeBtn" autocomplete="off" checked>
+            <label class="btn btn-outline-primary" for="searchModeBtn">Search</label>
+
+            <input type="radio" class="btn-check" name="mode" id="gameModeBtn" autocomplete="off">
+            <label class="btn btn-outline-primary" for="gameModeBtn">Game</label>
+        </div>
+
+        <div id="search-mode">
+            <div class="row">
+                <div class="col-lg-4">
+                    <div class="card">
+                        <div class="card-body">
+                            <h5 class="card-title">Filters</h5>
+                            <div class="mb-3">
+                                <label for="searchInput" class="form-label">Search</label>
+                                <input type="text" class="form-control" id="searchInput" placeholder="Actor, Character, Franchise, Production">
+                            </div>
+                            <div class="mb-3">
+                                <label for="ageLowerInput" class="form-label">Age Range</label>
+                                <div class="input-group">
+                                    <input type="number" class="form-control" id="ageLowerInput" placeholder="Min">
+                                    <input type="number" class="form-control" id="ageUpperInput" placeholder="Max">
+                                </div>
+                            </div>
+                            
+                            <div class="mb-3">
+                                <label for="sortByKey" class="form-label">Sort By</label>
+                                <select id="sortByKey" class="form-select">
+                                    <option value="ageAtStart" selected>Actor Age</option>
+                                    <option value="actorName">Actor Name</option>
+                                    <option value="character">Character Name</option>
+                                    <option value="franchise">Franchise</option>
+                                </select>
+                            </div>
+                            <div class="mb-3">
+                                <label for="sortOrder" class="form-label">Sort Order</label>
+                                <select id="sortOrder" class="form-select">
+                                    <option value="asc">Ascending</option>
+                                    <option value="desc">Descending</option>
+                                </select>
                             </div>
                         </div>
-                        
-                        <div class="mb-3">
-                            <label for="sortByKey" class="form-label">Sort By</label>
-                            <select id="sortByKey" class="form-select">
-                                <option value="ageAtStart" selected>Actor Age</option>
-                                <option value="actorName">Actor Name</option>
-                                <option value="character">Character Name</option>
-                                <option value="franchise">Franchise</option>
-                            </select>
-                        </div>
-                        <div class="mb-3">
-                            <label for="sortOrder" class="form-label">Sort Order</label>
-                            <select id="sortOrder" class="form-select">
-                                <option value="asc">Ascending</option>
-                                <option value="desc">Descending</option>
-                            </select>
+                    </div>
+                </div>
+                <div class="col-lg-8">
+                    <div id="results">
+                        <div class="alert alert-info">
+                            Enter an age and select a franchise to see results.
                         </div>
                     </div>
                 </div>
             </div>
-            <div class="col-lg-8">
-                <div id="results">
-                    <div class="alert alert-info">
-                        Enter an age and select a franchise to see results.
+        </div>
+
+        <div id="game-mode" class="d-none">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">Question</h5>
+                    <p id="question"></p>
+                    <div id="choices" class="list-group"></div>
+                    <div id="slider-container" class="d-none mt-3">
+                        <label for="ageSlider" class="form-label">Age: <span id="sliderValue">45</span></label>
+                        <input type="range" class="form-range" min="10" max="80" id="ageSlider">
+                        <button id="confirmAgeBtn" class="btn btn-primary mt-2">Confirm Age</button>
                     </div>
+                    <button id="nextQuestionBtn" class="btn btn-secondary mt-3 d-none">Next Question</button>
                 </div>
             </div>
         </div>
