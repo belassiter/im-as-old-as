@@ -36,3 +36,7 @@ main {
 .form-range::-moz-range-track {
   background-color: #a0c4ff; /* light blue */
 }
+
+#player-scores .col {
+    padding: 0.5rem;
+}

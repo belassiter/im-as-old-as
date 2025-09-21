@@ -16,9 +16,45 @@ document.addEventListener('DOMContentLoaded', async () => {
     const ageSlider = document.getElementById('ageSlider');
     const sliderValue = document.getElementById('sliderValue');
     const confirmAgeBtn = document.getElementById('confirmAgeBtn');
+    const playerSetup = document.getElementById('player-setup');
+    const playerCountSlider = document.getElementById('player-count-slider');
+    const playerCountValue = document.getElementById('player-count-value');
+    const playerNamesContainer = document.getElementById('player-names-container');
+    const questionsPerRoundSlider = document.getElementById('questions-per-round-slider');
+    const questionsPerRoundValue = document.getElementById('questions-per-round-value');
+    const readyBtn = document.getElementById('ready-btn');
+    const gameContainer = document.getElementById('game-container');
+    const playerScoresContainer = document.getElementById('player-scores');
+    const currentPlayerNameEl = document.getElementById('current-player-name');
+    const roundNumberEl = document.getElementById('round-number');
+    const feedbackEl = document.getElementById('feedback');
+    const roundStart = document.getElementById('round-start');
+    const roundStartTitle = document.getElementById('round-start-title');
+    const startRoundBtn = document.getElementById('start-round-btn');
+    const questionCard = gameContainer.querySelector('.card');
+    const gameOver = document.getElementById('game-over');
+    const finalScores = document.getElementById('final-scores');
+    const newGameBtn = document.getElementById('new-game-btn');
 
     let actors, productions, roles;
     let currentQuestion = {};
+    let players = [];
+    let currentPlayerIndex = 0;
+    let currentRound = 1;
+    let questionsPerRound = 3;
+    let questionsAnsweredInRound = 0;
+    const colors = ['#fd7e14', '#198754', '#0d6efd', '#6f42c1'];
+    const roundTitles = [
+        "Actors and Roles",
+        "How old were they?",
+        "Filmography age",
+        "Production age",
+        "Production age: hard mode"
+    ];
+
+    function getPointsString(points) {
+        return points === 1 ? '1 point' : `${points} points`;
+    }
 
     showLoading();
 
@@ -65,16 +101,30 @@ document.addEventListener('DOMContentLoaded', async () => {
             showSearchMode();
         }
 
-        searchInput.addEventListener('input', () => performSearch(actors, productions, roles));
-        ageLowerInput.addEventListener('input', () => performSearch(actors, productions, roles));
-        ageUpperInput.addEventListener('input', () => performSearch(actors, productions, roles));
-        sortByKey.addEventListener('change', () => performSearch(actors, productions, roles));
-        sortOrder.addEventListener('change', () => performSearch(actors, productions, roles));
+        searchInput.addEventListener('input', () => performSearch());
+        ageLowerInput.addEventListener('input', () => performSearch());
+        ageUpperInput.addEventListener('input', () => performSearch());
+        sortByKey.addEventListener('change', () => performSearch());
+        sortOrder.addEventListener('change', () => performSearch());
         searchModeBtn.addEventListener('change', () => showSearchMode());
         gameModeBtn.addEventListener('change', () => showGameMode());
 
         nextQuestionBtn.addEventListener('click', () => {
-            generateQuestion();
+            questionsAnsweredInRound++;
+            if (questionsAnsweredInRound >= questionsPerRound * players.length) {
+                currentRound++;
+                questionsAnsweredInRound = 0;
+                if (currentRound > 5) {
+                    displayFinalScores();
+                    return;
+                }
+                showRoundStartScreen();
+                return;
+            }
+            
+            currentPlayerIndex = (currentPlayerIndex + 1) % players.length;
+
+            generateQuestion(currentRound);
             displayQuestion();
         });
 
@@ -84,6 +134,8 @@ document.addEventListener('DOMContentLoaded', async () => {
                 const selectedAnswer = clickedElement.innerHTML;
                 if (selectedAnswer === currentQuestion.answer) {
                     clickedElement.classList.add('list-group-item-success');
+                    players[currentPlayerIndex].score += currentQuestion.score;
+                    feedbackEl.innerHTML = `<div class="alert alert-success">Correct! You scored ${getPointsString(currentQuestion.score)}.</div>`;
                 } else {
                     clickedElement.classList.add('list-group-item-danger');
                     // Highlight the correct answer
@@ -91,7 +143,9 @@ document.addEventListener('DOMContentLoaded', async () => {
                     if (correctChoice) {
                         correctChoice.classList.add('list-group-item-success');
                     }
+                    feedbackEl.innerHTML = `<div class="alert alert-danger">Incorrect!</div>`;
                 }
+                displayPlayerScores();
                 // Disable further clicks
                 choicesEl.style.pointerEvents = 'none';
                 nextQuestionBtn.classList.remove('d-none');
@@ -105,18 +159,81 @@ document.addEventListener('DOMContentLoaded', async () => {
         confirmAgeBtn.addEventListener('click', () => {
             const selectedAge = parseInt(ageSlider.value);
             const correctAge = currentQuestion.answer;
-            if (Math.abs(selectedAge - correctAge) <= 1) {
+            const diff = Math.abs(selectedAge - correctAge);
+            let score = 0;
+            if (diff === 0) {
+                score = 10;
+            } else if (diff === 1) {
+                score = 7;
+            } else if (diff === 2) {
+                score = 3;
+            }
+
+            if (score > 0) {
                 // Correct answer
-                sliderValue.classList.add('text-success');
-                sliderValue.textContent = `Correct! The answer was ${correctAge}.`;
+                players[currentPlayerIndex].score += score;
+                if (diff === 0) {
+                    feedbackEl.innerHTML = `<div class="alert alert-success">Correct! You scored ${getPointsString(score)}.</div>`;
+                } else {
+                    feedbackEl.innerHTML = `<div class="alert alert-success">Close! The correct answer was ${correctAge}. You scored ${getPointsString(score)}.</div>`;
+                }
             } else {
                 // Incorrect answer
-                sliderValue.classList.add('text-danger');
-                sliderValue.textContent = `Your guess: ${selectedAge}. Correct answer: ${correctAge}.`;
+                feedbackEl.innerHTML = `<div class="alert alert-danger">Incorrect! The correct answer was ${correctAge}.</div>`;
             }
+            displayPlayerScores();
             ageSlider.disabled = true;
             confirmAgeBtn.classList.add('d-none');
             nextQuestionBtn.classList.remove('d-none');
+        });
+
+        playerCountSlider.addEventListener('input', () => {
+            const count = playerCountSlider.value;
+            playerCountValue.textContent = count;
+            generatePlayerNameInputs(count);
+        });
+
+        questionsPerRoundSlider.addEventListener('input', () => {
+            questionsPerRoundValue.textContent = questionsPerRoundSlider.value;
+        });
+
+        readyBtn.addEventListener('click', () => {
+            const inputs = playerNamesContainer.querySelectorAll('input');
+            const names = Array.from(inputs).map(input => input.value.trim());
+            const uniqueNames = new Set(names);
+
+            if (uniqueNames.size !== names.length) {
+                showError("Player names must be unique.");
+                return;
+            }
+            
+            players = [];
+            names.forEach((name, index) => {
+                players.push({ name: name, score: 0, color: colors[index % colors.length] });
+            });
+            questionsPerRound = parseInt(questionsPerRoundSlider.value);
+
+            playerSetup.classList.add('d-none');
+            gameContainer.classList.remove('d-none');
+
+            currentPlayerIndex = 0;
+            currentRound = 1;
+            questionsAnsweredInRound = 0;
+
+            showRoundStartScreen();
+        });
+
+        startRoundBtn.addEventListener('click', () => {
+            roundStart.classList.add('d-none');
+            questionCard.classList.remove('d-none');
+            playerScoresContainer.classList.remove('d-none');
+            generateQuestion(currentRound);
+            displayQuestion();
+        });
+
+        newGameBtn.addEventListener('click', () => {
+            gameOver.classList.add('d-none');
+            showGameMode();
         });
 
     } catch (error) {
@@ -127,44 +244,97 @@ document.addEventListener('DOMContentLoaded', async () => {
     function showSearchMode() {
         searchModeContainer.classList.remove('d-none');
         gameModeContainer.classList.add('d-none');
-        performSearch(actors, productions, roles);
+        performSearch();
     }
 
     function showGameMode() {
         searchModeContainer.classList.add('d-none');
         gameModeContainer.classList.remove('d-none');
-
-        // Apply filtering for game mode
-        const actorRoleCounts = new Map();
-        roles.forEach(role => {
-            const uniqueActorKey = `${role.actor_imdb_id}-${role.actor_name}`;
-            actorRoleCounts.set(uniqueActorKey, (actorRoleCounts.get(uniqueActorKey) || 0) + 1);
-        });
-
-        const gameActorsArray = Array.from(actors.values()).filter(actor => {
-            const uniqueActorKey = `${actor.imdb_id}-${actor.name}`;
-            return actorRoleCounts.get(uniqueActorKey) >= 4;
-        });
-
-        const gameActorsMap = new Map();
-        gameActorsArray.forEach(actor => {
-            const uniqueActorKey = `${actor.imdb_id}-${actor.name}`;
-            gameActorsMap.set(uniqueActorKey, actor);
-        });
-
-        const validGameActorKeys = new Set(Array.from(gameActorsMap.keys()));
-        const gameRoles = roles.filter(role => validGameActorKeys.has(`${role.actor_imdb_id}-${role.actor_name}`));
-
-        if (gameRoles.length === 0) {
-            showError("No suitable data found to generate questions for Game Mode. Please check your CSV files or relax the actor role count criteria.");
-            return;
-        }
-
-        generateQuestion(gameActorsMap, gameRoles);
-        displayQuestion();
+        playerSetup.classList.remove('d-none');
+        gameContainer.classList.add('d-none');
+        gameOver.classList.add('d-none');
+        const count = playerCountSlider.value;
+        playerCountValue.textContent = count;
+        generatePlayerNameInputs(count);
     }
 
-    function generateQuestion() {
+    function showRoundStartScreen() {
+        roundStartTitle.textContent = `Round ${currentRound}: ${roundTitles[currentRound - 1]}`;
+        roundStart.classList.remove('d-none');
+        questionCard.classList.add('d-none');
+        playerScoresContainer.classList.add('d-none');
+    }
+
+    function displayFinalScores() {
+        questionCard.classList.add('d-none');
+        playerScoresContainer.classList.add('d-none');
+        gameOver.classList.remove('d-none');
+        
+        const sortedPlayers = [...players].sort((a, b) => b.score - a.score);
+
+        finalScores.innerHTML = '';
+        sortedPlayers.forEach((player, index) => {
+            const li = document.createElement('li');
+            li.classList.add('list-group-item');
+            li.innerHTML = `
+                <h5>${index + 1}. <span style="color: ${player.color}">${player.name}</span> - ${player.score} points</h5>
+            `;
+            finalScores.appendChild(li);
+        });
+    }
+
+    function generatePlayerNameInputs(count) {
+        const existingNames = [];
+        const inputs = playerNamesContainer.querySelectorAll('input');
+        inputs.forEach(input => existingNames.push(input.value));
+        const usedRoles = new Set(existingNames);
+
+        playerNamesContainer.innerHTML = '';
+        for (let i = 0; i < count; i++) {
+            const formGroup = document.createElement('div');
+            formGroup.classList.add('input-group', 'mt-2');
+
+            const label = document.createElement('span');
+            label.classList.add('input-group-text');
+            label.textContent = 'Name';
+            formGroup.appendChild(label);
+
+            const input = document.createElement('input');
+            input.type = 'text';
+            input.classList.add('form-control');
+            input.style.color = colors[i % colors.length];
+            if (existingNames[i]) {
+                input.value = existingNames[i];
+            } else {
+                let randomRole;
+                do {
+                    randomRole = roles[Math.floor(Math.random() * roles.length)];
+                } while (randomRole.character.length > 15 || usedRoles.has(randomRole.character));
+                input.value = randomRole.character;
+                usedRoles.add(randomRole.character);
+            }
+            formGroup.appendChild(input);
+            playerNamesContainer.appendChild(formGroup);
+        }
+    }
+
+    function displayPlayerScores() {
+        playerScoresContainer.innerHTML = '';
+        players.forEach((player, index) => {
+            const playerEl = document.createElement('div');
+            playerEl.classList.add('col', 'text-center');
+            playerEl.innerHTML = `
+                <h5 style="color: ${player.color}; font-size: 1rem;">${player.name}</h5>
+                <p class="h5">${player.score}</p>
+            `;
+            if (index === currentPlayerIndex) {
+                playerEl.classList.add('border', 'border-primary', 'rounded');
+            }
+            playerScoresContainer.appendChild(playerEl);
+        });
+    }
+
+    function generateQuestion(difficulty) {
         let questionGenerated = false;
         let attempts = 0;
         while (!questionGenerated && attempts < 100) {
@@ -182,53 +352,66 @@ document.addEventListener('DOMContentLoaded', async () => {
             const productionStart = new Date(production.production_start);
             const age = calculateAge(birthday, productionStart);
 
-            const questionType = Math.floor(Math.random() * 5); // 5 question types now
+            let questionType;
+            if (difficulty === 1) questionType = 3;
+            else if (difficulty === 2) questionType = 0;
+            else if (difficulty === 3) questionType = 1;
+            else if (difficulty === 4) questionType = 2;
+            else if (difficulty === 5) questionType = 4;
+
             let choices = [];
             let distractors = [];
             currentQuestion.type = 'multiple-choice'; // Default type
 
             switch (questionType) {
-                case 0: // Which actor was X years old...?
+                case 0: // "Which actor was..."
                     distractors = getActorDistractors(actor, randomRole, production, 3, age, roles, actors);
                     if (distractors.length < 3) continue;
                     currentQuestion.question = `Which actor was ${age} years old at the start of production for <em>${production.title}</em>?`;
                     currentQuestion.answer = `<strong>${actor.name}</strong> as ${randomRole.character}`;
+                    currentQuestion.difficulty = 2;
+                    currentQuestion.score = 3;
                     choices = distractors.map(r => `<strong>${r.actor_name}</strong> as ${r.character}`);
                     choices.push(currentQuestion.answer);
                     choices.sort();
                     break;
-                case 1: // Actor X was Y years old for which movie?
+                case 1: // "Actor X was Y years old for which movie?"
                     distractors = getProductionDistractors(actor.imdb_id, production, 3, roles);
                     if (distractors.length < 3) continue;
                     currentQuestion.question = `Actor <strong>${actor.name}</strong> was ${age} years old during the start of production for which movie?`;
                     currentQuestion.answer = `<em>${production.title}</em> as ${randomRole.character}`;
+                    currentQuestion.difficulty = 3;
+                    currentQuestion.score = 4;
                     choices = distractors.map(p => `<em>${p.production_title}</em> as ${p.character}`);
                     choices.push(currentQuestion.answer);
                     choices.sort();
                     break;
-                case 2: // How old was actor X...?
+                case 2: // "How old was actor X...?" (MC)
                     distractors = getAgeDistractors(age, 3);
                     if (distractors.length < 3) continue;
                     currentQuestion.question = `How old was <strong>${actor.name}</strong> as ${randomRole.character} at the start of production for <em>${production.title}</em>?`;
                     currentQuestion.answer = `${age}`;
+                    currentQuestion.difficulty = 4;
+                    currentQuestion.score = 5;
                     choices = distractors;
                     choices.push(currentQuestion.answer);
                     choices.sort((a, b) => a - b);
                     break;
-                case 3: // What role did actor X play in production Y?
+                case 3: // "What role did..."
                     distractors = getRoleDistractors(actor.imdb_id, production.imdb_id, randomRole.character, 3, roles);
                     if (distractors.length < 3) continue;
                     currentQuestion.question = `What role did <strong>${actor.name}</strong> play in <em>${production.title}</em>?`;
                     currentQuestion.answer = `${randomRole.character}`;
+                    currentQuestion.difficulty = 1;
+                    currentQuestion.score = 1;
                     choices = distractors;
                     choices.push(currentQuestion.answer);
                     choices.sort();
                     break;
-                case 4: // How old was actor X...? (Slider version)
-                    const minOffset = Math.floor(Math.random() * 8) + 3; // Random number between 3 and 10
-                    const maxOffset = Math.floor(Math.random() * 8) + 3; // Random number between 3 and 10
-                    const sliderMin = Math.max(10, age - minOffset);
-                    const sliderMax = age + maxOffset;
+                case 4: // "How old was actor X...?" (Slider)
+                    const randomOffset = Math.floor(Math.random() * 13);
+                    const sliderMin = Math.max(10, age - randomOffset);
+                    const sliderMax = sliderMin + 12;
 
                     ageSlider.min = sliderMin;
                     ageSlider.max = sliderMax;
@@ -237,6 +420,8 @@ document.addEventListener('DOMContentLoaded', async () => {
                     currentQuestion.question = `How old was <strong>${actor.name}</strong> as ${randomRole.character} at the start of production for <em>${production.title}</em>?`;
                     currentQuestion.answer = age;
                     currentQuestion.type = 'slider';
+                    currentQuestion.difficulty = 5;
+                    currentQuestion.score = 10;
                     choices = []; // No choices for slider
                     break;
             }
@@ -249,11 +434,16 @@ document.addEventListener('DOMContentLoaded', async () => {
     }
 
     function displayQuestion() {
+        displayPlayerScores();
+        currentPlayerNameEl.textContent = players[currentPlayerIndex].name;
+        currentPlayerNameEl.style.color = players[currentPlayerIndex].color;
+        roundNumberEl.textContent = currentRound;
         questionEl.innerHTML = currentQuestion.question;
         choicesEl.innerHTML = '';
         sliderContainer.classList.add('d-none');
         choicesEl.classList.remove('d-none');
         confirmAgeBtn.classList.remove('d-none');
+        feedbackEl.innerHTML = '';
 
 
         if (currentQuestion.type === 'slider') {
@@ -343,156 +533,165 @@ document.addEventListener('DOMContentLoaded', async () => {
         }
         return array;
     }
-});
 
-function performSearch(actors, productions, roles) {
-    const searchInput = document.getElementById('searchInput').value.toLowerCase();
-    const searchTerms = searchInput.split(/[,;]/).map(term => term.trim()).filter(term => term.length > 0);
-    const ageLowerInput = document.getElementById('ageLowerInput').value;
-    const ageUpperInput = document.getElementById('ageUpperInput').value;
+    function performSearch() {
+        const searchInput = document.getElementById('searchInput').value.toLowerCase();
+        const searchTerms = searchInput.split(/[,;]/).map(term => term.trim()).filter(term => term.length > 0);
+        const ageLowerInput = document.getElementById('ageLowerInput').value;
+        const ageUpperInput = document.getElementById('ageUpperInput').value;
 
-    let ageLower = parseInt(ageLowerInput);
-    let ageUpper = parseInt(ageUpperInput);
+        let ageLower = parseInt(ageLowerInput);
+        let ageUpper = parseInt(ageUpperInput);
 
-    if (ageLowerInput && !ageUpperInput) {
-        ageUpper = ageLower;
-    } else if (!ageLowerInput && ageUpperInput) {
-        ageLower = ageUpper;
-    } else if (ageLowerInput && ageUpperInput) {
-        if (ageLower > ageUpper) {
-            [ageLower, ageUpper] = [ageUpper, ageLower];
+        if (ageLowerInput && !ageUpperInput) {
+            ageUpper = ageLower;
+        } else if (!ageLowerInput && ageUpperInput) {
+            ageLower = ageUpper;
+        } else if (ageLowerInput && ageUpperInput) {
+            if (ageLower > ageUpper) {
+                [ageLower, ageUpper] = [ageUpper, ageLower];
+            }
+        } else {
+            ageLower = 0;
+            ageUpper = Infinity;
         }
-    } else {
-        ageLower = 0;
-        ageUpper = Infinity;
-    }
 
-    const sortByKey = document.getElementById('sortByKey').value;
-    const sortOrder = document.getElementById('sortOrder').value;
+        const sortByKey = document.getElementById('sortByKey').value;
+        const sortOrder = document.getElementById('sortOrder').value;
 
-    let results = [];
-    const seenResults = new Set();
+        let results = [];
+        const seenResults = new Set();
 
-    for (const role of roles) {
-        const actor = actors.get(`${role.actor_imdb_id}-${role.actor_name}`);
-        const production = productions.find(p => p.imdb_id === role.production_imdb_id);
+        for (const role of roles) {
+            const actor = actors.get(`${role.actor_imdb_id}-${role.actor_name}`);
+            const production = productions.find(p => p.imdb_id === role.production_imdb_id);
 
-        if (actor && production && actor['birthday (YYYY-MM-DD)'] && production.production_start) {
-            // General search filter
-            if (searchTerms.length > 0) {
-                const searchString = `${actor.name} ${role.character} ${production.title}`.toLowerCase();
-                let allTermsMatch = true;
-                for (const term of searchTerms) {
-                    if (!searchString.includes(term)) {
-                        allTermsMatch = false;
-                        break;
+            if (actor && production && actor['birthday (YYYY-MM-DD)'] && production.production_start) {
+                // General search filter
+                if (searchTerms.length > 0) {
+                    const searchString = `${actor.name} ${role.character} ${production.title}`.toLowerCase();
+                    let allTermsMatch = true;
+                    for (const term of searchTerms) {
+                        if (!searchString.includes(term)) {
+                            allTermsMatch = false;
+                            break;
+                        }
+                    }
+                    if (!allTermsMatch) {
+                        continue;
                     }
                 }
-                if (!allTermsMatch) {
-                    continue;
-                }
-            }
 
-            const birthday = new Date(actor['birthday (YYYY-MM-DD)']);
-            const productionStart = new Date(production.production_start);
-            const productionEnd = production.production_end ? new Date(production.production_end) : productionStart;
+                const birthday = new Date(actor['birthday (YYYY-MM-DD)']);
+                const productionStart = new Date(production.production_start);
+                const productionEnd = production.production_end ? new Date(production.production_end) : productionStart;
 
-            const ageAtStart = calculateAge(birthday, productionStart);
-            const ageAtEnd = calculateAge(birthday, productionEnd);
+                const ageAtStart = calculateAge(birthday, productionStart);
+                const ageAtEnd = calculateAge(birthday, productionEnd);
 
-            if (ageLower <= ageAtEnd && ageAtStart <= ageUpper) {
-                // Create a unique identifier for the result
-                const resultIdentifier = `${actor.imdb_id}-${production.imdb_id}-${role.character}`;
+                if (ageLower <= ageAtEnd && ageAtStart <= ageUpper) {
+                    // Create a unique identifier for the result
+                    const resultIdentifier = `${actor.imdb_id}-${production.imdb_id}-${role.character}`;
 
-                if (!seenResults.has(resultIdentifier)) {
-                    seenResults.add(resultIdentifier);
-                    results.push({
-                        actorName: role.actor_name,
-                        productionTitle: role.production_title,
-                        character: role.character,
-                        ageAtStart: ageAtStart,
-                        ageAtEnd: ageAtEnd
-                    });
+                    if (!seenResults.has(resultIdentifier)) {
+                        seenResults.add(resultIdentifier);
+                        results.push({
+                            actorName: role.actor_name,
+                            productionTitle: role.production_title,
+                            character: role.character,
+                            ageAtStart: ageAtStart,
+                            ageAtEnd: ageAtEnd
+                        });
+                    }
                 }
             }
         }
-    }
 
-    // Apply sorting
-    results.sort((a, b) => {
-        let valA, valB;
+        // Apply sorting
+        results.sort((a, b) => {
+            let valA, valB;
 
-        if (sortByKey === 'ageAtStart') {
-            valA = a.ageAtStart;
-            valB = b.ageAtStart;
-        } else {
-            valA = a[sortByKey].toLowerCase();
-            valB = b[sortByKey].toLowerCase();
-        }
+            if (sortByKey === 'ageAtStart') {
+                valA = a.ageAtStart;
+                valB = b.ageAtStart;
+            } else {
+                valA = a[sortByKey].toLowerCase();
+                valB = b[sortByKey].toLowerCase();
+            }
 
-        if (valA < valB) {
-            return sortOrder === 'asc' ? -1 : 1;
-        } else if (valA > valB) {
-            return sortOrder === 'asc' ? 1 : -1;
-        }
-        return 0;
-    });
-
-    displayResults(results);
-}
-
-function displayResults(results) {
-    const resultsDiv = document.getElementById('results');
-    if (results.length === 0) {
-        resultsDiv.innerHTML = '<div class="alert alert-warning">No results found.</div>';
-        return;
-    }
-
-    let html = '<ul class="list-group">';
-    for (const result of results) {
-        const ageDisplay = result.ageAtStart === result.ageAtEnd ? result.ageAtStart : `${result.ageAtStart}-${result.ageAtEnd}`;
-        html += `<li class="list-group-item"><strong>${result.actorName}</strong> was ${ageDisplay} years old as ${result.character} in <em>${result.productionTitle}</em></li>`;
-    }
-    html += '</ul>';
-    resultsDiv.innerHTML = html;
-}
-
-function calculateAge(birthDate, otherDate) {
-    let age = otherDate.getFullYear() - birthDate.getFullYear();
-    const m = otherDate.getMonth() - birthDate.getMonth();
-    if (m < 0 || (m === 0 && otherDate.getDate() < birthDate.getDate())) {
-        age--;
-    }
-    return age;
-}
-
-function parseCsv(text) {
-    const lines = text.split('\n').filter(line => line.trim() !== '');
-    const header = lines[0].split(',').map(h => h.trim());
-    const rows = lines.slice(1).map(line => {
-        const values = line.split(/,(?=(?:(?:[^\"]*\"){2})*[^\"]*$)/);
-        const row = {};
-        header.forEach((h, i) => {
-            row[h] = values[i] ? values[i].trim().replace(/^"|"$/g, '') : '';
+            if (valA < valB) {
+                return sortOrder === 'asc' ? -1 : 1;
+            } else if (valA > valB) {
+                return sortOrder === 'asc' ? 1 : -1;
+            }
+            return 0;
         });
-        return row;
-    });
-    return rows;
-}
 
-function showLoading() {
-    document.getElementById('results').innerHTML = `
-        <div class="d-flex justify-content-center">
-            <div class="spinner-border" role="status">
-                <span class="visually-hidden">Loading...</span>
-            </div>
-        </div>`;
-}
+        displayResults(results);
+    }
 
-function hideLoading() {
-    document.getElementById('results').innerHTML = '';
-}
+    function displayResults(results) {
+        const resultsDiv = document.getElementById('results');
+        if (results.length === 0) {
+            resultsDiv.innerHTML = '<div class="alert alert-warning">No results found.</div>';
+            return;
+        }
 
-function showError(message) {
-    document.getElementById('results').innerHTML = `<div class="alert alert-danger">${message}</div>`;
-}
+        const slicedResults = results.slice(0, 40);
+
+        let html = '<ul class="list-group">';
+        for (const result of slicedResults) {
+            const ageDisplay = result.ageAtStart === result.ageAtEnd ? result.ageAtStart : `${result.ageAtStart}-${result.ageAtEnd}`;
+            html += `<li class="list-group-item"><strong>${result.actorName}</strong> was ${ageDisplay} years old as ${result.character} in <em>${result.productionTitle}</em></li>`;
+        }
+        html += '</ul>';
+        if (results.length > 40) {
+            html += `<p class="mt-2">Showing 40 of ${results.length} results.</p>`;
+        }
+        resultsDiv.innerHTML = html;
+    }
+
+    function calculateAge(birthDate, otherDate) {
+        let age = otherDate.getFullYear() - birthDate.getFullYear();
+        const m = otherDate.getMonth() - birthDate.getMonth();
+        if (m < 0 || (m === 0 && otherDate.getDate() < birthDate.getDate())) {
+            age--;
+        }
+        return age;
+    }
+
+    function parseCsv(text) {
+        const lines = text.split('\n').filter(line => line.trim() !== '');
+        const header = lines[0].split(',').map(h => h.trim());
+        const rows = lines.slice(1).map(line => {
+            const values = line.split(/,(?=(?:(?:[^\"]*\"){2})*[^\"]*$)/);
+            const row = {};
+            header.forEach((h, i) => {
+                row[h] = values[i] ? values[i].trim().replace(/^\"|\"$/g, '') : '';
+            });
+            return row;
+        });
+        return rows;
+    }
+
+    function showLoading() {
+        document.getElementById('results').innerHTML = `
+            <div class="d-flex justify-content-center">
+                <div class="spinner-border" role="status">
+                    <span class="visually-hidden">Loading...</span>
+                </div>
+            </div>`;
+    }
+
+    function hideLoading() {
+        document.getElementById('results').innerHTML = '';
+    }
+
+    function showError(message) {
+        const errorEl = document.createElement('div');
+        errorEl.classList.add('alert', 'alert-danger', 'mt-3');
+        errorEl.textContent = message;
+        playerSetup.prepend(errorEl);
+        setTimeout(() => errorEl.remove(), 3000);
+    }
+});

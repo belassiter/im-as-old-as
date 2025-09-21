@@ -15,7 +15,7 @@
     </nav>
 
     <div class="container text-center mt-4">
-        <p class="lead">That's right, now you're older than your childhood movie heroes.</p>
+        <p class="lead">A game about movies and the inevitable passage of time</p>
     </div>
 
     <main class="container my-5">
@@ -75,17 +75,49 @@
         </div>
 
         <div id="game-mode" class="d-none">
-            <div class="card">
-                <div class="card-body">
-                    <h5 class="card-title">Question</h5>
-                    <p id="question"></p>
-                    <div id="choices" class="list-group"></div>
-                    <div id="slider-container" class="d-none mt-3">
-                        <label for="ageSlider" class="form-label">Age: <span id="sliderValue">45</span></label>
-                        <input type="range" class="form-range" min="10" max="80" id="ageSlider">
-                        <button id="confirmAgeBtn" class="btn btn-primary mt-2">Confirm Age</button>
+            <div id="player-setup">
+                <h5>How many players/teams do we have?</h5>
+                <label for="player-count-slider" class="form-label">Players: <span id="player-count-value">1</span></label>
+                <input type="range" class="form-range" min="1" max="4" id="player-count-slider" value="1">
+                <div id="player-names-container" class="mt-3">
+                    <!-- Player name inputs will be generated here -->
+                </div>
+
+                <h5 class="mt-3">Questions per round: <span id="questions-per-round-value">3</span></h5>
+                <input type="range" class="form-range" min="1" max="5" id="questions-per-round-slider" value="3">
+
+                <button id="ready-btn" class="btn btn-success mt-3">Ready!</button>
+            </div>
+
+            <div id="game-container" class="d-none">
+                <div id="round-start" class="d-none text-center">
+                    <h2 id="round-start-title"></h2>
+                    <button id="start-round-btn" class="btn btn-primary">Start Round</button>
+                </div>
+                <div id="player-scores" class="row mb-3">
+                    <!-- Player scores will be displayed here -->
+                </div>
+                <div class="card d-none">
+                    <div class="card-body">
+                        <div>
+                            <h5 class="card-title">Round: <span id="round-number">1</span></h5>
+                            <h5 class="card-title">Question for <span id="current-player-name"></span></h5>
+                        </div>
+                        <p id="question"></p>
+                        <div id="choices" class="list-group"></div>
+                        <div id="slider-container" class="d-none mt-3">
+                            <label for="ageSlider" class="form-label">Age: <span id="sliderValue">45</span></label>
+                            <input type="range" class="form-range" min="10" max="80" id="ageSlider">
+                            <button id="confirmAgeBtn" class="btn btn-primary mt-2">Confirm Age</button>
+                        </div>
+                        <div id="feedback" class="mt-3"></div>
+                        <button id="nextQuestionBtn" class="btn btn-secondary mt-3 d-none">Next Question</button>
                     </div>
-                    <button id="nextQuestionBtn" class="btn btn-secondary mt-3 d-none">Next Question</button>
+                </div>
+                <div id="game-over" class="d-none text-center">
+                    <h2>Game Over!</h2>
+                    <ul id="final-scores" class="list-group"></ul>
+                    <button id="new-game-btn" class="btn btn-primary mt-3">New Game</button>
                 </div>
             </div>
         </div>
@@ -93,7 +125,7 @@
 
     <footer class="footer mt-auto py-3 bg-light">
         <div class="container text-center">
-            <span class="text-muted">Made with &hearts; by an AI assistant. View on <a href="https://github.com/belassiter/im-as-old-as" target="_blank">GitHub</a>.</span>
+            <span class="text-muted">Code available at <a href="https://github.com/belassiter/im-as-old-as" target="_blank">GitHub</a>.</span>
         </div>
     </footer>
 
