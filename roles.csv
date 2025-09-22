@@ -7,26 +7,26 @@ nm0000533,Gates McFadden,tng_s01,Star Trek: TNG - Season 1,Beverly Crusher
 nm0000996,LeVar Burton,tng_s01,Star Trek: TNG - Season 1,Geordi La Forge
 nm0000642,Marina Sirtis,tng_s01,Star Trek: TNG - Season 1,Deanna Troi
 nm0000696,Wil Wheaton,tng_s01,Star Trek: TNG - Season 1,Wesley Crusher
-nm0000434,Mark Hamill,tt0076759,Star Wars: A New Hope,Luke Skywalker
-nm0000148,Harrison Ford,tt0076759,Star Wars: A New Hope,Han Solo
-nm0000402,Carrie Fisher,tt0076759,Star Wars: A New Hope,Princess Leia
-nm0000027,Alec Guinness,tt0076759,Star Wars: A New Hope,Obi-Wan Kenobi
-nm0001088,Peter Cushing,tt0076759,Star Wars: A New Hope,Grand Moff Tarkin
-nm0000355,Anthony Daniels,tt0076759,Star Wars: A New Hope,C-3PO
-nm0048652,Kenny Baker,tt0076759,Star Wars: A New Hope,R2-D2
-nm0562679,Peter Mayhew,tt0076759,Star Wars: A New Hope,Chewbacca
-nm0001190,David Prowse,tt0076759,Star Wars: A New Hope,Darth Vader (body)
+nm0000434,Mark Hamill,tt36328088,Star Wars: A New Hope,Luke Skywalker
+nm0000148,Harrison Ford,tt36328088,Star Wars: A New Hope,Han Solo
+nm0000402,Carrie Fisher,tt36328088,Star Wars: A New Hope,Princess Leia
+nm0000027,Alec Guinness,tt36328088,Star Wars: A New Hope,Obi-Wan Kenobi
+nm0001088,Peter Cushing,tt36328088,Star Wars: A New Hope,Grand Moff Tarkin
+nm0000355,Anthony Daniels,tt36328088,Star Wars: A New Hope,C-3PO
+nm0048652,Kenny Baker,tt36328088,Star Wars: A New Hope,R2-D2
+nm0562679,Peter Mayhew,tt36328088,Star Wars: A New Hope,Chewbacca
+nm0001190,David Prowse,tt36328088,Star Wars: A New Hope,Darth Vader (body)
 nm0000434,Mark Hamill,tt0080684,The Empire Strikes Back,Luke Skywalker
 nm0000148,Harrison Ford,tt0080684,The Empire Strikes Back,Han Solo
 nm0000402,Carrie Fisher,tt0080684,The Empire Strikes Back,Princess Leia
 nm0000568,Frank Oz,tt0080684,The Empire Strikes Back,Yoda (voice)
 nm0001850,Billy Dee Williams,tt0080684,The Empire Strikes Back,Lando Calrissian
 nm0001519,Ian McDiarmid,tt0080684,The Empire Strikes Back,Emperor Palpatine
-nm0048652,Kenny Baker,tt0080684,The Empire Strikes Back,R2-D2
 nm0000638,William Shatner,tt0084726,Star Trek II: The Wrath of Khan,James T. Kirk
 nm0000559,Leonard Nimoy,tt0084726,Star Trek II: The Wrath of Khan,Spock
 nm0001420,DeForest Kelley,tt0084726,Star Trek II: The Wrath of Khan,Dr. Leonard McCoy
 nm0001544,Ricardo Montalban,tt0084726,Star Trek II: The Wrath of Khan,Khan Noonien Singh
+nm0000638,William Shatner,tt0084726,Star Trek II: The Wrath of Khan,James T. Kirk
 nm0000559,Leonard Nimoy,tt0084726,Star Trek II: The Wrath of Khan,Spock
 nm0001420,DeForest Kelley,tt0084726,Star Trek II: The Wrath of Khan,Dr. Leonard McCoy
 nm0001150,James Doohan,tt0084726,Star Trek II: The Wrath of Khan,Montgomery Scott
@@ -65,13 +65,13 @@ nm0001150,James Doohan,tt0098382,Star Trek V: The Final Frontier,Montgomery Scot
 nm0629667,Nichelle Nichols,tt0098382,Star Trek V: The Final Frontier,Nyota Uhura
 nm0001786,George Takei,tt0098382,Star Trek V: The Final Frontier,Hikaru Sulu
 nm0000479,Walter Koenig,tt0098382,Star Trek V: The Final Frontier,Pavel Chekov
-nm0000638,William Shatner,tt0098383,Star Trek VI: The Undiscovered Country,James T. Kirk
-nm0000559,Leonard Nimoy,tt0098383,Star Trek VI: The Undiscovered Country,Spock
-nm0001420,DeForest Kelley,tt0098383,Star Trek VI: The Undiscovered Country,Dr. Leonard McCoy
-nm0001150,James Doohan,tt0098383,Star Trek VI: The Undiscovered Country,Montgomery Scott
-nm0629667,Nichelle Nichols,tt0098383,Star Trek VI: The Undiscovered Country,Nyota Uhura
-nm0001786,George Takei,tt0098383,Star Trek VI: The Undiscovered Country,Hikaru Sulu
-nm0000479,Walter Koenig,tt0098383,Star Trek VI: The Undiscovered Country,Pavel Chekov
+nm0000638,William Shatner,tt0102975,Star Trek VI: The Undiscovered Country,James T. Kirk
+nm0000559,Leonard Nimoy,tt0102975,Star Trek VI: The Undiscovered Country,Spock
+nm0001420,DeForest Kelley,tt0102975,Star Trek VI: The Undiscovered Country,Dr. Leonard McCoy
+nm0001150,James Doohan,tt0102975,Star Trek VI: The Undiscovered Country,Montgomery Scott
+nm0629667,Nichelle Nichols,tt0102975,Star Trek VI: The Undiscovered Country,Nyota Uhura
+nm0001786,George Takei,tt0102975,Star Trek VI: The Undiscovered Country,Hikaru Sulu
+nm0000479,Walter Koenig,tt0102975,Star Trek VI: The Undiscovered Country,Pavel Chekov
 nm0000408,Jonathan Frakes,tt0111280,Star Trek: Generations,William Riker
 nm0000638,William Shatner,tt0111280,Star Trek: Generations,James T. Kirk
 nm0001772,Patrick Stewart,tt0111280,Star Trek: Generations,Jean-Luc Picard
@@ -161,9 +161,6 @@ nm0000568,Frank Oz,tt0120915,Star Wars: Episode I - The Phantom Menace,Yoda (voi
 nm0078886,Ahmed Best,tt0120915,Star Wars: Episode I - The Phantom Menace,Jar Jar Binks (voice)
 nm0000168,Samuel L. Jackson,tt0120915,Star Wars: Episode I - The Phantom Menace,Mace Windu
 nm0661917,Ray Park,tt0120915,Star Wars: Episode I - The Phantom Menace,Darth Maul
-nm0048652,Kenny Baker,tt0120915,Star Wars: Episode I - The Phantom Menace,R2-D2
-nm0048652,Kenny Baker,tt0121765,Star Wars: Episode II - Attack of the Clones,R2-D2
-nm0048652,Kenny Baker,tt0121766,Star Wars: Episode III - Revenge of the Sith,R2-D2
 nm0000654,Terence Stamp,tt0120915,Star Wars: Episode I - The Phantom Menace,Chancellor Valorum
 nm0000191,Ewan McGregor,tt0121765,Star Wars: Episode II - Attack of the Clones,Obi-Wan Kenobi
 nm0000204,Natalie Portman,tt0121765,Star Wars: Episode II - Attack of the Clones,Padme
@@ -178,22 +175,22 @@ nm0000204,Natalie Portman,tt0121766,Star Wars: Episode III - Revenge of the Sith
 nm0159789,Hayden Christensen,tt0121766,Star Wars: Episode III - Revenge of the Sith,Anakin Skywalker
 nm0001519,Ian McDiarmid,tt0121766,Star Wars: Episode III - Revenge of the Sith,Palpatine
 nm0000168,Samuel L. Jackson,tt0121766,Star Wars: Episode III - Revenge of the Sith,Mace Windu
-nm0000148,Harrison Ford,tt2488496,Star Wars: The Force Awakens,Han Solo
-nm0000434,Mark Hamill,tt2488496,Star Wars: The Force Awakens,Luke Skywalker
-nm0000402,Carrie Fisher,tt2488496,Star Wars: The Force Awakens,Leia Organa
-nm3485845,Adam Driver,tt2488496,Star Wars: The Force Awakens,Kylo Ren
-nm5397459,Daisy Ridley,tt2488496,Star Wars: The Force Awakens,Rey
-nm0000434,Mark Hamill,tt2527336,Star Wars: The Last Jedi,Luke Skywalker
-nm0000402,Carrie Fisher,tt2527336,Star Wars: The Last Jedi,Leia Organa
-nm3485845,Adam Driver,tt2527336,Star Wars: The Last Jedi,Kylo Ren
-nm5397459,Daisy Ridley,tt2527336,Star Wars: The Last Jedi,Rey
-nm3915784,John Boyega,tt2527336,Star Wars: The Last Jedi,Finn
-nm0000568,Frank Oz,tt2527336,Star Wars: The Last Jedi,Yoda (voice)
-nm0000402,Carrie Fisher,tt2527338,Star Wars: The Rise of Skywalker,Leia Organa
-nm0000434,Mark Hamill,tt2527338,Star Wars: The Rise of Skywalker,Luke Skywalker
-nm3485845,Adam Driver,tt2527338,Star Wars: The Rise of Skywalker,Kylo Ren
-nm5397459,Daisy Ridley,tt2527338,Star Wars: The Rise of Skywalker,Rey
-nm3915784,John Boyega,tt2527338,Star Wars: The Rise of Skywalker,Finn
+nm0000148,Harrison Ford,tt10321138,Star Wars: The Force Awakens,Han Solo
+nm0000434,Mark Hamill,tt10321138,Star Wars: The Force Awakens,Luke Skywalker
+nm0000402,Carrie Fisher,tt10321138,Star Wars: The Force Awakens,Leia Organa
+nm3485845,Adam Driver,tt10321138,Star Wars: The Force Awakens,Kylo Ren
+nm5397459,Daisy Ridley,tt10321138,Star Wars: The Force Awakens,Rey
+nm0000434,Mark Hamill,tt3486354,Star Wars: The Last Jedi,Luke Skywalker
+nm0000402,Carrie Fisher,tt3486354,Star Wars: The Last Jedi,Leia Organa
+nm3485845,Adam Driver,tt3486354,Star Wars: The Last Jedi,Kylo Ren
+nm5397459,Daisy Ridley,tt3486354,Star Wars: The Last Jedi,Rey
+nm3915784,John Boyega,tt3486354,Star Wars: The Last Jedi,Finn
+nm0000568,Frank Oz,tt3486354,Star Wars: The Last Jedi,Yoda (voice)
+nm0000402,Carrie Fisher,tt15662564,Star Wars: The Rise of Skywalker,Leia Organa
+nm0000434,Mark Hamill,tt15662564,Star Wars: The Rise of Skywalker,Luke Skywalker
+nm3485845,Adam Driver,tt15662564,Star Wars: The Rise of Skywalker,Kylo Ren
+nm5397459,Daisy Ridley,tt15662564,Star Wars: The Rise of Skywalker,Rey
+nm3915784,John Boyega,tt15662564,Star Wars: The Rise of Skywalker,Finn
 nm0428065,Felicity Jones,tt3748528,Rogue One: A Star Wars Story,Jyn Erso
 nm0526019,Diego Luna,tt3748528,Rogue One: A Star Wars Story,Cassian Andor
 nm0876138,Alan Tudyk,tt3748528,Rogue One: A Star Wars Story,K-2SO
@@ -281,7 +278,7 @@ nm0000469,James Earl Jones,tt0080684,Star Wars: Episode V - The Empire Strikes B
 nm0000469,James Earl Jones,tt0086190,Star Wars: Episode VI - Return of the Jedi,Darth Vader (voice)
 nm0000469,James Earl Jones,tt0121766,Star Wars: Episode III - Revenge of the Sith,Darth Vader (voice)
 nm0000469,James Earl Jones,tt3748528,Rogue One: A Star Wars Story,Darth Vader (voice)
-nm0000469,James Earl Jones,tt2527338,Star Wars: The Rise of Skywalker,Darth Vader (voice)
+nm0000469,James Earl Jones,tt15662564,Star Wars: The Rise of Skywalker,Darth Vader (voice)
 nm1517976,Chris Pine,tt0796366,Star Trek,James T. Kirk
 nm0704270,Zachary Quinto,tt0796366,Star Trek,Spock
 nm0757855,Zoe Saldana,tt0796366,Star Trek,Nyota Uhura
@@ -361,21 +358,21 @@ nm0000156,Jeff Goldblum,tt8041270,Jurassic World Dominion,Dr. Ian Malcolm
 nm1986622,DeWanda Wise,tt8041270,Jurassic World Dominion,Kayla Watts
 nm6974206,Mamoudou Athie,tt8041270,Jurassic World Dominion,Ramsay Cole
 nm1901842,Dichen Lachman,tt8041270,Jurassic World Dominion,Soyona Santos
-nm0000129,Tom Cruise,tt0117060,Mission: Impossible,Ethan Hunt
-nm0000685,Jon Voight,tt0117060,Mission: Impossible,Jim Phelps
-nm0000322,Emmanuelle Béart,tt0117060,Mission: Impossible,Claire Phelps
-nm0001089,Henry Czerny,tt0117060,Mission: Impossible,Eugene Kittridge
-nm0000606,Jean Reno,tt0117060,Mission: Impossible,Franz Krieger
-nm0000609,Ving Rhames,tt0117060,Mission: Impossible,Luther Stickell
-nm0000218,Kristin Scott Thomas,tt0117060,Mission: Impossible,Sarah Davies
-nm0200848,Ingeborga Dapkunaite,tt0117060,Mission: Impossible,Hannah Williams
-nm0000129,Tom Cruise,tt0120755,Mission: Impossible 2,Ethan Hunt
-nm0779084,Dougray Scott,tt0120755,Mission: Impossible 2,Sean Ambrose
-nm0628601,Thandiwe Newton,tt0120755,Mission: Impossible 2,Nyah Nordoff-Hall
-nm0000609,Ving Rhames,tt0120755,Mission: Impossible 2,Luther Stickell
-nm0000164,Anthony Hopkins,tt0120755,Mission: Impossible 2,Mission Commander Swanbeck
-nm0746896,Richard Roxburgh,tt0120755,Mission: Impossible 2,Hugh Stamp
-nm0689852,John Polson,tt0120755,Mission: Impossible 2,Billy Baird
+nm0000129,Tom Cruise,tt1229238,Mission: Impossible,Ethan Hunt
+nm0000685,Jon Voight,tt1229238,Mission: Impossible,Jim Phelps
+nm0000322,Emmanuelle Béart,tt1229238,Mission: Impossible,Claire Phelps
+nm0001089,Henry Czerny,tt1229238,Mission: Impossible,Eugene Kittridge
+nm0000606,Jean Reno,tt1229238,Mission: Impossible,Franz Krieger
+nm0000609,Ving Rhames,tt1229238,Mission: Impossible,Luther Stickell
+nm0000218,Kristin Scott Thomas,tt1229238,Mission: Impossible,Sarah Davies
+nm0200848,Ingeborga Dapkunaite,tt1229238,Mission: Impossible,Hannah Williams
+nm0000129,Tom Cruise,tt18304238,Mission: Impossible 2,Ethan Hunt
+nm0779084,Dougray Scott,tt18304238,Mission: Impossible 2,Sean Ambrose
+nm0628601,Thandiwe Newton,tt18304238,Mission: Impossible 2,Nyah Nordoff-Hall
+nm0000609,Ving Rhames,tt18304238,Mission: Impossible 2,Luther Stickell
+nm0000164,Anthony Hopkins,tt18304238,Mission: Impossible 2,Mission Commander Swanbeck
+nm0746896,Richard Roxburgh,tt18304238,Mission: Impossible 2,Hugh Stamp
+nm0689852,John Polson,tt18304238,Mission: Impossible 2,Billy Baird
 nm0000129,Tom Cruise,tt0317919,Mission: Impossible III,Ethan Hunt
 nm0000450,Philip Seymour Hoffman,tt0317919,Mission: Impossible III,Owen Davian
 nm0000609,Ving Rhames,tt0317919,Mission: Impossible III,Luther Stickell
@@ -484,20 +481,20 @@ nm0240565,Karen Duffy,tt0109686,Dumb and Dumber,J.P. Shay
 nm0000120,Jim Carrey,tt0119528,Liar Liar,Fletcher Reede
 nm0005491,Maura Tierney,tt0119528,Liar Liar,Audrey Reede
 nm0178176,Justin Cooper,tt0119528,Liar Liar,Max Reede
-nm0000120,Jim Carrey,tt0116695,The Cable Guy,Ernie 'Chip' Douglas
-nm0000111,Matthew Broderick,tt0116695,The Cable Guy,Steven M. Kovacs
-nm0001774,Ben Stiller,tt0116695,The Cable Guy,Sam Sweet
-nm0000120,Jim Carrey,tt0118799,The Truman Show,Truman Burbank
-nm0000438,Ed Harris,tt0118799,The Truman Show,Christof
-nm0001473,Laura Linney,tt0118799,The Truman Show,Meryl Burbank
-nm0001187,Noah Emmerich,tt0118799,The Truman Show,Marlon
-nm0000120,Jim Carrey,tt0120094,Man on the Moon,Andy Kaufman
-nm0000362,Danny DeVito,tt0120094,Man on the Moon,George Shapiro
-nm0316079,Paul Giamatti,tt0120094,Man on the Moon,Bob Zmuda
-nm0000120,Jim Carrey,tt0350258,Bruce Almighty,Bruce Nolan
-nm0000098,Jennifer Aniston,tt0350258,Bruce Almighty,Grace Connelly
-nm0000151,Morgan Freeman,tt0350258,Bruce Almighty,God
-nm0001311,Philip Baker Hall,tt0350258,Bruce Almighty,Jack Baylor
+nm0000120,Jim Carrey,tt0115798,The Cable Guy,Ernie 'Chip' Douglas
+nm0000111,Matthew Broderick,tt0115798,The Cable Guy,Steven M. Kovacs
+nm0001774,Ben Stiller,tt0115798,The Cable Guy,Sam Sweet
+nm0000120,Jim Carrey,tt0120382,The Truman Show,Truman Burbank
+nm0000438,Ed Harris,tt0120382,The Truman Show,Christof
+nm0001473,Laura Linney,tt0120382,The Truman Show,Meryl Burbank
+nm0001187,Noah Emmerich,tt0120382,The Truman Show,Marlon
+nm0000120,Jim Carrey,tt0125664,Man on the Moon,Andy Kaufman
+nm0000362,Danny DeVito,tt0125664,Man on the Moon,George Shapiro
+nm0316079,Paul Giamatti,tt0125664,Man on the Moon,Bob Zmuda
+nm0000120,Jim Carrey,tt0315327,Bruce Almighty,Bruce Nolan
+nm0000098,Jennifer Aniston,tt0315327,Bruce Almighty,Grace Connelly
+nm0000151,Morgan Freeman,tt0315327,Bruce Almighty,God
+nm0001311,Philip Baker Hall,tt0315327,Bruce Almighty,Jack Baylor
 nm0000120,Jim Carrey,tt0338013,Eternal Sunshine of the Spotless Mind,Joel Barish
 nm0000701,Kate Winslet,tt0338013,Eternal Sunshine of the Spotless Mind,Clementine Kruczynski
 nm0929489,Tom Wilkinson,tt0338013,Eternal Sunshine of the Spotless Mind,Dr. Howard Mierzwiak
@@ -521,16 +518,16 @@ nm0005155,Desmond Llewelyn,tt0057076,From Russia with Love,Q
 nm0000936,Martine Beswick,tt0057076,From Russia with Love,Zora
 nm0348518,Aliza Gur,tt0057076,From Russia with Love,Shirley Eaton
 nm0206060,Anthony Dawson,tt0057076,From Russia with Love,Professor Dent
-nm0000125,Sean Connery,tt0058594,Goldfinger,James Bond
-nm0002085,Gert Frobe,tt0058594,Goldfinger,Auric Goldfinger
-nm0000303,Honor Blackman,tt0058594,Goldfinger,Pussy Galore
-nm0496866,Bernard Lee,tt0058594,Goldfinger,M
-nm0561755,Lois Maxwell,tt0058594,Goldfinger,Miss Moneypenny
-nm0247881,Shirley Eaton,tt0058594,Goldfinger,Shirley Eaton
-nm0005155,Desmond Llewelyn,tt0058594,Goldfinger,Q
-nm0577996,Michael Mellinger,tt0058594,Goldfinger,Mr. Solo
-nm0072578,Martin Benson,tt0058594,Goldfinger,Mr. Ling
-nm0206060,Anthony Dawson,tt0058594,Goldfinger,Professor Dent
+nm0000125,Sean Connery,tt0058150,Goldfinger,James Bond
+nm0002085,Gert Frobe,tt0058150,Goldfinger,Auric Goldfinger
+nm0000303,Honor Blackman,tt0058150,Goldfinger,Pussy Galore
+nm0496866,Bernard Lee,tt0058150,Goldfinger,M
+nm0561755,Lois Maxwell,tt0058150,Goldfinger,Miss Moneypenny
+nm0247881,Shirley Eaton,tt0058150,Goldfinger,Shirley Eaton
+nm0005155,Desmond Llewelyn,tt0058150,Goldfinger,Q
+nm0577996,Michael Mellinger,tt0058150,Goldfinger,Mr. Solo
+nm0072578,Martin Benson,tt0058150,Goldfinger,Mr. Ling
+nm0206060,Anthony Dawson,tt0058150,Goldfinger,Professor Dent
 nm0000125,Sean Connery,tt0059800,Thunderball,James Bond
 nm0000805,Claudine Auger,tt0059800,Thunderball,Domino Derval
 nm0148041,Adolfo Celi,tt0059800,Thunderball,Emilio Largo
@@ -553,75 +550,75 @@ nm0357240,Mie Hama,tt0062512,You Only Live Twice,Kissy Suzuki
 nm0336509,Charles Gray,tt0062512,You Only Live Twice,Mr. Henderson
 nm0048468,George Baker,tt0062512,You Only Live Twice,Count Lippe
 nm0365139,Naomi Harris,tt0062512,You Only Live Twice,Miss Moneypenny
-nm0493872,George Lazenby,tt0062512,On Her Majesty's Secret Service,James Bond
-nm0001671,Diana Rigg,tt0062512,On Her Majesty's Secret Service,Tracy Draco
-nm0496866,Bernard Lee,tt0062512,On Her Majesty's Secret Service,M
-nm0561755,Lois Maxwell,tt0062512,On Her Majesty's Secret Service,Miss Moneypenny
-nm0005155,Desmond Llewelyn,tt0062512,On Her Majesty's Secret Service,Q
-nm0001699,Telly Savalas,tt0062512,On Her Majesty's Secret Service,Ernst Stavro Blofeld
-nm0275213,Gabriele Ferzetti,tt0062512,On Her Majesty's Secret Service,Marc-Ange Draco
-nm0827375,Ilse Steppat,tt0062512,On Her Majesty's Secret Service,Irma Bunt
-nm0636075,Virginia North,tt0062512,On Her Majesty's Secret Service,Ruby Bartlett
-nm0000125,Sean Connery,tt0066999,Diamonds Are Forever,James Bond
-nm0001762,Jill St. John,tt0066999,Diamonds Are Forever,Tiffany Case
-nm0496866,Bernard Lee,tt0066999,Diamonds Are Forever,M
-nm0561755,Lois Maxwell,tt0066999,Diamonds Are Forever,Miss Moneypenny
-nm0005155,Desmond Llewelyn,tt0066999,Diamonds Are Forever,Q
-nm0336509,Charles Gray,tt0066999,Diamonds Are Forever,Ernst Stavro Blofeld
-nm0247881,Shirley Eaton,tt0066999,Diamonds Are Forever,Jill Masterson
-nm0123680,Norman Burton,tt0066999,Diamonds Are Forever,Felix Leiter
-nm0000125,Sean Connery,tt0071807,Live and Let Die,James Bond
-nm0005412,Jane Seymour,tt0071807,Live and Let Die,Solitaire
-nm0496866,Bernard Lee,tt0071807,Live and Let Die,M
-nm0561755,Lois Maxwell,tt0071807,Live and Let Die,Miss Moneypenny
-nm0005155,Desmond Llewelyn,tt0071807,Live and Let Die,Q
-nm0001433,Yaphet Kotto,tt0071807,Live and Let Die,Dr. Kananga
-nm0416378,Clifton James,tt0071807,Live and Let Die,J. W. Pepper
-nm0001423,Richard Kiel,tt0076752,The Man with the Golden Gun,Jaws
-nm0000549,Roger Moore,tt0076752,The Man with the Golden Gun,James Bond
-nm0000489,Christopher Lee,tt0076752,The Man with the Golden Gun,Francisco Scaramanga
-nm0496866,Bernard Lee,tt0076752,The Man with the Golden Gun,M
-nm0561755,Lois Maxwell,tt0076752,The Man with the Golden Gun,Miss Moneypenny
-nm0005155,Desmond Llewelyn,tt0076752,The Man with the Golden Gun,Q
-nm0000726,Maud Adams,tt0076752,The Man with the Golden Gun,Andrea Anders
-nm0007042,Herbert Lom,tt0076752,The Man with the Golden Gun,Colonel Sun
-nm0000549,Roger Moore,tt0079574,The Spy Who Loved Me,James Bond
-nm0000819,Barbara Bach,tt0079574,The Spy Who Loved Me,Anya Amasova
-nm0496866,Bernard Lee,tt0079574,The Spy Who Loved Me,M
-nm0561755,Lois Maxwell,tt0079574,The Spy Who Loved Me,Miss Moneypenny
-nm0005155,Desmond Llewelyn,tt0079574,The Spy Who Loved Me,Q
-nm0432007,Curt Jurgens,tt0079574,The Spy Who Loved Me,Karl Stromberg
-nm0001423,Richard Kiel,tt0079574,The Spy Who Loved Me,Jaws
-nm0613098,Caroline Munro,tt0079574,The Spy Who Loved Me,Nikita
-nm0000549,Roger Moore,tt0082398,Moonraker,James Bond
-nm0001042,Lois Chiles,tt0082398,Moonraker,Holly Goodhead
-nm0005155,Desmond Llewelyn,tt0082398,Moonraker,Q
-nm0496866,Bernard Lee,tt0082398,Moonraker,M
-nm0003909,Michael Lonsdale,tt0082398,Moonraker,Hugo Drax
-nm0001423,Richard Kiel,tt0082398,Moonraker,Jaws
-nm0093391,Emily Bolton,tt0082398,Moonraker,Manuela
-nm0000549,Roger Moore,tt0082694,For Your Eyes Only,James Bond
-nm0000962,Carole Bouquet,tt0082694,For Your Eyes Only,Melina Havelock
-nm0496866,Bernard Lee,tt0082694,For Your Eyes Only,M
-nm0561755,Lois Maxwell,tt0082694,For Your Eyes Only,Miss Moneypenny
-nm0005155,Desmond Llewelyn,tt0082694,For Your Eyes Only,Q
-nm0867694,Topol,tt0082694,For Your Eyes Only,Aristotle Kristatos
-nm0002103,Julian Glover,tt0082694,For Your Eyes Only,Gregory
-nm0000549,Roger Moore,tt0086033,Octopussy,James Bond
-nm0001881,Maryam d'Abo,tt0086033,Octopussy,Octopussy
-nm0496866,Bernard Lee,tt0086033,Octopussy,M
-nm0561755,Lois Maxwell,tt0086033,Octopussy,Miss Moneypenny
-nm0005155,Desmond Llewelyn,tt0086033,Octopussy,Q
-nm0431139,Louis Jourdan,tt0086033,Octopussy,Kamal Khan
-nm0000726,Maud Adams,tt0086033,Octopussy,Mona
-nm0000549,Roger Moore,tt0086753,A View to a Kill,James Bond
-nm0005063,Grace Jones,tt0086753,A View to a Kill,May Day
-nm0496866,Bernard Lee,tt0086753,A View to a Kill,M
-nm0561755,Lois Maxwell,tt0086753,A View to a Kill,Miss Moneypenny
-nm0005155,Desmond Llewelyn,tt0086753,A View to a Kill,Q
-nm0000686,Christopher Walken,tt0086753,A View to a Kill,Max Zorin
-nm0000617,Tanya Roberts,tt0086753,A View to a Kill,Stacey Sutton
-nm0001495,Patrick Macnee,tt0086753,A View to a Kill,Sir Godfrey Tibbett
+nm0493872,George Lazenby,tt0064757,On Her Majesty's Secret Service,James Bond
+nm0001671,Diana Rigg,tt0064757,On Her Majesty's Secret Service,Tracy Draco
+nm0496866,Bernard Lee,tt0064757,On Her Majesty's Secret Service,M
+nm0561755,Lois Maxwell,tt0064757,On Her Majesty's Secret Service,Miss Moneypenny
+nm0005155,Desmond Llewelyn,tt0064757,On Her Majesty's Secret Service,Q
+nm0001699,Telly Savalas,tt0064757,On Her Majesty's Secret Service,Ernst Stavro Blofeld
+nm0275213,Gabriele Ferzetti,tt0064757,On Her Majesty's Secret Service,Marc-Ange Draco
+nm0827375,Ilse Steppat,tt0064757,On Her Majesty's Secret Service,Irma Bunt
+nm0636075,Virginia North,tt0064757,On Her Majesty's Secret Service,Ruby Bartlett
+nm0000125,Sean Connery,tt0066995,Diamonds Are Forever,James Bond
+nm0001762,Jill St. John,tt0066995,Diamonds Are Forever,Tiffany Case
+nm0496866,Bernard Lee,tt0066995,Diamonds Are Forever,M
+nm0561755,Lois Maxwell,tt0066995,Diamonds Are Forever,Miss Moneypenny
+nm0005155,Desmond Llewelyn,tt0066995,Diamonds Are Forever,Q
+nm0336509,Charles Gray,tt0066995,Diamonds Are Forever,Ernst Stavro Blofeld
+nm0247881,Shirley Eaton,tt0066995,Diamonds Are Forever,Jill Masterson
+nm0123680,Norman Burton,tt0066995,Diamonds Are Forever,Felix Leiter
+nm0000125,Sean Connery,tt0070328,Live and Let Die,James Bond
+nm0005412,Jane Seymour,tt0070328,Live and Let Die,Solitaire
+nm0496866,Bernard Lee,tt0070328,Live and Let Die,M
+nm0561755,Lois Maxwell,tt0070328,Live and Let Die,Miss Moneypenny
+nm0005155,Desmond Llewelyn,tt0070328,Live and Let Die,Q
+nm0001433,Yaphet Kotto,tt0070328,Live and Let Die,Dr. Kananga
+nm0416378,Clifton James,tt0070328,Live and Let Die,J. W. Pepper
+nm0001423,Richard Kiel,tt0071807,The Man with the Golden Gun,Jaws
+nm0000549,Roger Moore,tt0071807,The Man with the Golden Gun,James Bond
+nm0000489,Christopher Lee,tt0071807,The Man with the Golden Gun,Francisco Scaramanga
+nm0496866,Bernard Lee,tt0071807,The Man with the Golden Gun,M
+nm0561755,Lois Maxwell,tt0071807,The Man with the Golden Gun,Miss Moneypenny
+nm0005155,Desmond Llewelyn,tt0071807,The Man with the Golden Gun,Q
+nm0000726,Maud Adams,tt0071807,The Man with the Golden Gun,Andrea Anders
+nm0007042,Herbert Lom,tt0071807,The Man with the Golden Gun,Colonel Sun
+nm0000549,Roger Moore,tt0076752,The Spy Who Loved Me,James Bond
+nm0000819,Barbara Bach,tt0076752,The Spy Who Loved Me,Anya Amasova
+nm0496866,Bernard Lee,tt0076752,The Spy Who Loved Me,M
+nm0561755,Lois Maxwell,tt0076752,The Spy Who Loved Me,Miss Moneypenny
+nm0005155,Desmond Llewelyn,tt0076752,The Spy Who Loved Me,Q
+nm0432007,Curt Jurgens,tt0076752,The Spy Who Loved Me,Karl Stromberg
+nm0001423,Richard Kiel,tt0076752,The Spy Who Loved Me,Jaws
+nm0613098,Caroline Munro,tt0076752,The Spy Who Loved Me,Nikita
+nm0000549,Roger Moore,tt0079574,Moonraker,James Bond
+nm0001042,Lois Chiles,tt0079574,Moonraker,Holly Goodhead
+nm0005155,Desmond Llewelyn,tt0079574,Moonraker,Q
+nm0496866,Bernard Lee,tt0079574,Moonraker,M
+nm0003909,Michael Lonsdale,tt0079574,Moonraker,Hugo Drax
+nm0001423,Richard Kiel,tt0079574,Moonraker,Jaws
+nm0093391,Emily Bolton,tt0079574,Moonraker,Manuela
+nm0000549,Roger Moore,tt0082398,For Your Eyes Only,James Bond
+nm0000962,Carole Bouquet,tt0082398,For Your Eyes Only,Melina Havelock
+nm0496866,Bernard Lee,tt0082398,For Your Eyes Only,M
+nm0561755,Lois Maxwell,tt0082398,For Your Eyes Only,Miss Moneypenny
+nm0005155,Desmond Llewelyn,tt0082398,For Your Eyes Only,Q
+nm0867694,Topol,tt0082398,For Your Eyes Only,Aristotle Kristatos
+nm0002103,Julian Glover,tt0082398,For Your Eyes Only,Gregory
+nm0000549,Roger Moore,tt0086034,Octopussy,James Bond
+nm0001881,Maryam d'Abo,tt0086034,Octopussy,Octopussy
+nm0496866,Bernard Lee,tt0086034,Octopussy,M
+nm0561755,Lois Maxwell,tt0086034,Octopussy,Miss Moneypenny
+nm0005155,Desmond Llewelyn,tt0086034,Octopussy,Q
+nm0431139,Louis Jourdan,tt0086034,Octopussy,Kamal Khan
+nm0000726,Maud Adams,tt0086034,Octopussy,Mona
+nm0000549,Roger Moore,tt0090264,A View to a Kill,James Bond
+nm0005063,Grace Jones,tt0090264,A View to a Kill,May Day
+nm0496866,Bernard Lee,tt0090264,A View to a Kill,M
+nm0561755,Lois Maxwell,tt0090264,A View to a Kill,Miss Moneypenny
+nm0005155,Desmond Llewelyn,tt0090264,A View to a Kill,Q
+nm0000686,Christopher Walken,tt0090264,A View to a Kill,Max Zorin
+nm0000617,Tanya Roberts,tt0090264,A View to a Kill,Stacey Sutton
+nm0001495,Patrick Macnee,tt0090264,A View to a Kill,Sir Godfrey Tibbett
 nm0001096,Timothy Dalton,tt0093428,The Living Daylights,James Bond
 nm0001881,Maryam d'Abo,tt0093428,The Living Daylights,Nadja
 nm0496866,Bernard Lee,tt0093428,The Living Daylights,M
@@ -630,14 +627,14 @@ nm0005155,Desmond Llewelyn,tt0093428,The Living Daylights,Q
 nm0469103,Jeroen Krabbe,tt0093428,The Living Daylights,General Koskov
 nm0000833,Joe Don Baker,tt0093428,The Living Daylights,Brad Whitaker
 nm0001096,Timothy Dalton,tt0093428,The Living Daylights,James Bond
-nm0001096,Timothy Dalton,tt0095875,Licence to Kill,James Bond
-nm0001108,Robert Davi,tt0095875,Licence to Kill,Franz Sanchez
-nm0000508,Carey Lowell,tt0095875,Licence to Kill,Pamela
-nm0005155,Desmond Llewelyn,tt0095875,Licence to Kill,Q
-nm0088504,Caroline Bliss,tt0095875,Licence to Kill,Miss Moneypenny
-nm0114543,Robert Brown,tt0095875,Licence to Kill,M
-nm0001875,Anthony Zerbe,tt0095875,Licence to Kill,Milton Krest
-nm0373314,David Hedison,tt0095875,Licence to Kill,Felix Leiter
+nm0001096,Timothy Dalton,tt0097742,Licence to Kill,James Bond
+nm0001108,Robert Davi,tt0097742,Licence to Kill,Franz Sanchez
+nm0000508,Carey Lowell,tt0097742,Licence to Kill,Pamela
+nm0005155,Desmond Llewelyn,tt0097742,Licence to Kill,Q
+nm0088504,Caroline Bliss,tt0097742,Licence to Kill,Miss Moneypenny
+nm0114543,Robert Brown,tt0097742,Licence to Kill,M
+nm0001875,Anthony Zerbe,tt0097742,Licence to Kill,Milton Krest
+nm0373314,David Hedison,tt0097742,Licence to Kill,Felix Leiter
 nm0000112,Pierce Brosnan,tt0113189,GoldenEye,James Bond
 nm0001713,Izabella Scorupco,tt0113189,GoldenEye,Xenia Onatopp
 nm0114543,Robert Brown,tt0113189,GoldenEye,M
@@ -646,21 +643,21 @@ nm0005155,Desmond Llewelyn,tt0113189,GoldenEye,Q
 nm0000293,Sean Bean,tt0113189,GoldenEye,Alec Trevelyan
 nm0000833,Joe Don Baker,tt0113189,GoldenEye,Jack Wade
 nm0000112,Pierce Brosnan,tt0113189,GoldenEye,James Bond
-nm0000112,Pierce Brosnan,tt0114281,Tomorrow Never Dies,James Bond
-nm0000706,Michelle Yeoh,tt0114281,Tomorrow Never Dies,Wai Lin
-nm0114543,Robert Brown,tt0114281,Tomorrow Never Dies,M
-nm0094039,Samantha Bond,tt0114281,Tomorrow Never Dies,Miss Moneypenny
-nm0005155,Desmond Llewelyn,tt0114281,Tomorrow Never Dies,Q
-nm0000596,Jonathan Pryce,tt0114281,Tomorrow Never Dies,Elliot Carver
-nm0827170,Toby Stephens,tt0114281,Tomorrow Never Dies,Henry Gupta
-nm0000112,Pierce Brosnan,tt0120347,The World Is Not Enough,James Bond
-nm0000612,Denise Richards,tt0120347,The World Is Not Enough,Dr. Christmas Jones
-nm0114543,Robert Brown,tt0120347,The World Is Not Enough,M
-nm0094039,Samantha Bond,tt0120347,The World Is Not Enough,Miss Moneypenny
-nm0005155,Desmond Llewelyn,tt0120347,The World Is Not Enough,Q
-nm0001015,Robert Carlyle,tt0120347,The World Is Not Enough,Rene Mathis
-nm0000092,John Cleese,tt0120347,The World Is Not Enough,R
-nm0539562,Art Malik,tt0120347,The World Is Not Enough,Dr. Kaufman
+nm0000112,Pierce Brosnan,tt0120347,Tomorrow Never Dies,James Bond
+nm0000706,Michelle Yeoh,tt0120347,Tomorrow Never Dies,Wai Lin
+nm0114543,Robert Brown,tt0120347,Tomorrow Never Dies,M
+nm0094039,Samantha Bond,tt0120347,Tomorrow Never Dies,Miss Moneypenny
+nm0005155,Desmond Llewelyn,tt0120347,Tomorrow Never Dies,Q
+nm0000596,Jonathan Pryce,tt0120347,Tomorrow Never Dies,Elliot Carver
+nm0827170,Toby Stephens,tt0120347,Tomorrow Never Dies,Henry Gupta
+nm0000112,Pierce Brosnan,tt0143145,The World Is Not Enough,James Bond
+nm0000612,Denise Richards,tt0143145,The World Is Not Enough,Dr. Christmas Jones
+nm0114543,Robert Brown,tt0143145,The World Is Not Enough,M
+nm0094039,Samantha Bond,tt0143145,The World Is Not Enough,Miss Moneypenny
+nm0005155,Desmond Llewelyn,tt0143145,The World Is Not Enough,Q
+nm0001015,Robert Carlyle,tt0143145,The World Is Not Enough,Rene Mathis
+nm0000092,John Cleese,tt0143145,The World Is Not Enough,R
+nm0539562,Art Malik,tt0143145,The World Is Not Enough,Dr. Kaufman
 nm0000112,Pierce Brosnan,tt0246460,Die Another Day,James Bond
 nm0000932,Halle Berry,tt0246460,Die Another Day,Jinx
 nm0001132,Judi Dench,tt0246460,Die Another Day,M
@@ -698,11 +695,11 @@ nm0365140,Naomie Harris,tt2379713,Spectre,Miss Moneypenny
 nm0000146,Ralph Fiennes,tt2379713,Spectre,Q
 nm0778831,Andrew Scott,tt2379713,Spectre,Max Denbigh
 nm0000899,Monica Bellucci,tt2379713,Spectre,Lucia Sciarra
-nm0185819,Daniel Craig,tt4154796,No Time to Die,James Bond
-nm1785339,Rami Malek,tt4154796,No Time to Die,Safin
-nm2244205,Lea Seydoux,tt4154796,No Time to Die,Madeleine Swann
-nm0001132,Judi Dench,tt4154796,No Time to Die,M
-nm0365140,Naomie Harris,tt4154796,No Time to Die,Miss Moneypenny
-nm0924210,Ben Whishaw,tt4154796,No Time to Die,Q
-nm0942482,Jeffrey Wright,tt4154796,No Time to Die,Felix Leiter
-nm1869101,Ana de Armas,tt4154796,No Time to Die,Paloma
+nm0185819,Daniel Craig,tt2382320,No Time to Die,James Bond
+nm1785339,Rami Malek,tt2382320,No Time to Die,Safin
+nm2244205,Lea Seydoux,tt2382320,No Time to Die,Madeleine Swann
+nm0001132,Judi Dench,tt2382320,No Time to Die,M
+nm0365140,Naomie Harris,tt2382320,No Time to Die,Miss Moneypenny
+nm0924210,Ben Whishaw,tt2382320,No Time to Die,Q
+nm0942482,Jeffrey Wright,tt2382320,No Time to Die,Felix Leiter
+nm1869101,Ana de Armas,tt2382320,No Time to Die,Paloma

@@ -5,9 +5,9 @@ tt0086190,Star Wars: Episode VI - Return of the Jedi,Film,Star Wars,1982-08-01,1
 tt0120915,Star Wars: Episode I - The Phantom Menace,Film,Star Wars,1997-06-01,1998-12-01,1999-05-19,6.5,"$487,576,624",https://m.media-amazon.com/images/M/MV5BODVhNGIxOGItYWNlMi00YTA0LWI3NTctZmQxZGUwZDEyZWI4XkEyXkFqcGc@._V1_SX1000.jpg
 tt0121765,Star Wars: Episode II - Attack of the Clones,Film,Star Wars,2000-06-26,2001-09-21,2002-05-16,6.6,"$310,676,740",https://m.media-amazon.com/images/M/MV5BNTgxMjY2YzUtZmVmNC00YjAwLWJlODMtNDBhNzllNzIzMjgxXkEyXkFqcGc@._V1_SX1000.jpg
 tt0121766,Star Wars: Episode III - Revenge of the Sith,Film,Star Wars,2003-06-30,2004-10-15,2005-05-19,7.6,"$414,378,291",https://m.media-amazon.com/images/M/MV5BNTc4MTc3NTQ5OF5BMl5BanBnXkFtZTcwOTg0NjI4NA@@._V1_SX1000.jpg
-tt2488496,Star Wars: The Force Awakens,Film,Star Wars,2014-05-16,2015-06-12,2015-12-18,7.7,"$936,662,225",https://m.media-amazon.com/images/M/MV5BOTAzODEzNDAzMl5BMl5BanBnXkFtZTgwMDU1MTgzNzE@._V1_SX1000.jpg
-tt2527336,Star Wars: The Last Jedi,Film,Star Wars,2016-02-10,2017-07-22,2017-12-15,6.9,"$620,181,382",https://m.media-amazon.com/images/M/MV5BMjQ1MzcxNjg4N15BMl5BanBnXkFtZTgwNzgwMjY4MzI@._V1_SX1000.jpg
-tt2527338,Star Wars: The Rise of Skywalker,Film,Star Wars,2018-08-20,2019-10-26,2019-12-20,6.4,"$515,202,542",https://m.media-amazon.com/images/M/MV5BODg5ZTNmMTUtYThlNy00NjljLWE0MGUtYmQ1NDg4NWU5MjQ1XkEyXkFqcGc@._V1_SX1000.jpg
+tt7768640,Star Wars: The Force Awakens,Film,Star Wars,2014-05-16,2015-06-12,2015-12-18,6.7,N/A,https://m.media-amazon.com/images/M/MV5BM2UzYjk5MTQtY2U3NC00ODlmLTg2ZGYtMDc1N2Q5YTc0OWViXkEyXkFqcGdeQXVyMjMyMjA0NTA@._V1_SX1000.jpg
+tt7769872,Star Wars: The Last Jedi,Film,Star Wars,2016-02-10,2017-07-22,2017-12-15,4.3,N/A,https://m.media-amazon.com/images/M/MV5BNzBkODVkNTUtNDBiOC00Y2ZiLWExMjAtODc0YzA4YTZmZDkwXkEyXkFqcGc@._V1_SX1000.jpg
+tt11464830,Star Wars: The Rise of Skywalker,Film,Star Wars,2018-08-20,2019-10-26,2019-12-20,N/A,N/A,https://m.media-amazon.com/images/M/MV5BZjA2NWIyODgtYWNmMS00NjVmLTg2N2MtMWI5ZDVkZTY2OGNkXkEyXkFqcGc@._V1_SX1000.jpg
 tt3748528,Rogue One: A Star Wars Story,Film,Star Wars,2015-08-08,2016-07-16,2016-12-16,7.8,"$533,539,991",https://m.media-amazon.com/images/M/MV5BMjEwMzMxODIzOV5BMl5BanBnXkFtZTgwNzg3OTAzMDI@._V1_SX1000.jpg
 tt3778644,Solo: A Star Wars Story,Film,Star Wars,2017-05-10,2017-10-22,2018-05-25,6.9,"$213,767,512",https://m.media-amazon.com/images/M/MV5BOTM2NTI3NTc3Nl5BMl5BanBnXkFtZTgwNzM1OTQyNTM@._V1_SX1000.jpg
 tt0079945,Star Trek: The Motion Picture,Film,Star Trek,1978-08-07,1979-01-26,1979-12-07,6.4,"$82,604,699",https://m.media-amazon.com/images/M/MV5BNjcyMmVmMTItNTA3Yy00NGJjLTlmYjQtZWQ3ZjcyNmU5NDQ2XkEyXkFqcGc@._V1_SX1000.jpg
@@ -15,22 +15,14 @@ tt0084726,Star Trek II: The Wrath of Khan,Film,Star Trek,1981-04-01,1982-02-01,1
 tt0088170,Star Trek III: The Search for Spock,Film,Star Trek,1983-08-01,1984-04-01,1984-06-01,6.7,"$76,471,046",https://m.media-amazon.com/images/M/MV5BYzNkOTZjMTMtOWYzZS00Yjg2LTgyMzQtMmNjODdkYzM0ZjhmXkEyXkFqcGc@._V1_SX1000.jpg
 tt0092007,Star Trek IV: The Voyage Home,Film,Star Trek,1985-02-01,1985-10-01,1986-11-26,7.3,"$109,713,132",https://m.media-amazon.com/images/M/MV5BYmZlYWYwMzUtMjYzMy00MWI1LTg3MDctOTdjYjA2MDkwNGU5XkEyXkFqcGc@._V1_SX1000.jpg
 tt0098382,Star Trek V: The Final Frontier,Film,Star Trek,1988-03-01,1989-02-01,1989-06-09,5.5,"$52,210,049",https://m.media-amazon.com/images/M/MV5BNWEzYmU4ZDYtNWMwMi00YWRmLTg3NDQtMWFhYTI3YWQ2OTQ3XkEyXkFqcGc@._V1_SX1000.jpg
-tt0098383,Star Trek VI: The Undiscovered Country,Film,Star Trek,1990-09-01,1991-06-01,1991-12-06,6.1,"$4,348,025",https://m.media-amazon.com/images/M/MV5BYmZlMzY5YWItNjdlOC00M2IyLWE3YjUtMTc2NGJmNzQzMzIzXkEyXkFqcGdeQXVyMjY3MjUzNDk@._V1_SX1000.jpg
+tt0102975,Star Trek VI: The Undiscovered Country,Film,Star Trek,1990-09-01,1991-06-01,1991-12-06,7.2,"$74,888,996",https://m.media-amazon.com/images/M/MV5BNDgzYjM5MWQtYTkzNy00OWZlLWEzMDctYjA5MDUyNmJhZjM5XkEyXkFqcGc@._V1_SX1000.jpg
 tt0111280,Star Trek: Generations,Film,Star Trek,1993-06-01,1994-05-01,1994-11-18,6.6,"$75,671,125",https://m.media-amazon.com/images/M/MV5BNDFjYmFmNmItODM5Ny00YzhlLWEzNjEtNTBlNjRiN2RlYTRhXkEyXkFqcGc@._V1_SX1000.jpg
 tt0117731,Star Trek: First Contact,Film,Star Trek,1995-04-01,1996-03-01,1996-11-22,7.6,"$92,027,888",https://m.media-amazon.com/images/M/MV5BZjc0OWE1NDMtNjRmMi00ZDc2LWI2ZmQtNzEwNWU4Nzg4NDA5XkEyXkFqcGc@._V1_SX1000.jpg
 tt0120844,Star Trek: Insurrection,Film,Star Trek,1997-06-01,1998-10-01,1998-12-11,6.4,"$70,187,658",https://m.media-amazon.com/images/M/MV5BNTQwZDg2NGQtNjEwNS00ZWVhLWE0YTEtYjhkZWM0NjdkOWIzXkEyXkFqcGc@._V1_SX1000.jpg
-tt0796366,Star Trek (2009),Film,Star Trek,2007-11-07,2008-03-27,2009-05-08,7.9,"$257,730,019",https://m.media-amazon.com/images/M/MV5BMjE5NDQ5OTE4Ml5BMl5BanBnXkFtZTcwOTE3NDIzMw@@._V1_SX1000.jpg
 tt1408101,Star Trek Into Darkness,Film,Star Trek,2012-01-12,2012-05-01,2013-05-16,7.7,"$228,778,661",https://m.media-amazon.com/images/M/MV5BMTk2NzczOTgxNF5BMl5BanBnXkFtZTcwODQ5ODczOQ@@._V1_SX1000.jpg
 tt2660888,Star Trek Beyond,Film,Star Trek,2015-06-25,2015-10-15,2016-07-22,7.0,"$158,848,340",https://m.media-amazon.com/images/M/MV5BN2FhNDI1YTYtNWI0OC00ZjYxLWJlYWEtN2ZiZjRmZDY1MWJjXkEyXkFqcGc@._V1_SX1000.jpg
-tng_s01,Star Trek: TNG - Season 1,TV Season,Star Trek,1987-01-01,1987-12-31,1987-09-28,,,
-tng_s02,Star Trek: TNG - Season 2,TV Season,Star Trek,1988-01-01,1988-12-31,1988-09-20,,,
-tng_s03,Star Trek: TNG - Season 3,TV Season,Star Trek,1989-01-01,1989-12-31,1989-09-18,,,
-tng_s04,Star Trek: TNG - Season 4,TV Season,Star Trek,1990-01-01,1990-12-31,1990-09-24,,,
-tng_s05,Star Trek: TNG - Season 5,TV Season,Star Trek,1991-01-01,1991-12-31,1991-09-23,,,
-tng_s06,Star Trek: TNG - Season 6,TV Season,Star Trek,1992-01-01,1992-12-31,1992-09-22,,,
-tng_s07,Star Trek: TNG - Season 7,TV Season,Star Trek,1993-01-01,1993-12-31,1993-09-20,,,
 tt0114709,Toy Story,Film,Pixar,1994-10-01,1995-06-01,1995-11-22,8.3,"$223,225,679",https://m.media-amazon.com/images/M/MV5BZTA3OWVjOWItNjE1NS00NzZiLWE1MjgtZDZhMWI1ZTlkNzYwXkEyXkFqcGc@._V1_SX1000.jpg
-tt0120390,A Bug's Life,Film,Pixar,1997-06-01,1998-10-01,1998-11-25,5.0,"$11,538,235",https://m.media-amazon.com/images/M/MV5BYWI5MDkyMzEtNTc3ZC00YjBmLWJlNDItN2Y2ZGE4NDRiYTA2XkEyXkFqcGc@._V1_SX1000.jpg
+tt0120623,A Bug's Life,Film,Pixar,1997-06-01,1998-10-01,1998-11-25,7.2,"$162,798,565",https://m.media-amazon.com/images/M/MV5BNGI3Mjc1ZjUtYTJhYS00NjBiLTgyYjctODU5NTNlMWJiYjYzXkEyXkFqcGc@._V1_SX1000.jpg
 tt0120363,Toy Story 2,Film,Pixar,1998-07-01,1999-03-01,1999-11-24,7.9,"$245,852,179",https://m.media-amazon.com/images/M/MV5BNzVmODlhMDEtY2YxZi00OTVjLTlkNTktN2Q2OTRlM2I4M2FhXkEyXkFqcGc@._V1_SX1000.jpg
 tt0088763,Back to the Future,Film,Back to the Future,1984-06-25,1985-04-26,1985-07-03,8.5,"$214,553,307",https://m.media-amazon.com/images/M/MV5BZmM3ZjE0NzctNjBiOC00MDZmLTgzMTUtNGVlOWFlOTNiZDJiXkEyXkFqcGc@._V1_SX1000.jpg
 tt0096874,Back to the Future Part II,Film,Back to the Future,1989-02-20,1989-08-01,1989-11-22,7.8,"$119,361,197",https://m.media-amazon.com/images/M/MV5BMTNlOTRmOTEtMTAyMi00NjFiLTk3NDMtNWI0YzA3ZTZlYjZiXkEyXkFqcGc@._V1_SX1000.jpg
@@ -53,15 +45,15 @@ tt6450804,Terminator: Dark Fate,Film,Terminator,2018-03-27,2018-11-28,2019-11-01
 tt0080455,The Blues Brothers,Film,Blues Brothers,1979-07-01,1979-10-01,1980-06-20,7.9,"$57,229,890",https://m.media-amazon.com/images/M/MV5BNzI2ZDAyNjYtNzgwOS00MTRlLWE3MjUtMTI3M2VmYzQ1ZWJmXkEyXkFqcGc@._V1_SX1000.jpg
 tt0087332,Ghostbusters,Film,Ghostbusters,1983-10-28,1984-01-20,1984-06-08,7.8,"$243,640,120",https://m.media-amazon.com/images/M/MV5BMGI0Yjg2ODAtNDYzNi00Njc2LTlkMmMtMmRmYWI5MDE4ZGRkXkEyXkFqcGc@._V1_SX1000.jpg
 tt0097428,Ghostbusters II,Film,Ghostbusters,1988-11-28,1989-03-20,1989-06-16,6.6,"$112,494,738",https://m.media-amazon.com/images/M/MV5BZThjODU5NTMtMWJiNC00NjNkLWJmM2YtM2EzNDg3NjMxYjU5XkEyXkFqcGc@._V1_SX1000.jpg
-imdb_id,title,type,franchise,production_start,production_end,release_date,,,
+tt0141905,title,type,franchise,production_start,production_end,release_date,3.3,N/A,https://m.media-amazon.com/images/M/MV5BOGNmMDE4M2ItMDRiNy00ZTFlLTkzMDQtZDlkMmE1NTUzZGQ5XkEyXkFqcGdeQXVyNzE5NDY2NTg@._V1_SX1000.jpg
 tt0107290,Jurassic Park,Film,Jurassic Park,1992-08-24,1992-11-30,1993-06-11,8.2,"$407,185,075",https://m.media-amazon.com/images/M/MV5BMjM2MDgxMDg0Nl5BMl5BanBnXkFtZTgwNTM2OTM5NDE@._V1_SX1000.jpg
-tt0119567,Jurassic Park: The Lost World,Film,Jurassic Park,1996-09-05,1996-12-11,1997-05-23,6.6,"$229,086,679",https://m.media-amazon.com/images/M/MV5BMGI3NDg5N2ItZGIyZi00ZWNkLWFlODUtZDA1Y2Q1M2U4NGM2XkEyXkFqcGc@._V1_SX1000.jpg
+tt0369690,Jurassic Park: The Lost World,Film,Jurassic Park,1996-09-05,1996-12-11,1997-05-23,7.1,N/A,https://m.media-amazon.com/images/M/MV5BNDQ3YzM4NzUtY2U3NS00YTQ3LWIwYTYtOTI3MmRjOTcwZTk0XkEyXkFqcGc@._V1_SX1000.jpg
 tt0163025,Jurassic Park III,Film,Jurassic Park,2000-08-30,2000-10-31,2001-07-18,6.0,"$181,171,875",https://m.media-amazon.com/images/M/MV5BN2FmMjhlZDYtNmYyMy00NTdjLTlhYzYtZWNlMDY2MmUzOGM2XkEyXkFqcGc@._V1_SX1000.jpg
 tt0369610,Jurassic World,Film,Jurassic Park/World,2014-04-10,2014-08-05,2015-06-12,6.9,"$653,406,625",https://m.media-amazon.com/images/M/MV5BNzBhNzlkM2UtZTQyOC00NjUyLTkzMmMtNDQ1YTM5N2NmMGE5XkEyXkFqcGc@._V1_SX1000.jpg
 tt4881806,Jurassic World: Fallen Kingdom,Film,Jurassic Park/World,2017-02-01,2017-07-31,2018-06-22,6.1,"$417,719,760",https://m.media-amazon.com/images/M/MV5BNzIxMjYwNDEwN15BMl5BanBnXkFtZTgwMzk5MDI3NTM@._V1_SX1000.jpg
 tt8041270,Jurassic World: Dominion,Film,Jurassic Park/World,2020-02-24,2020-11-30,2022-06-10,5.6,"$376,851,080",https://m.media-amazon.com/images/M/MV5BZGExMWU2NWMtNzczYi00NjQ4LTk2YzctZGZkYmRmMDdhMjllXkEyXkFqcGc@._V1_SX1000.jpg
 tt0117060,Mission: Impossible,Film,Mission Impossible,1995-03-01,1995-08-31,1996-05-22,7.2,"$180,981,856",https://m.media-amazon.com/images/M/MV5BOGZjNDlkMTYtMTJkZi00OTkzLWI4NDEtYTA2ODQyMjcwYTdlXkEyXkFqcGc@._V1_SX1000.jpg
-tt0120755,Mission: Impossible 2,Film,Mission Impossible,1999-08-01,2000-02-29,2000-05-24,6.1,"$215,409,889",https://m.media-amazon.com/images/M/MV5BYWFjM2NhMTAtNDU1My00ODUxLTkwMzYtODQzNzM0ODM0ZWQ0XkEyXkFqcGc@._V1_SX1000.jpg
+tt18304238,Mission: Impossible 2,Film,Mission Impossible,1999-08-01,2000-02-29,2000-05-24,N/A,N/A,https://m.media-amazon.com/images/M/MV5BYTU0OGNlNTItZDU0ZS00YTcyLTliYWUtNDliNTExYmRkMmJiXkEyXkFqcGc@._V1_SX1000.jpg
 tt0317919,Mission: Impossible III,Film,Mission Impossible,2005-07-01,2005-10-31,2006-05-05,6.9,"$134,029,801",https://m.media-amazon.com/images/M/MV5BNzY1MzdjMjYtNDJiZS00N2U4LWI0MWQtZTRiZWYxMzU3ZmI4XkEyXkFqcGc@._V1_SX1000.jpg
 tt1229238,Mission: Impossible: Ghost Protocol,Film,Mission Impossible,2010-10-01,2011-03-19,2011-12-16,7.4,"$209,397,903",https://m.media-amazon.com/images/M/MV5BMTY4MTUxMjQ5OV5BMl5BanBnXkFtZTcwNTUyMzg5Ng@@._V1_SX1000.jpg
 tt2381249,Mission: Impossible: Rogue Nation,Film,Mission Impossible,2014-08-01,2015-03-12,2015-07-31,7.4,"$195,042,377",https://m.media-amazon.com/images/M/MV5BZjUwZjg2ZjAtY2RhZi00YmZjLTlhNGQtOWQwNDk1MjhhM2NhXkEyXkFqcGc@._V1_SX1000.jpg
@@ -80,31 +72,31 @@ tt0109040,Ace Ventura: Pet Detective,Film,Jim Carrey,1993-04-01,1993-06-30,1994-
 tt0110475,The Mask,Film,Jim Carrey,1993-08-30,1993-10-31,1994-07-29,7.0,"$119,938,730",https://m.media-amazon.com/images/M/MV5BNGNmNjI0ZmMtMzI5MC00ZjUyLWFlZDEtYjUyMGZlN2E3N2E2XkEyXkFqcGc@._V1_SX1000.jpg
 tt0109686,Dumb and Dumber,Film,Jim Carrey,1993-09-01,1994-11-30,1994-12-16,7.3,"$127,190,327",https://m.media-amazon.com/images/M/MV5BNGQxZDA1MmMtYWQ1Ni00NTJmLTljMjgtZWVmODllODVhMzgyXkEyXkFqcGc@._V1_SX1000.jpg
 tt0119528,Liar Liar,Film,Jim Carrey,1996-04-01,1996-11-30,1997-03-21,6.9,"$181,410,615",https://m.media-amazon.com/images/M/MV5BMGQ4MTk5YjctNGE5NC00ODk4LWIzOWItNzNhODc0N2JmYzMzXkEyXkFqcGc@._V1_SX1000.jpg
-tt0116695,The Cable Guy,Film,Jim Carrey,1995-09-01,1996-01-31,1996-06-14,7.3,"$153,952,592",https://m.media-amazon.com/images/M/MV5BM2E1ZjU1MjctZjU2Yi00MGE1LWI1MDEtYzBlMWJlNDc1NTQxXkEyXkFqcGc@._V1_SX1000.jpg
-tt0118799,The Truman Show,Film,Jim Carrey,1996-12-09,1997-04-21,1998-06-05,8.6,"$57,563,264",https://m.media-amazon.com/images/M/MV5BZTBhOGYzZjQtYzE0Mi00MGIwLWE0MWYtNzMxNTM2OTFkM2NjXkEyXkFqcGc@._V1_SX1000.jpg
-tt0120094,Man on the Moon,Film,Jim Carrey,1998-09-01,1999-03-31,1999-12-22,6.9,"$35,764,351",https://m.media-amazon.com/images/M/MV5BOWU2MjkzN2EtNzY4MC00N2RlLThiNzEtMjk2M2M3NGJjZjRlXkEyXkFqcGc@._V1_SX1000.jpg
-tt0273093,How the Grinch Stole Christmas,Film,Jim Carrey,1999-09-01,1999-12-15,2000-11-17,8.0,N/A,
-tt0350258,Bruce Almighty,Film,Jim Carrey,2002-03-01,2003-04-30,2003-05-23,7.7,"$75,331,600",https://m.media-amazon.com/images/M/MV5BMTQxNDQwNjQzOV5BMl5BanBnXkFtZTcwNTQxNDYyMQ@@._V1_SX1000.jpg
+tt0115798,The Cable Guy,Film,Jim Carrey,1995-09-01,1996-01-31,1996-06-14,6.1,"$60,240,295",https://m.media-amazon.com/images/M/MV5BZjZiODE3ZTUtYTA0Yi00YjVmLTlhYTEtMzc3MDU1YmZjMWYxXkEyXkFqcGc@._V1_SX1000.jpg
+tt0120382,The Truman Show,Film,Jim Carrey,1996-12-09,1997-04-21,1998-06-05,8.2,"$125,618,201",https://m.media-amazon.com/images/M/MV5BNzA3ZjZlNzYtMTdjMy00NjMzLTk5ZGYtMTkyYzNiOGM1YmM3XkEyXkFqcGc@._V1_SX1000.jpg
+tt0125664,Man on the Moon,Film,Jim Carrey,1998-09-01,1999-03-31,1999-12-22,7.4,"$34,607,430",https://m.media-amazon.com/images/M/MV5BYjQ1NmQ3MjItNGNiZC00OWFiLWFiYjktN2E5MzAzZDYwNjdhXkEyXkFqcGc@._V1_SX1000.jpg
+tt0170016,How the Grinch Stole Christmas,Film,Jim Carrey,1999-09-01,1999-12-15,2000-11-17,6.4,"$261,901,880",https://m.media-amazon.com/images/M/MV5BNDAwMjFhYTEtNzYyMS00YmY2LTg3MGEtZTRkNWNiMDI4MDRkXkEyXkFqcGc@._V1_SX1000.jpg
+tt0315327,Bruce Almighty,Film,Jim Carrey,2002-03-01,2003-04-30,2003-05-23,6.8,"$242,829,261",https://m.media-amazon.com/images/M/MV5BZWM2ZjA2OTctZmRhMy00ZDIzLTkwZGQtYTRlNmQwZWZmMDBlXkEyXkFqcGc@._V1_SX1000.jpg
 tt0338013,Eternal Sunshine of the Spotless Mind,Film,Jim Carrey,2003-06-01,2003-09-15,2004-03-19,8.3,"$34,400,301",https://m.media-amazon.com/images/M/MV5BMTY4NzcwODg3Nl5BMl5BanBnXkFtZTcwNTEwOTMyMw@@._V1_SX1000.jpg
 tt0055928,Dr. No,Film,James Bond,1962-01-16,1962-02-21,1962-10-05,7.2,"$16,067,035",https://m.media-amazon.com/images/M/MV5BM2Q0ODAxYTgtN2E3My00Yzc2LWI2NDUtOGU0YzgzYzM4OWMwXkEyXkFqcGc@._V1_SX1000.jpg
 tt0057076,From Russia with Love,Film,James Bond,1963-04-01,1963-06-10,1963-10-10,7.3,"$24,796,765",https://m.media-amazon.com/images/M/MV5BMWY2MWY2ODAtMTY5Ny00MzA2LWFkMWYtODU2MjE0MmM4ZTQ4XkEyXkFqcGc@._V1_SX1000.jpg
-tt0058592,Goldfinger,Film,James Bond,1964-03-19,1964-05-29,1964-09-17,7.0,N/A,https://m.media-amazon.com/images/M/MV5BN2ZiNGI5MmUtOWNiYS00MDk3LWEwZDktMzEyODE2NTZhNGJhXkEyXkFqcGdeQXVyMTg2NjYzOA@@._V1_SX1000.jpg
+tt0058150,Goldfinger,Film,James Bond,1964-03-19,1964-05-29,1964-09-17,7.7,"$51,081,062",https://m.media-amazon.com/images/M/MV5BMTQ2MzE0OTU3NV5BMl5BanBnXkFtZTcwNjQxNTgzNA@@._V1_SX1000.jpg
 tt0059800,Thunderball,Film,James Bond,1965-02-16,1965-05-15,1965-12-09,6.9,"$63,595,658",https://m.media-amazon.com/images/M/MV5BZjJiYmRhZjUtZTg5Zi00YjYwLTlmZWYtODZhMzQzMWZlYTRhXkEyXkFqcGc@._V1_SX1000.jpg
-tt0059753,You Only Live Twice,Film,James Bond,1966-07-04,1966-11-18,1967-06-13,7.6,,https://m.media-amazon.com/images/M/MV5BMGY3NWExOGUtMTJhMi00NGE0LTgwNmQtNmY4NTNiZjI5MjllXkEyXkFqcGc@._V1_SX1000.jpg
-tt0062512,On Her Majesty's Secret Service,Film,James Bond,1968-10-21,1969-06-23,1969-12-18,6.8,"$43,084,787",https://m.media-amazon.com/images/M/MV5BMjhlMjg3NDctN2QzNC00N2ViLWJjYjYtMzcyZDdlMmI1MmU4XkEyXkFqcGc@._V1_SX1000.jpg
-tt0066999,Diamonds Are Forever,Film,James Bond,1971-04-05,1971-07-15,1971-12-17,7.7,"$35,988,495",https://m.media-amazon.com/images/M/MV5BYzNmOWVjN2ItMTQzOS00MTI4LTgxZDItMmZjNTVlMjY5Mjc1XkEyXkFqcGc@._V1_SX1000.jpg
-tt0071807,Live and Let Die,Film,James Bond,1972-06-14,1973-03-01,1973-06-27,6.7,"$20,972,000",https://m.media-amazon.com/images/M/MV5BNzEzMzFiZDgtMWQ4YS00YmU1LWI5OTUtZjcwZmYyY2FlMTFhXkEyXkFqcGc@._V1_SX1000.jpg
-tt0076752,The Man with the Golden Gun,Film,James Bond,1973-11-06,1974-02-01,1974-12-19,7.0,"$46,838,673",https://m.media-amazon.com/images/M/MV5BOGQzNTIyYjAtNjAyNy00OTZhLTg4YmMtNzAyNjdiOTlhZDVlXkEyXkFqcGc@._V1_SX1000.jpg
-tt0079574,The Spy Who Loved Me,Film,James Bond,1976-08-09,1977-03-01,1977-07-07,6.3,"$70,308,099",https://m.media-amazon.com/images/M/MV5BZDM0YTZkNDQtYTU1ZC00MzUyLTlkMTYtYmM2ZjVlM2EyMjBhXkEyXkFqcGc@._V1_SX1000.jpg
-tt0082398,Moonraker,Film,James Bond,1978-06-01,1979-02-01,1979-06-29,6.7,"$54,812,802",https://m.media-amazon.com/images/M/MV5BMjFiYTczNzktZmNiYi00ZGVmLTk4YjUtYzZmYTAwYjU4YTgxXkEyXkFqcGc@._V1_SX1000.jpg
-tt0083987,For Your Eyes Only,Film,James Bond,1980-08-01,1981-03-01,1981-06-24,8.0,"$52,767,889",https://m.media-amazon.com/images/M/MV5BNTg3ODhlZTEtM2Q3MC00YzMxLWJjN2YtOWUyMDIyYTlhYzM3XkEyXkFqcGc@._V1_SX1000.jpg
-tt0086879,Octopussy,Film,James Bond,1982-08-10,1983-04-01,1983-06-10,8.4,"$51,973,029",https://m.media-amazon.com/images/M/MV5BMzc2MjM0NTMtOGY4NC00NzY1LWE2ODUtZjMzY2RhNGNkZDAyXkEyXkFqcGc@._V1_SX1000.jpg
-tt0087469,A View to a Kill,Film,James Bond,1984-05-22,1985-03-01,1985-05-24,7.5,"$179,870,271",https://m.media-amazon.com/images/M/MV5BOGUwZjZiNWQtYzAzZi00NGI5LWE4YmUtN2Y4YWMwY2RlZDkyXkEyXkFqcGc@._V1_SX1000.jpg
+tt0062512,You Only Live Twice,Film,James Bond,1966-07-04,1966-11-18,1967-06-13,6.8,"$43,084,787",https://m.media-amazon.com/images/M/MV5BMjhlMjg3NDctN2QzNC00N2ViLWJjYjYtMzcyZDdlMmI1MmU4XkEyXkFqcGc@._V1_SX1000.jpg
+tt0064757,On Her Majesty's Secret Service,Film,James Bond,1968-10-21,1969-06-23,1969-12-18,6.7,"$22,774,493",https://m.media-amazon.com/images/M/MV5BYmMzOWNlNDMtM2NjMC00NTAxLWE4ODYtNzMyNmY0MzM0OWNhXkEyXkFqcGc@._V1_SX1000.jpg
+tt0066995,Diamonds Are Forever,Film,James Bond,1971-04-05,1971-07-15,1971-12-17,6.5,"$43,819,547",https://m.media-amazon.com/images/M/MV5BMTEwMTdmOWQtNjA0NS00NTBmLTkxMjAtYWI0YjVlZTQ0NmMzXkEyXkFqcGc@._V1_SX1000.jpg
+tt0070328,Live and Let Die,Film,James Bond,1972-06-14,1973-03-01,1973-06-27,6.7,"$35,377,836",https://m.media-amazon.com/images/M/MV5BOGQ0OThkZGQtMzM4Zi00ZDc2LWE4ZWQtZGYyNjEzYzAzMTYzXkEyXkFqcGc@._V1_SX1000.jpg
+tt0071807,The Man with the Golden Gun,Film,James Bond,1973-11-06,1974-02-01,1974-12-19,6.7,"$20,972,000",https://m.media-amazon.com/images/M/MV5BNzEzMzFiZDgtMWQ4YS00YmU1LWI5OTUtZjcwZmYyY2FlMTFhXkEyXkFqcGc@._V1_SX1000.jpg
+tt0076752,The Spy Who Loved Me,Film,James Bond,1976-08-09,1977-03-01,1977-07-07,7.0,"$46,838,673",https://m.media-amazon.com/images/M/MV5BOGQzNTIyYjAtNjAyNy00OTZhLTg4YmMtNzAyNjdiOTlhZDVlXkEyXkFqcGc@._V1_SX1000.jpg
+tt0079574,Moonraker,Film,James Bond,1978-06-01,1979-02-01,1979-06-29,6.3,"$70,308,099",https://m.media-amazon.com/images/M/MV5BZDM0YTZkNDQtYTU1ZC00MzUyLTlkMTYtYmM2ZjVlM2EyMjBhXkEyXkFqcGc@._V1_SX1000.jpg
+tt0082398,For Your Eyes Only,Film,James Bond,1980-08-01,1981-03-01,1981-06-24,6.7,"$54,812,802",https://m.media-amazon.com/images/M/MV5BMjFiYTczNzktZmNiYi00ZGVmLTk4YjUtYzZmYTAwYjU4YTgxXkEyXkFqcGc@._V1_SX1000.jpg
+tt0086034,Octopussy,Film,James Bond,1982-08-10,1983-04-01,1983-06-10,6.5,"$67,893,619",https://m.media-amazon.com/images/M/MV5BOWZkNWVhMDItOTQwYy00ZDgwLTg3MGItMTcyOTk3OWZkMWIwXkEyXkFqcGc@._V1_SX1000.jpg
+tt0090264,A View to a Kill,Film,James Bond,1984-05-22,1985-03-01,1985-05-24,6.3,"$50,327,960",https://m.media-amazon.com/images/M/MV5BZjc3ZTJkZjUtM2E4Mi00YzA1LWJkZTAtM2U0OWUyYTE4YTFiXkEyXkFqcGc@._V1_SX1000.jpg
 tt0093428,The Living Daylights,Film,James Bond,1986-08-18,1987-05-01,1987-06-29,6.7,"$51,185,897",https://m.media-amazon.com/images/M/MV5BNzU3NjJlZDItY2EzOC00NWU2LThiZjUtMTUzNjdiYmZlYWE0XkEyXkFqcGc@._V1_SX1000.jpg
 tt0097742,Licence to Kill,Film,James Bond,1988-07-18,1989-02-01,1989-07-13,6.7,"$34,667,015",https://m.media-amazon.com/images/M/MV5BYjY3OWJkMjMtYTgwYS00MjJjLWE4M2ItOWVhOWMxNGM1NDk3XkEyXkFqcGc@._V1_SX1000.jpg
 tt0113189,GoldenEye,Film,James Bond,1994-01-17,1995-05-01,1995-11-17,7.2,"$106,429,941",https://m.media-amazon.com/images/M/MV5BOGQxNmYyY2YtZGIyNy00ODgxLThhZWEtZGIyNjJhYzFlOTllXkEyXkFqcGc@._V1_SX1000.jpg
-tt0112760,Tomorrow Never Dies,Film,James Bond,1997-04-07,1997-07-01,1997-12-12,5.7,"$10,017,322",https://m.media-amazon.com/images/M/MV5BZTQ3OWY2NTctOTAyNS00MThjLTgyZjEtNzgzZGNiZDNhODUyXkEyXkFqcGc@._V1_SX1000.jpg
-tt0120347,The World Is Not Enough,Film,James Bond,1999-04-12,1999-07-01,1999-11-19,6.5,"$125,304,276",https://m.media-amazon.com/images/M/MV5BMTM1MTk2ODQxNV5BMl5BanBnXkFtZTcwOTY5MDg0NA@@._V1_SX1000.jpg
+tt0120347,Tomorrow Never Dies,Film,James Bond,1997-04-07,1997-07-01,1997-12-12,6.5,"$125,304,276",https://m.media-amazon.com/images/M/MV5BMTM1MTk2ODQxNV5BMl5BanBnXkFtZTcwOTY5MDg0NA@@._V1_SX1000.jpg
+tt0143145,The World Is Not Enough,Film,James Bond,1999-04-12,1999-07-01,1999-11-19,6.4,"$126,943,684",https://m.media-amazon.com/images/M/MV5BMDlmNTA0YmMtODJmMi00NTZhLTk4MzUtY2FiYjNhMmY4OTI1XkEyXkFqcGc@._V1_SX1000.jpg
 tt0246460,Die Another Day,Film,James Bond,2001-02-01,2002-03-01,2002-11-22,6.1,"$160,942,139",https://m.media-amazon.com/images/M/MV5BNDZiYWFmOTQtMTQ5Yy00MzA3LWFlNzktZTVmMGQ1MDA4MjEyXkEyXkFqcGc@._V1_SX1000.jpg
 tt0381061,Casino Royale,Film,James Bond,2005-01-30,2006-03-01,2006-11-14,8.0,"$167,445,960",https://m.media-amazon.com/images/M/MV5BMWQ1ZDM4NDktMWY0NC00MjcxLWJlMDMtNmE2MGVhYzRjMWQ0XkEyXkFqcGc@._V1_SX1000.jpg
 tt0830515,Quantum of Solace,Film,James Bond,2007-01-07,2008-03-01,2008-10-31,6.5,"$168,368,427",https://m.media-amazon.com/images/M/MV5BYmMwZTA3MTAtNWU0Yy00NGZmLTg0YmItZTVkZGFjZTI1ZWJiXkEyXkFqcGc@._V1_SX1000.jpg
