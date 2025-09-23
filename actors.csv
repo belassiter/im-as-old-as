@@ -1,11 +1,11 @@
 imdb_id,tmdb_id,name,birthday (YYYY-MM-DD),notes
-nm0001850,,Billy Dee Williams,1937-04-06,Lando Calrissian
+nm0001850,2139,Billy Dee Williams,1937-04-06,
 nm0000355,,Anthony Daniels,1946-02-21,C-3PO
 nm0001190,,David Prowse,1935-07-01,Darth Vader (body)
 nm0048652,,Kenny Baker,1934-08-24,R2-D2
 nm0562679,,Peter Mayhew,1944-05-19,Chewbacca
 nm0000553,,Liam Neeson,1952-06-07,Qui-Gon Jinn
-nm0005157,,Jake Lloyd,1989-03-05,Anakin Skywalker
+nm0005157,,Jake Lloyd,1989-03-05,
 nm0629667,,Nichelle Nichols,1932-12-28,Nyota Uhura
 nm0001772,,Patrick Stewart,1940-07-13,Jean-Luc Picard
 nm0000408,,Jonathan Frakes,1952-08-19,William Riker
@@ -28,7 +28,7 @@ nm0001459,1906,Denis Leary,1957-08-18,"Francis, A Bug's Life"
 nm0226887,1907,Phyllis Diller,1917-07-17,"Queen, A Bug's Life"
 nm0000349,1908,Joan Cusack,1962-10-11,"Jessie, Toy Story 2"
 nm0001288,1909,Kelsey Grammer,1955-02-21,"Stinky Pete, Toy Story 2"
-nm0001431,1910,Wayne Knight,1955-08-07,"Al McWhiggin, Toy Story 2"
+nm0001431,7478,Wayne Knight,1955-08-07,
 nm0000150,2888,Michael J. Fox,1961-06-09,Marty McFly
 nm0000502,192,Christopher Lloyd,1938-10-22,Dr. Emmett Brown
 nm0000670,592,Lea Thompson,1961-05-31,Lorraine Baines
@@ -42,7 +42,7 @@ nm0000223,1258,Elisabeth Shue,1963-10-06,Jennifer
 nm0866055,1102,James Tolkan,1931-06-20,Strickland
 nm0005460,205,Mary Steenburgen,1953-02-08,Clara Clayton
 nm0000638,199,William Shatner,1931-03-22,James T. Kirk
-nm0000559,201,Leonard Nimoy,1931-03-26,Spock
+nm0000559,201,Leonard Nimoy,1931-03-26,
 nm0001420,4953,DeForest Kelley,1920-01-20,Dr. McCoy
 nm0001150,4954,James Doohan,1920-03-03,Scott
 nm0001786,4956,George Takei,1937-04-20,Sulu
@@ -51,7 +51,7 @@ nm0000191,3061,Ewan McGregor,1971-03-31,Obi-Wan Kenobi
 nm0000204,524,Natalie Portman,1981-06-09,Padmé
 nm0159789,3160,Hayden Christensen,1981-04-19,Anakin Skywalker
 nm0000489,2231,Christopher Lee,1922-05-27,Count Dooku
-nm0000168,2231,Samuel L. Jackson,1948-12-21,Mace Windu
+nm0000168,2231,Samuel L. Jackson,1948-12-21,
 nm0001519,3158,Ian McDiarmid,1944-08-11,Supreme Chancellor Palpatine
 nm0000148,3,Harrison Ford,1942-07-13,Han Solo
 nm0000434,2,Mark Hamill,1951-09-25,Luke Skywalker
@@ -85,8 +85,8 @@ nm0001186,1315,Denholm Elliott,1922-05-31,Marcus Brody
 nm0233145,1432,Alison Doody,1966-11-11,Dr. Elsa Schneider
 nm0000949,204,Cate Blanchett,1969-05-14,Irina Spalko
 nm3564817,974,Phoebe Waller-Bridge,1985-07-14,Helena
-nm0586568,138,Mads Mikkelsen,1965-11-22,Dr. Voller
-nm0000216,380,Arnold Schwarzenegger,1947-07-30,The Terminator
+nm0586568,,Mads Mikkelsen,1965-11-22,
+nm0000216,380,Arnold Schwarzenegger,1947-07-30,
 nm0000299,749,Michael Biehn,1956-07-31,Kyle Reese
 nm0000157,1152,Linda Hamilton,1956-09-26,Sarah Connor
 nm0934902,1620,Paul Winfield,1939-05-22,Lt. Ed Traxler
@@ -95,7 +95,7 @@ nm0001598,1922,Robert Patrick,1958-11-05,T-1000
 nm0001763,877,Nick Stahl,1979-12-05,John Connor
 nm0000132,414,Claire Danes,1979-04-12,Kate Brewster
 nm0518085,593,Kristanna Loken,1979-10-08,T-X
-nm0000288,190,Christian Bale,1974-01-30,John Connor
+nm0000288,190,Christian Bale,1974-01-30,
 nm0941777,843,Sam Worthington,1976-08-02,Marcus Wright
 nm1291227,692,Moon Bloodgood,1975-09-20,Blair Williams
 nm0164809,525,Jason Clarke,1969-07-17,John Connor
@@ -120,7 +120,6 @@ nm0158626,1732,John Cho,1972-06-16,
 nm0947338,36931,Anton Yelchin,1989-03-11,
 nm0051509,1743,Eric Bana,1968-08-09,
 nm0339304,12836,Bruce Greenwood,1956-08-12,
-nm0000559,201,Leonard Nimoy,1931-03-26,
 nm0000213,1174,Winona Ryder,1971-10-29,
 nm1212722,1019250,Benedict Cumberbatch,1976-07-19,
 nm1404408,5335,Alice Eve,1982-02-06,
@@ -132,13 +131,11 @@ nm0000554,63,Sam Neill,1947-09-14,
 nm0000368,5292,Laura Dern,1967-02-10,
 nm0000156,2233,Jeff Goldblum,1952-10-22,
 nm0000277,3292,Richard Attenborough,1923-08-29,
-nm0000168,2231,Samuel L. Jackson,1948-12-21,
 nm0000703,13737,BD Wong,1960-10-24,
 nm0001515,11135,Joseph Mazzello,1983-09-21,
 nm0000611,11136,Ariana Richards,1979-09-11,
 nm0669629,11137,Bob Peck,1945-08-23,
 nm0274684,11138,Martin Ferrero,1947-09-13,
-nm0001431,7478,Wayne Knight,1955-08-07,
 nm0000194,1204,Julianne Moore,1960-12-03,
 nm0000592,193,Pete Postlethwaite,1946-02-07,
 nm0397124,11140,Arliss Howard,1954-10-18,
@@ -198,12 +195,11 @@ nm0000197,32,Jack Nicholson,1937-04-22,
 nm0000107,1159,Kim Basinger,1953-12-08,
 nm0943237,1160,Robert Wuhl,1951-10-09,
 nm0385757,1161,Pat Hingle,1924-07-19,
-nm0001850,2139,Billy Dee Williams,1937-04-06,
 nm0001284,1163,Michael Gough,1916-11-23,
 nm0355717,1164,Jerry Hall,1956-07-02,
 nm0000362,1165,Danny DeVito,1944-11-17,
 nm0000201,9,Michelle Pfeiffer,1958-04-29,
-nm0000686,1167,Christopher Walken,1943-03-31,
+nm0000686,,Christopher Walken,1943-03-31,
 nm0000174,1168,Val Kilmer,1959-12-31,
 nm0000169,1169,Tommy Lee Jones,1946-09-15,
 nm0000120,201,Jim Carrey,1962-01-17,
@@ -211,10 +207,8 @@ nm0000173,1171,Nicole Kidman,1967-06-20,
 nm0000563,1172,Chris O'Donnell,1970-06-26,
 nm0000106,1173,Drew Barrymore,1975-02-22,
 nm0000123,1175,George Clooney,1961-05-06,
-nm0000216,380,Arnold Schwarzenegger,1947-07-30,
 nm0000224,1177,Alicia Silverstone,1976-10-04,
 nm0000235,1179,Uma Thurman,1970-04-29,
-nm0000288,190,Christian Bale,1974-01-30,
 nm0000323,192,Michael Caine,1933-03-14,
 nm0000198,1183,Gary Oldman,1958-03-21,
 nm0614165,1184,Cillian Murphy,1976-05-25,
@@ -227,7 +221,6 @@ nm0362766,1190,Tom Hardy,1977-09-15,
 nm0004266,1191,Anne Hathaway,1982-11-12,
 nm0330687,1192,Joseph Gordon-Levitt,1981-02-17,
 nm0000255,880,Ben Affleck,1972-08-15,
-nm0147147,73998,Henry Cavill,1983-05-05,
 nm0010736,1194,Amy Adams,1974-08-20,
 nm0251986,1195,Jesse Eisenberg,1983-10-05,
 nm2933757,976,Gal Gadot,1985-04-30,
@@ -286,7 +279,6 @@ nm0867694,,Topol,1935-05-09,
 nm0002103,,Julian Glover,1935-03-27,
 nm0001881,,Maryam d'Abo,1960-01-27,
 nm0005063,,Grace Jones,1948-05-19,
-nm0000686,,Christopher Walken,1943-03-31,
 nm0001495,,Patrick Macnee,1922-02-06,
 nm0001096,,Timothy Dalton,1946-03-21,
 nm0469103,,Jeroen Krabbe,1944-12-05,
@@ -312,24 +304,69 @@ nm0950935,,Rick Yune,1971-08-22,
 nm0000514,,Michael Madsen,1957-09-25,
 nm0185819,,Daniel Craig,1968-03-02,
 nm1200692,,Eva Green,1980-07-06,
-nm0586568,,Mads Mikkelsen,1965-11-22,
 nm0159802,,Jesper Christensen,1948-05-16,
 nm0316284,,Giancarlo Giannini,1942-08-01,
 nm1385871,,Olga Kurylenko,1979-11-14,
 nm2966102,,Bérénice Marlohe,1979-05-19,
 nm0000849,,Javier Bardem,1969-03-01,
-nm0000932,,Halle Berry,1966-08-14,
-nm0000612,,Denise Richards,1971-02-17,
-nm0827170,,Toby Stephens,1969-06-21,
-nm0000266,,Ursula Andress,1936-03-19,
-nm0000962,,Carole Bouquet,1957-03-23,
-nm0827170,,Toby Stephens,1969-06-21,
-nm0950935,,Rick Yune,1971-08-22,
-nm0000514,,Michael Madsen,1957-09-25,
-nm0001881,,Maryam d'Abo,1960-01-27,
 nm0000568,,Frank Oz,1944-05-25,
-nm0005157,,Jake Lloyd,1989-03-05,
 nm0000278,,Pernilla August,1958-02-13,
 nm0078886,,Ahmed Best,1973-08-19,
 nm0661917,,Ray Park,1974-08-23,
 nm0000654,,Terence Stamp,1938-07-22,
+nm0000996,,LeVar Burton,1957-02-16
+nm0000642,,Marina Sirtis,1955-03-29
+nm0000696,,Wil Wheaton,1972-07-29
+nm0000027,,Alec Guinness,1914-04-02
+nm0001088,,Peter Cushing,1913-05-26
+nm0001544,,Ricardo Montalban,1920-11-25
+nm0120116,,Jeremy Bulloch,1945-02-16
+nm0000532,,Malcolm McDowell,1943-06-13
+nm0078252,,Peter Burton,,
+nm0000938,,Daniela Bianchi,1932-01-31
+nm0001727,,Robert Shaw,1927-08-09
+nm0000784,,Pedro Armendáriz,1916-05-06
+nm0005155,,Desmond Llewelyn,1914-09-12
+nm0000936,,Martine Beswick,1941-05-26
+nm0348518,,Aliza Gur,1936-06-28
+nm0002085,,Gert Frobe,1913-02-25
+nm0000303,,Honor Blackman,1925-08-22
+nm0247881,,Shirley Eaton,1937-01-12
+nm0577996,,Michael Mellinger,1929-05-30
+nm0072578,,Martin Benson,1918-08-10
+nm0000805,,Claudine Auger,1941-04-26
+nm0148041,,Adolfo Celi,1922-07-27
+nm0658885,,Luciana Paluzzi,1937-06-10
+nm0887607,,Rik Van Nutter,1929-06-01
+nm0233312,,Karin Dor,1938-02-22
+nm0000587,,Donald Pleasence,1919-10-05
+nm0793574,,Teru Shimada,1905-12-12
+nm0906686,,Akiko Wakabayashi,1939-01-26
+nm0357240,,Mie Hama,1943-11-20
+nm0048468,,George Baker,1931-04-01
+nm0365139,,Naomi Harris,1966-09-06
+nm0275213,,Gabriele Ferzetti,1925-03-17
+nm0827375,,Ilse Steppat,1923-09-13
+nm0636075,,Virginia North,1940-11-19
+nm0123680,,Norman Burton,1923-02-15
+nm0000726,,Maud Adams,1945-02-12
+nm0432007,,Curt Jürgens,1915-12-13
+nm0613098,,Caroline Munro,1949-01-16
+nm0001042,,Lois Chiles,1947-04-15
+nm0431139,,Louis Jourdan,1921-06-19
+nm0000617,,Tanya Roberts,1949-10-15
+nm0088504,,Caroline Bliss,1961-07-12
+nm0094039,,Samantha Bond,1961-11-27
+nm0001015,,Robert Carlyle,1961-04-14
+nm0539562,,Art Malik,1952-11-13
+nm0023832,,Mathieu Amalric,1965-10-25
+nm0000146,,Ralph Fiennes,1962-12-22
+nm0910607,,Christoph Waltz,1956-10-04
+nm2244205,,Léa Seydoux,1985-07-01
+nm0778831,,Andrew Scott,1976-10-21
+nm0000899,,Monica Bellucci,1964-09-30
+nm1785339,,Rami Malek,1981-05-12
+nm0924210,,Ben Whishaw,1980-10-14
+nm1869101,,Ana de Armas,1988-04-30
+
+
