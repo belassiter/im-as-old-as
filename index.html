@@ -92,6 +92,7 @@
             <div id="game-container" class="d-none">
                 <div id="round-start" class="d-none text-center">
                     <h2 id="round-start-title"></h2>
+                    <p id="round-start-description"></p>
                     <button id="start-round-btn" class="btn btn-primary">Start Round</button>
                 </div>
                 <div id="player-scores" class="row mb-3">
@@ -99,19 +100,26 @@
                 </div>
                 <div class="card d-none">
                     <div class="card-body">
-                        <div>
-                            <h5 class="card-title">Round: <span id="round-number">1</span></h5>
-                            <h5 class="card-title">Question for <span id="current-player-name"></span></h5>
+                        <div class="row">
+                            <div class="col-md-8">
+                                <div>
+                                    <h5 class="card-title">Round: <span id="round-number">1</span></h5>
+                                    <h5 class="card-title">Question for <span id="current-player-name"></span></h5>
+                                </div>
+                                <p id="question"></p>
+                                <div id="choices" class="list-group"></div>
+                                <div id="slider-container" class="d-none mt-3">
+                                    <label for="ageSlider" class="form-label">Age: <span id="sliderValue">45</span></label>
+                                    <input type="range" class="form-range" min="10" max="80" id="ageSlider">
+                                    <button id="confirmAgeBtn" class="btn btn-primary mt-2">Confirm Age</button>
+                                </div>
+                                <div id="feedback" class="mt-3"></div>
+                                <button id="nextQuestionBtn" class="btn btn-secondary mt-3 d-none">Next Question</button>
+                            </div>
+                            <div class="col-md-4">
+                                <img id="question-poster" class="img-fluid d-none" src="" alt="Movie Poster">
+                            </div>
                         </div>
-                        <p id="question"></p>
-                        <div id="choices" class="list-group"></div>
-                        <div id="slider-container" class="d-none mt-3">
-                            <label for="ageSlider" class="form-label">Age: <span id="sliderValue">45</span></label>
-                            <input type="range" class="form-range" min="10" max="80" id="ageSlider">
-                            <button id="confirmAgeBtn" class="btn btn-primary mt-2">Confirm Age</button>
-                        </div>
-                        <div id="feedback" class="mt-3"></div>
-                        <button id="nextQuestionBtn" class="btn btn-secondary mt-3 d-none">Next Question</button>
                     </div>
                 </div>
                 <div id="game-over" class="d-none text-center">

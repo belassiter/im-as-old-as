@@ -30,11 +30,13 @@ document.addEventListener('DOMContentLoaded', async () => {
     const feedbackEl = document.getElementById('feedback');
     const roundStart = document.getElementById('round-start');
     const roundStartTitle = document.getElementById('round-start-title');
+    const roundStartDescription = document.getElementById('round-start-description');
     const startRoundBtn = document.getElementById('start-round-btn');
     const questionCard = gameContainer.querySelector('.card');
     const gameOver = document.getElementById('game-over');
     const finalScores = document.getElementById('final-scores');
     const newGameBtn = document.getElementById('new-game-btn');
+    const questionPoster = document.getElementById('question-poster');
 
     let actors, productions, roles;
     let currentQuestion = {};
@@ -51,6 +53,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         "Production age",
         "Production age: hard mode"
     ];
+    const roundPoints = [1, 3, 4, 5, 10];
 
     function getPointsString(points) {
         return points === 1 ? '1 point' : `${points} points`;
@@ -260,6 +263,8 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     function showRoundStartScreen() {
         roundStartTitle.textContent = `Round ${currentRound}: ${roundTitles[currentRound - 1]}`;
+        const points = roundPoints[currentRound - 1];
+        roundStartDescription.textContent = `Questions worth ${getPointsString(points)}.`;
         roundStart.classList.remove('d-none');
         questionCard.classList.add('d-none');
         playerScoresContainer.classList.add('d-none');
@@ -362,6 +367,7 @@ document.addEventListener('DOMContentLoaded', async () => {
             let choices = [];
             let distractors = [];
             currentQuestion.type = 'multiple-choice'; // Default type
+            currentQuestion.poster = null;
 
             switch (questionType) {
                 case 0: // "Which actor was..."
@@ -371,6 +377,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                     currentQuestion.answer = `<strong>${actor.name}</strong> as ${randomRole.character}`;
                     currentQuestion.difficulty = 2;
                     currentQuestion.score = 3;
+                    currentQuestion.poster = production.poster;
                     choices = distractors.map(r => `<strong>${r.actor_name}</strong> as ${r.character}`);
                     choices.push(currentQuestion.answer);
                     choices.sort();
@@ -404,6 +411,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                     currentQuestion.answer = `${randomRole.character}`;
                     currentQuestion.difficulty = 1;
                     currentQuestion.score = 1;
+                    currentQuestion.poster = production.poster;
                     choices = distractors;
                     choices.push(currentQuestion.answer);
                     choices.sort();
@@ -444,6 +452,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         choicesEl.classList.remove('d-none');
         confirmAgeBtn.classList.remove('d-none');
         feedbackEl.innerHTML = '';
+        questionPoster.classList.add('d-none');
 
 
         if (currentQuestion.type === 'slider') {
@@ -454,6 +463,10 @@ document.addEventListener('DOMContentLoaded', async () => {
             sliderValue.classList.remove('text-success', 'text-danger');
             sliderValue.textContent = ageSlider.value;
         } else {
+            if (currentQuestion.poster) {
+                questionPoster.src = currentQuestion.poster;
+                questionPoster.classList.remove('d-none');
+            }
             currentQuestion.choices.forEach(choice => {
                 const choiceEl = document.createElement('button');
                 choiceEl.type = 'button';
@@ -645,8 +658,8 @@ document.addEventListener('DOMContentLoaded', async () => {
             html += `<li class="list-group-item"><strong>${result.actorName}</strong> was ${ageDisplay} years old as ${result.character} in <em>${result.productionTitle}</em></li>`;
         }
         html += '</ul>';
-        if (results.length > 40) {
-            html += `<p class="mt-2">Showing 40 of ${results.length} results.</p>`;
+        if (results.length > 0) {
+            html += `<p class="mt-2">Showing ${slicedResults.length} of ${results.length} results.</p>`;
         }
         resultsDiv.innerHTML = html;
     }
@@ -664,10 +677,10 @@ document.addEventListener('DOMContentLoaded', async () => {
         const lines = text.split('\n').filter(line => line.trim() !== '');
         const header = lines[0].split(',').map(h => h.trim());
         const rows = lines.slice(1).map(line => {
-            const values = line.split(/,(?=(?:(?:[^\"]*\"){2})*[^\"]*$)/);
+            const values = line.split(/,(?=(?:(?:[^"]*"){2})*[^"]*$)/);
             const row = {};
             header.forEach((h, i) => {
-                row[h] = values[i] ? values[i].trim().replace(/^\"|\"$/g, '') : '';
+                row[h] = values[i] ? values[i].trim().replace(/^"|"$/g, '') : '';
             });
             return row;
         });
