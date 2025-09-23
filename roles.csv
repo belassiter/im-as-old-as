@@ -7,15 +7,15 @@ nm0000533,Gates McFadden,tng_s01,Star Trek: TNG - Season 1,Beverly Crusher
 nm0000996,LeVar Burton,tng_s01,Star Trek: TNG - Season 1,Geordi La Forge
 nm0000642,Marina Sirtis,tng_s01,Star Trek: TNG - Season 1,Deanna Troi
 nm0000696,Wil Wheaton,tng_s01,Star Trek: TNG - Season 1,Wesley Crusher
-nm0000434,Mark Hamill,tt36328088,Star Wars: A New Hope,Luke Skywalker
-nm0000148,Harrison Ford,tt36328088,Star Wars: A New Hope,Han Solo
-nm0000402,Carrie Fisher,tt36328088,Star Wars: A New Hope,Princess Leia
-nm0000027,Alec Guinness,tt36328088,Star Wars: A New Hope,Obi-Wan Kenobi
-nm0001088,Peter Cushing,tt36328088,Star Wars: A New Hope,Grand Moff Tarkin
-nm0000355,Anthony Daniels,tt36328088,Star Wars: A New Hope,C-3PO
-nm0048652,Kenny Baker,tt36328088,Star Wars: A New Hope,R2-D2
-nm0562679,Peter Mayhew,tt36328088,Star Wars: A New Hope,Chewbacca
-nm0001190,David Prowse,tt36328088,Star Wars: A New Hope,Darth Vader (body)
+nm0000434,Mark Hamill,tt0076759,Star Wars: A New Hope,Luke Skywalker
+nm0000148,Harrison Ford,tt0076759,Star Wars: A New Hope,Han Solo
+nm0000402,Carrie Fisher,tt0076759,Star Wars: A New Hope,Princess Leia
+nm0000027,Alec Guinness,tt0076759,Star Wars: A New Hope,Obi-Wan Kenobi
+nm0001088,Peter Cushing,tt0076759,Star Wars: A New Hope,Grand Moff Tarkin
+nm0000355,Anthony Daniels,tt0076759,Star Wars: A New Hope,C-3PO
+nm0048652,Kenny Baker,tt0076759,Star Wars: A New Hope,R2-D2
+nm0562679,Peter Mayhew,tt0076759,Star Wars: A New Hope,Chewbacca
+nm0001190,David Prowse,tt0076759,Star Wars: A New Hope,Darth Vader (body)
 nm0000434,Mark Hamill,tt0080684,The Empire Strikes Back,Luke Skywalker
 nm0000148,Harrison Ford,tt0080684,The Empire Strikes Back,Han Solo
 nm0000402,Carrie Fisher,tt0080684,The Empire Strikes Back,Princess Leia
@@ -26,9 +26,6 @@ nm0000638,William Shatner,tt0084726,Star Trek II: The Wrath of Khan,James T. Kir
 nm0000559,Leonard Nimoy,tt0084726,Star Trek II: The Wrath of Khan,Spock
 nm0001420,DeForest Kelley,tt0084726,Star Trek II: The Wrath of Khan,Dr. Leonard McCoy
 nm0001544,Ricardo Montalban,tt0084726,Star Trek II: The Wrath of Khan,Khan Noonien Singh
-nm0000638,William Shatner,tt0084726,Star Trek II: The Wrath of Khan,James T. Kirk
-nm0000559,Leonard Nimoy,tt0084726,Star Trek II: The Wrath of Khan,Spock
-nm0001420,DeForest Kelley,tt0084726,Star Trek II: The Wrath of Khan,Dr. Leonard McCoy
 nm0001150,James Doohan,tt0084726,Star Trek II: The Wrath of Khan,Montgomery Scott
 nm0629667,Nichelle Nichols,tt0084726,Star Trek II: The Wrath of Khan,Nyota Uhura
 nm0001786,George Takei,tt0084726,Star Trek II: The Wrath of Khan,Hikaru Sulu
@@ -72,7 +69,6 @@ nm0001150,James Doohan,tt0102975,Star Trek VI: The Undiscovered Country,Montgome
 nm0629667,Nichelle Nichols,tt0102975,Star Trek VI: The Undiscovered Country,Nyota Uhura
 nm0001786,George Takei,tt0102975,Star Trek VI: The Undiscovered Country,Hikaru Sulu
 nm0000479,Walter Koenig,tt0102975,Star Trek VI: The Undiscovered Country,Pavel Chekov
-nm0000408,Jonathan Frakes,tt0111280,Star Trek: Generations,William Riker
 nm0000638,William Shatner,tt0111280,Star Trek: Generations,James T. Kirk
 nm0001772,Patrick Stewart,tt0111280,Star Trek: Generations,Jean-Luc Picard
 nm0000408,Jonathan Frakes,tt0111280,Star Trek: Generations,William Riker
@@ -175,22 +171,22 @@ nm0000204,Natalie Portman,tt0121766,Star Wars: Episode III - Revenge of the Sith
 nm0159789,Hayden Christensen,tt0121766,Star Wars: Episode III - Revenge of the Sith,Anakin Skywalker
 nm0001519,Ian McDiarmid,tt0121766,Star Wars: Episode III - Revenge of the Sith,Palpatine
 nm0000168,Samuel L. Jackson,tt0121766,Star Wars: Episode III - Revenge of the Sith,Mace Windu
-nm0000148,Harrison Ford,tt10321138,Star Wars: The Force Awakens,Han Solo
-nm0000434,Mark Hamill,tt10321138,Star Wars: The Force Awakens,Luke Skywalker
-nm0000402,Carrie Fisher,tt10321138,Star Wars: The Force Awakens,Leia Organa
-nm3485845,Adam Driver,tt10321138,Star Wars: The Force Awakens,Kylo Ren
-nm5397459,Daisy Ridley,tt10321138,Star Wars: The Force Awakens,Rey
-nm0000434,Mark Hamill,tt3486354,Star Wars: The Last Jedi,Luke Skywalker
-nm0000402,Carrie Fisher,tt3486354,Star Wars: The Last Jedi,Leia Organa
-nm3485845,Adam Driver,tt3486354,Star Wars: The Last Jedi,Kylo Ren
-nm5397459,Daisy Ridley,tt3486354,Star Wars: The Last Jedi,Rey
-nm3915784,John Boyega,tt3486354,Star Wars: The Last Jedi,Finn
-nm0000568,Frank Oz,tt3486354,Star Wars: The Last Jedi,Yoda (voice)
-nm0000402,Carrie Fisher,tt15662564,Star Wars: The Rise of Skywalker,Leia Organa
-nm0000434,Mark Hamill,tt15662564,Star Wars: The Rise of Skywalker,Luke Skywalker
-nm3485845,Adam Driver,tt15662564,Star Wars: The Rise of Skywalker,Kylo Ren
-nm5397459,Daisy Ridley,tt15662564,Star Wars: The Rise of Skywalker,Rey
-nm3915784,John Boyega,tt15662564,Star Wars: The Rise of Skywalker,Finn
+nm0000148,Harrison Ford,tt2488496,Star Wars: The Force Awakens,Han Solo
+nm0000434,Mark Hamill,tt2488496,Star Wars: The Force Awakens,Luke Skywalker
+nm0000402,Carrie Fisher,tt2488496,Star Wars: The Force Awakens,Leia Organa
+nm3485845,Adam Driver,tt2488496,Star Wars: The Force Awakens,Kylo Ren
+nm5397459,Daisy Ridley,tt2488496,Star Wars: The Force Awakens,Rey
+nm0000434,Mark Hamill,tt2527336,Star Wars: The Last Jedi,Luke Skywalker
+nm0000402,Carrie Fisher,tt2527336,Star Wars: The Last Jedi,Leia Organa
+nm3485845,Adam Driver,tt2527336,Star Wars: The Last Jedi,Kylo Ren
+nm5397459,Daisy Ridley,tt2527336,Star Wars: The Last Jedi,Rey
+nm3915784,John Boyega,tt2527336,Star Wars: The Last Jedi,Finn
+nm0000568,Frank Oz,tt2527336,Star Wars: The Last Jedi,Yoda (voice)
+nm0000402,Carrie Fisher,tt2527338,Star Wars: The Rise of Skywalker,Leia Organa
+nm0000434,Mark Hamill,tt2527338,Star Wars: The Rise of Skywalker,Luke Skywalker
+nm3485845,Adam Driver,tt2527338,Star Wars: The Rise of Skywalker,Kylo Ren
+nm5397459,Daisy Ridley,tt2527338,Star Wars: The Rise of Skywalker,Rey
+nm3915784,John Boyega,tt2527338,Star Wars: The Rise of Skywalker,Finn
 nm0428065,Felicity Jones,tt3748528,Rogue One: A Star Wars Story,Jyn Erso
 nm0526019,Diego Luna,tt3748528,Rogue One: A Star Wars Story,Cassian Andor
 nm0876138,Alan Tudyk,tt3748528,Rogue One: A Star Wars Story,K-2SO
@@ -549,7 +545,7 @@ nm0906686,Akiko Wakabayashi,tt0062512,You Only Live Twice,Aki
 nm0357240,Mie Hama,tt0062512,You Only Live Twice,Kissy Suzuki
 nm0336509,Charles Gray,tt0062512,You Only Live Twice,Mr. Henderson
 nm0048468,George Baker,tt0062512,You Only Live Twice,Count Lippe
-nm0365139,Naomi Harris,tt0062512,You Only Live Twice,Miss Moneypenny
+nm0561755,Lois Maxwell,tt0062512,You Only Live Twice,Miss Moneypenny
 nm0493872,George Lazenby,tt0064757,On Her Majesty's Secret Service,James Bond
 nm0001671,Diana Rigg,tt0064757,On Her Majesty's Secret Service,Tracy Draco
 nm0496866,Bernard Lee,tt0064757,On Her Majesty's Secret Service,M
