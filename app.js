@@ -47,15 +47,17 @@ document.addEventListener('DOMContentLoaded', async () => {
     let questionsPerRound = 3;
     let questionsAnsweredInRound = 0;
     let usedQuestions = new Set();
+    let usedFranchises = new Set();
     const colors = ['#fd7e14', '#198754', '#0d6efd', '#6f42c1'];
     const roundTitles = [
         "Actors and Roles",
         "How old were they?",
         "Filmography age",
         "Production age",
+        "Franchise Box Office",
         "Production age: hard mode"
     ];
-    const roundPoints = [1, 3, 4, 5, 10];
+    const roundPoints = [1, 3, 4, 5, 10, 10];
 
     function getPointsString(points) {
         return points === 1 ? '1 point' : `${points} points`;
@@ -123,7 +125,7 @@ document.addEventListener('DOMContentLoaded', async () => {
             if (questionsAnsweredInRound >= questionsPerRound * players.length) {
                 currentRound++;
                 questionsAnsweredInRound = 0;
-                if (currentRound > 5) {
+                if (currentRound > 6) { // Adjusted for 6 rounds
                     displayFinalScores();
                     return;
                 }
@@ -196,6 +198,61 @@ document.addEventListener('DOMContentLoaded', async () => {
             nextQuestionBtn.classList.remove('d-none');
         });
 
+        const confirmMatchBtn = document.getElementById('confirmMatchBtn');
+        confirmMatchBtn.addEventListener('click', () => {
+            const dragList = document.getElementById('drag-list');
+            const userOrder = Array.from(dragList.children).map(li => li.dataset.id);
+            const correctOrder = currentQuestion.correctOrder;
+
+            let correct_answers = 0;
+            for (let i = 0; i < userOrder.length; i++) {
+                if (userOrder[i] === correctOrder[i]) {
+                    correct_answers++;
+                }
+            }
+
+            const permutation = userOrder.map(id => correctOrder.indexOf(id));
+            const swaps = countBubbleSortSwaps(permutation);
+
+            let score = correct_answers * 2 - swaps + 2;
+            if (score < 0) {
+                score = 0;
+            }
+
+            if (score > 0) {
+                players[currentPlayerIndex].score += score;
+                feedbackEl.innerHTML = `<div class="alert alert-success">You scored ${getPointsString(score)}.</div>`;
+            } else {
+                feedbackEl.innerHTML = `<div class="alert alert-danger">Incorrect!</div>`;
+            }
+
+            // Show correct order and feedback
+            const dragListItems = dragList.querySelectorAll('li');
+            const matchList = document.getElementById('match-list');
+            const matchListItems = matchList.querySelectorAll('li');
+
+            for (let i = 0; i < userOrder.length; i++) {
+                const userMovieId = userOrder[i];
+                const correctMovieId = correctOrder[i];
+                const dragItem = Array.from(dragListItems).find(item => item.dataset.id === userMovieId);
+
+                if (userMovieId === correctMovieId) {
+                    dragItem.classList.add('list-group-item-success');
+                    matchListItems[i].classList.add('list-group-item-success');
+                } else {
+                    dragItem.classList.add('list-group-item-danger');
+                }
+                const correctMovie = currentQuestion.movies.find(m => m.id === correctMovieId);
+                matchListItems[i].innerHTML = `${currentQuestion.revenues[i]} - <em>${correctMovie.title}</em>`;
+            }
+
+            synchronizeHeights(dragList, matchList);
+
+            displayPlayerScores();
+            confirmMatchBtn.classList.add('d-none');
+            nextQuestionBtn.classList.remove('d-none');
+        });
+
         playerCountSlider.addEventListener('input', () => {
             const count = playerCountSlider.value;
             playerCountValue.textContent = count;
@@ -223,6 +280,7 @@ document.addEventListener('DOMContentLoaded', async () => {
             questionsPerRound = parseInt(questionsPerRoundSlider.value);
 
             usedQuestions.clear();
+            usedFranchises.clear();
             playerSetup.classList.add('d-none');
             gameContainer.classList.remove('d-none');
 
@@ -321,7 +379,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         const maxScore = questionsPerRound * roundPoints.reduce((a, b) => a + b, 0);
         const maxScoreEl = document.createElement('p');
         maxScoreEl.classList.add('mt-3');
-        maxScoreEl.textContent = `Maximum score for one player: ${maxScore} points`;
+        maxScoreEl.textContent = `Maximum score: ${maxScore} points`;
         finalScores.appendChild(maxScoreEl);
     }
 
@@ -381,112 +439,176 @@ document.addEventListener('DOMContentLoaded', async () => {
         let [currentMinYear, currentMaxYear] = yearRangeSlider.noUiSlider.get();
 
         let questionGenerated = false;
-        let attempts = 0;
-        const maxAttempts = roles.length * 2; // Set a realistic limit based on available data
 
-        while (!questionGenerated && attempts < maxAttempts) {
-            attempts++;
-            const randomRole = roles[Math.floor(Math.random() * roles.length)];
-            const actor = actors.get(`${randomRole.actor_imdb_id}-${randomRole.actor_name}`);
-            const production = productions.find(p => p.imdb_id === randomRole.production_imdb_id);
+        if (difficulty === 5) {
+            // Special logic for Franchise round
+            let franchiseFound = false;
+            let localMinYear = currentMinYear;
+            let localMaxYear = currentMaxYear;
+            const allFranchises = [...new Set(productions.map(p => p.franchise).filter(f => f))];
+            shuffleArray(allFranchises);
 
-            if (!actor || !production || !actor['birthday (YYYY-MM-DD)'] || !production.production_start || !production.release_date) {
-                continue;
-            }
+            while (!franchiseFound) {
+                for (const franchise of allFranchises) {
+                    if (usedFranchises.has(franchise)) {
+                        continue;
+                    }
 
-            const questionId = `${randomRole.actor_imdb_id}-${randomRole.production_imdb_id}-${randomRole.character}`;
-            const releaseYear = parseInt(production.release_date.split('-')[0]);
+                    const franchiseMovies = productions.filter(p =>
+                        p.franchise === franchise &&
+                        p.box_office_us && p.box_office_us !== 'N/A' &&
+                        parseInt(p.release_date.split('-')[0]) >= localMinYear &&
+                        parseInt(p.release_date.split('-')[0]) <= localMaxYear
+                    );
 
-            if (releaseYear < currentMinYear || releaseYear > currentMaxYear || usedQuestions.has(questionId)) {
-                if (attempts >= maxAttempts) {
-                    currentMinYear = Math.max(absoluteMinYear, currentMinYear - 2);
-                    currentMaxYear = Math.min(absoluteMaxYear, currentMaxYear + 2);
-                    yearRangeSlider.noUiSlider.set([currentMinYear, currentMaxYear]);
-                    attempts = 0;
+                    if (franchiseMovies.length >= 4) {
+                        shuffleArray(franchiseMovies);
+                        const selectedMovies = franchiseMovies.slice(0, 4);
+                        const parseRevenue = (revenue) => parseInt(revenue.replace(/[^\d]/g, ''));
+                        selectedMovies.sort((a, b) => parseRevenue(a.box_office_us) - parseRevenue(b.box_office_us));
+
+                        currentQuestion.question = `Match the US Box Office revenue for these movies in the <strong>${franchise}</strong> franchise.`
+                        currentQuestion.type = 'drag-and-match';
+                        currentQuestion.movies = selectedMovies.map(p => ({ id: p.imdb_id, title: p.title }));
+                        currentQuestion.revenues = selectedMovies.map(p => p.box_office_us);
+                        currentQuestion.correctOrder = selectedMovies.map(p => p.imdb_id);
+                        currentQuestion.score = 10;
+                        shuffleArray(currentQuestion.movies);
+                        usedFranchises.add(franchise);
+                        franchiseFound = true;
+                        questionGenerated = true;
+                        break;
+                    }
                 }
-                continue;
+
+                if (!franchiseFound) {
+                    localMinYear = Math.max(absoluteMinYear, localMinYear - 2);
+                    localMaxYear = Math.min(absoluteMaxYear, localMaxYear + 2);
+
+                    if (localMinYear === absoluteMinYear && localMaxYear === absoluteMaxYear) {
+                        const availableFranchises = allFranchises.filter(f => {
+                            const movies = productions.filter(p => p.franchise === f && p.box_office_us && p.box_office_us !== 'N/A');
+                            return movies.length >= 4;
+                        });
+                        if (availableFranchises.every(f => usedFranchises.has(f))) {
+                            usedFranchises.clear();
+                            shuffleArray(allFranchises); // Reshuffle to try again with a new order
+                        } else if (allFranchises.filter(f => !usedFranchises.has(f)).length === 0) {
+                            // This case handles when there are available franchises, but they don't meet the 4-movie criteria within the fully expanded year range.
+                            // This is a fallback to prevent an infinite loop.
+                            usedFranchises.clear();
+                            shuffleArray(allFranchises);
+                        }
+                    }
+                }
             }
+        } else {
+            let attempts = 0;
+            const maxAttempts = roles.length * 2;
+            while (!questionGenerated && attempts < maxAttempts) {
+                attempts++;
+                const randomRole = roles[Math.floor(Math.random() * roles.length)];
+                const actor = actors.get(`${randomRole.actor_imdb_id}-${randomRole.actor_name}`);
+                const production = productions.find(p => p.imdb_id === randomRole.production_imdb_id);
 
-            const birthday = new Date(actor['birthday (YYYY-MM-DD)']);
-            const productionStart = new Date(production.production_start);
-            const age = calculateAge(birthday, productionStart);
+                if (!actor || !production || !actor['birthday (YYYY-MM-DD)'] || !production.production_start || !production.release_date) {
+                    continue;
+                }
 
-            let questionType;
-            if (difficulty === 1) questionType = 3;
-            else if (difficulty === 2) questionType = 0;
-            else if (difficulty === 3) questionType = 1;
-            else if (difficulty === 4) questionType = 2;
-            else if (difficulty === 5) questionType = 4;
+                const questionId = `${randomRole.actor_imdb_id}-${randomRole.production_imdb_id}-${randomRole.character}`;
+                const releaseYear = parseInt(production.release_date.split('-')[0]);
 
-            let choices = [];
-            let distractors = [];
-            currentQuestion.type = 'multiple-choice'; // Default type
-            currentQuestion.poster = null;
+                if (releaseYear < currentMinYear || releaseYear > currentMaxYear || usedQuestions.has(questionId)) {
+                    if (attempts >= maxAttempts) {
+                        currentMinYear = Math.max(absoluteMinYear, currentMinYear - 2);
+                        currentMaxYear = Math.min(absoluteMaxYear, currentMaxYear + 2);
+                        yearRangeSlider.noUiSlider.set([currentMinYear, currentMaxYear]);
+                        attempts = 0;
+                    }
+                    continue;
+                }
 
-            switch (questionType) {
-                case 0: // "Which actor was..."
-                    distractors = getActorDistractors(actor, randomRole, production, 3, age, roles, actors);
-                    if (distractors.length < 3) continue;
-                    currentQuestion.question = `Which actor was ${age} years old at the start of production for <em>${production.title}</em>?`;
-                    currentQuestion.answer = `<strong>${actor.name}</strong> as ${randomRole.character}`;
-                    currentQuestion.difficulty = 2;
-                    currentQuestion.score = 3;
-                    currentQuestion.poster = production.poster;
-                    choices = distractors.map(r => `<strong>${r.actor_name}</strong> as ${r.character}`);
-                    choices.push(currentQuestion.answer);
-                    shuffleArray(choices);
-                    break;
-                case 1: // "Actor X was Y years old for which movie?"
-                    distractors = getProductionDistractors(actor.imdb_id, production, 3, currentMinYear, currentMaxYear);
-                    if (distractors.length < 3) continue;
-                    currentQuestion.question = `Actor <strong>${actor.name}</strong> was ${age} years old during the start of production for which movie?`;
-                    currentQuestion.answer = `<em>${production.title}</em> as ${randomRole.character}`;
-                    currentQuestion.difficulty = 3;
-                    currentQuestion.score = 4;
-                    choices = distractors.map(p => `<em>${p.production_title}</em> as ${p.character}`);
-                    choices.push(currentQuestion.answer);
-                    shuffleArray(choices);
-                    break;
-                case 2: // "How old was actor X...?" (MC)
-                    choices = generateSortedRandomChoices(age);
-                    currentQuestion.question = `How old was <strong>${actor.name}</strong> as ${randomRole.character} at the start of production for <em>${production.title}</em>?`;
-                    currentQuestion.answer = `${age}`;
-                    currentQuestion.difficulty = 4;
-                    currentQuestion.score = 5;
-                    break;
-                case 3: // "What role did..."
-                    distractors = getRoleDistractors(actor.imdb_id, production.imdb_id, randomRole.character, 3, roles);
-                    if (distractors.length < 3) continue;
-                    currentQuestion.question = `What role did <strong>${actor.name}</strong> play in <em>${production.title}</em>?`;
-                    currentQuestion.answer = `${randomRole.character}`;
-                    currentQuestion.difficulty = 1;
-                    currentQuestion.score = 1;
-                    currentQuestion.poster = production.poster;
-                    choices = distractors;
-                    choices.push(currentQuestion.answer);
-                    shuffleArray(choices);
-                    break;
-                case 4: // "How old was actor X...?" (Slider)
-                    const randomOffset = Math.floor(Math.random() * 13);
-                    const sliderMin = Math.max(10, age - randomOffset);
-                    const sliderMax = sliderMin + 12;
+                const birthday = new Date(actor['birthday (YYYY-MM-DD)']);
+                const productionStart = new Date(production.production_start);
+                const age = calculateAge(birthday, productionStart);
 
-                    ageSlider.min = sliderMin;
-                    ageSlider.max = sliderMax;
-                    ageSlider.value = Math.floor((sliderMin + sliderMax) / 2);
+                let questionType;
+                if (difficulty === 1) questionType = 3;
+                else if (difficulty === 2) questionType = 0;
+                else if (difficulty === 3) questionType = 1;
+                else if (difficulty === 4) questionType = 2;
+                else if (difficulty === 6) questionType = 4;
 
-                    currentQuestion.question = `How old was <strong>${actor.name}</strong> as ${randomRole.character} at the start of production for <em>${production.title}</em>?`;
-                    currentQuestion.answer = age;
-                    currentQuestion.type = 'slider';
-                    currentQuestion.difficulty = 5;
-                    currentQuestion.score = 10;
-                    choices = []; // No choices for slider
-                    break;
+                let choices = [];
+                currentQuestion.type = 'multiple-choice';
+                currentQuestion.poster = null;
+
+                switch (questionType) {
+                    case 0: // "Which actor was..."
+                        const distractors0 = getActorDistractors(actor, randomRole, production, 3, age, roles, actors);
+                        if (distractors0.length < 3) continue;
+                        currentQuestion.question = `Which actor was ${age} years old at the start of production for <em>${production.title}</em>?`;
+                        currentQuestion.answer = `<strong>${actor.name}</strong> as ${randomRole.character}`;
+                        currentQuestion.difficulty = 2;
+                        currentQuestion.score = 3;
+                        currentQuestion.poster = production.poster;
+                        choices = distractors0.map(r => `<strong>${r.actor_name}</strong> as ${r.character}`);
+                        choices.push(currentQuestion.answer);
+                        shuffleArray(choices);
+                        break;
+                    case 1: // "Actor X was Y years old for which movie?"
+                        const distractors1 = getProductionDistractors(actor.imdb_id, production, 3, currentMinYear, currentMaxYear);
+                        if (distractors1.length < 3) continue;
+                        currentQuestion.question = `Actor <strong>${actor.name}</strong> was ${age} years old during the start of production for which movie?`;
+                        currentQuestion.answer = `<em>${production.title}</em> as ${randomRole.character}`;
+                        currentQuestion.difficulty = 3;
+                        currentQuestion.score = 4;
+                        choices = distractors1.map(p => `<em>${p.production_title}</em> as ${p.character}`);
+                        choices.push(currentQuestion.answer);
+                        shuffleArray(choices);
+                        break;
+                    case 2: // "How old was actor X...?" (MC)
+                        choices = generateSortedRandomChoices(age);
+                        currentQuestion.question = `How old was <strong>${actor.name}</strong> as ${randomRole.character} at the start of production for <em>${production.title}</em>?`;
+                        currentQuestion.answer = `${age}`;
+                        currentQuestion.difficulty = 4;
+                        currentQuestion.score = 5;
+                        break;
+                    case 3: // "What role did..."
+                        const distractors3 = getRoleDistractors(actor.imdb_id, production.imdb_id, randomRole.character, 3, roles);
+                        if (distractors3.length < 3) continue;
+                        currentQuestion.question = `What role did <strong>${actor.name}</strong> play in <em>${production.title}</em>?`;
+                        currentQuestion.answer = `${randomRole.character}`;
+                        currentQuestion.difficulty = 1;
+                        currentQuestion.score = 1;
+                        currentQuestion.poster = production.poster;
+                        choices = distractors3;
+                        choices.push(currentQuestion.answer);
+                        shuffleArray(choices);
+                        break;
+                    case 4: // "How old was actor X...?" (Slider)
+                        const randomOffset = Math.floor(Math.random() * 13);
+                        const sliderMin = Math.max(10, age - randomOffset);
+                        const sliderMax = sliderMin + 12;
+
+                        ageSlider.min = sliderMin;
+                        ageSlider.max = sliderMax;
+                        ageSlider.value = Math.floor((sliderMin + sliderMax) / 2);
+
+                        currentQuestion.question = `How old was <strong>${actor.name}</strong> as ${randomRole.character} at the start of production for <em>${production.title}</em>?`;
+                        currentQuestion.answer = age;
+                        currentQuestion.type = 'slider';
+                        currentQuestion.difficulty = 6; // now round 6
+                        currentQuestion.score = 10;
+                        choices = []; // No choices for slider
+                        break;
+                }
+                currentQuestion.choices = choices;
+                usedQuestions.add(questionId);
+                questionGenerated = true;
             }
-            currentQuestion.choices = choices;
-            usedQuestions.add(questionId);
-            questionGenerated = true;
         }
+
         if (!questionGenerated) {
             showError("Couldn't generate a question with enough choices. Please check your data or criteria.");
         }
@@ -500,8 +622,10 @@ document.addEventListener('DOMContentLoaded', async () => {
         questionEl.innerHTML = currentQuestion.question;
         choicesEl.innerHTML = '';
         sliderContainer.classList.add('d-none');
+        const dragAndMatchContainer = document.getElementById('drag-and-match-container');
+        dragAndMatchContainer.classList.add('d-none');
         choicesEl.classList.remove('d-none');
-        confirmAgeBtn.classList.remove('d-none');
+        confirmAgeBtn.classList.add('d-none');
         feedbackEl.innerHTML = '';
         questionPoster.classList.add('d-none');
 
@@ -509,9 +633,40 @@ document.addEventListener('DOMContentLoaded', async () => {
             choicesEl.classList.add('d-none');
             sliderContainer.classList.remove('d-none');
             ageSlider.disabled = false;
-            confirmAgeBtn.disabled = false;
+            confirmAgeBtn.classList.remove('d-none');
             sliderValue.classList.remove('text-success', 'text-danger');
             sliderValue.textContent = ageSlider.value;
+        } else if (currentQuestion.type === 'drag-and-match') {
+            choicesEl.classList.add('d-none');
+            dragAndMatchContainer.classList.remove('d-none');
+            confirmMatchBtn.classList.remove('d-none');
+            const dragList = document.getElementById('drag-list');
+            const matchList = document.getElementById('match-list');
+            dragList.innerHTML = '';
+            matchList.innerHTML = '';
+
+            currentQuestion.movies.forEach(movie => {
+                const li = document.createElement('li');
+                li.classList.add('list-group-item');
+                li.dataset.id = movie.id;
+                li.textContent = movie.title;
+                dragList.appendChild(li);
+            });
+
+            currentQuestion.revenues.forEach(revenue => {
+                const li = document.createElement('li');
+                li.classList.add('list-group-item');
+                li.textContent = revenue;
+                matchList.appendChild(li);
+            });
+
+            new Sortable(dragList, {
+                animation: 150,
+                ghostClass: 'blue-background-class'
+            });
+
+            synchronizeHeights(dragList, matchList);
+
         } else {
             if (currentQuestion.poster) {
                 questionPoster.src = currentQuestion.poster;
@@ -632,6 +787,39 @@ document.addEventListener('DOMContentLoaded', async () => {
             [array[i], array[j]] = [array[j], array[i]];
         }
         return array;
+    }
+
+    function countBubbleSortSwaps(array) {
+        let swaps = 0;
+        let n = array.length;
+        let tempArr = [...array]; // Make a copy to not modify the original
+
+        for (let i = 0; i < n - 1; i++) {
+            for (let j = 0; j < n - i - 1; j++) {
+                if (tempArr[j] > tempArr[j + 1]) {
+                    // Swap
+                    [tempArr[j], tempArr[j+1]] = [tempArr[j+1], tempArr[j]];
+                    swaps++;
+                }
+            }
+        }
+        return swaps;
+    }
+
+    function synchronizeHeights(list1, list2) {
+        const allItems = [...list1.querySelectorAll('li'), ...list2.querySelectorAll('li')];
+        let maxHeight = 0;
+        allItems.forEach(item => {
+            item.style.minHeight = ''; // Reset min-height before calculating
+        });
+        allItems.forEach(item => {
+            if (item.offsetHeight > maxHeight) {
+                maxHeight = item.offsetHeight;
+            }
+        });
+        allItems.forEach(item => {
+            item.style.minHeight = `${maxHeight}px`;
+        });
     }
 
     function performSearch() {
