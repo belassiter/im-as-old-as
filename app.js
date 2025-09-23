@@ -39,13 +39,14 @@ document.addEventListener('DOMContentLoaded', async () => {
     const questionPoster = document.getElementById('question-poster');
 
     let actors, productions, roles;
-    let minYear, maxYear;
+    let absoluteMinYear, absoluteMaxYear;
     let currentQuestion = {};
     let players = [];
     let currentPlayerIndex = 0;
     let currentRound = 1;
     let questionsPerRound = 3;
     let questionsAnsweredInRound = 0;
+    let usedQuestions = new Set();
     const colors = ['#fd7e14', '#198754', '#0d6efd', '#6f42c1'];
     const roundTitles = [
         "Actors and Roles",
@@ -80,8 +81,8 @@ document.addEventListener('DOMContentLoaded', async () => {
         const allRolesArray = parseCsv(rolesText);
 
         const releaseYears = productions.map(p => parseInt(p.release_date.split('-')[0])).filter(y => !isNaN(y));
-        minYear = Math.min(...releaseYears);
-        maxYear = Math.max(...releaseYears);
+        absoluteMinYear = Math.min(...releaseYears);
+        absoluteMaxYear = Math.max(...releaseYears);
 
         // Create a Map for all actors with a unique key (imdb_id-name) to handle potential duplicate imdb_ids
         const allActorsMap = new Map();
@@ -221,6 +222,7 @@ document.addEventListener('DOMContentLoaded', async () => {
             });
             questionsPerRound = parseInt(questionsPerRoundSlider.value);
 
+            usedQuestions.clear();
             playerSetup.classList.add('d-none');
             gameContainer.classList.remove('d-none');
 
@@ -270,11 +272,11 @@ document.addEventListener('DOMContentLoaded', async () => {
 
         if (!yearRangeSlider.noUiSlider) {
             noUiSlider.create(yearRangeSlider, {
-                start: [minYear, maxYear],
+                start: [absoluteMinYear, absoluteMaxYear],
                 connect: true,
                 range: {
-                    'min': minYear,
-                    'max': maxYear
+                    'min': absoluteMinYear,
+                    'max': absoluteMaxYear
                 },
                 step: 1,
                 tooltips: true,
@@ -376,7 +378,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     function generateQuestion(difficulty) {
         const yearRangeSlider = document.getElementById('year-range-slider');
-        let [minYear, maxYear] = yearRangeSlider.noUiSlider.get();
+        let [currentMinYear, currentMaxYear] = yearRangeSlider.noUiSlider.get();
 
         let questionGenerated = false;
         let attempts = 0;
@@ -392,14 +394,15 @@ document.addEventListener('DOMContentLoaded', async () => {
                 continue;
             }
 
+            const questionId = `${randomRole.actor_imdb_id}-${randomRole.production_imdb_id}-${randomRole.character}`;
             const releaseYear = parseInt(production.release_date.split('-')[0]);
-            if (releaseYear < minYear || releaseYear > maxYear) {
-                if (attempts === maxAttempts -1) {
-                    // If we are about to exhaust attempts, expand the range and restart
-                    minYear = Math.max(minYear - 2, minYear);
-                    maxYear = Math.min(maxYear + 2, maxYear);
-                    yearRangeSlider.noUiSlider.set([minYear, maxYear]);
-                    attempts = 0; // Reset attempts to try again with the new range
+
+            if (releaseYear < currentMinYear || releaseYear > currentMaxYear || usedQuestions.has(questionId)) {
+                if (attempts >= maxAttempts) {
+                    currentMinYear = Math.max(absoluteMinYear, currentMinYear - 2);
+                    currentMaxYear = Math.min(absoluteMaxYear, currentMaxYear + 2);
+                    yearRangeSlider.noUiSlider.set([currentMinYear, currentMaxYear]);
+                    attempts = 0;
                 }
                 continue;
             }
@@ -431,10 +434,10 @@ document.addEventListener('DOMContentLoaded', async () => {
                     currentQuestion.poster = production.poster;
                     choices = distractors.map(r => `<strong>${r.actor_name}</strong> as ${r.character}`);
                     choices.push(currentQuestion.answer);
-                    choices.sort();
+                    shuffleArray(choices);
                     break;
                 case 1: // "Actor X was Y years old for which movie?"
-                    distractors = getProductionDistractors(actor.imdb_id, production, 3, minYear, maxYear);
+                    distractors = getProductionDistractors(actor.imdb_id, production, 3, currentMinYear, currentMaxYear);
                     if (distractors.length < 3) continue;
                     currentQuestion.question = `Actor <strong>${actor.name}</strong> was ${age} years old during the start of production for which movie?`;
                     currentQuestion.answer = `<em>${production.title}</em> as ${randomRole.character}`;
@@ -442,18 +445,14 @@ document.addEventListener('DOMContentLoaded', async () => {
                     currentQuestion.score = 4;
                     choices = distractors.map(p => `<em>${p.production_title}</em> as ${p.character}`);
                     choices.push(currentQuestion.answer);
-                    choices.sort();
+                    shuffleArray(choices);
                     break;
                 case 2: // "How old was actor X...?" (MC)
-                    distractors = getAgeDistractors(age, 3);
-                    if (distractors.length < 3) continue;
+                    choices = generateSortedRandomChoices(age);
                     currentQuestion.question = `How old was <strong>${actor.name}</strong> as ${randomRole.character} at the start of production for <em>${production.title}</em>?`;
                     currentQuestion.answer = `${age}`;
                     currentQuestion.difficulty = 4;
                     currentQuestion.score = 5;
-                    choices = distractors;
-                    choices.push(currentQuestion.answer);
-                    choices.sort((a, b) => a - b);
                     break;
                 case 3: // "What role did..."
                     distractors = getRoleDistractors(actor.imdb_id, production.imdb_id, randomRole.character, 3, roles);
@@ -465,7 +464,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                     currentQuestion.poster = production.poster;
                     choices = distractors;
                     choices.push(currentQuestion.answer);
-                    choices.sort();
+                    shuffleArray(choices);
                     break;
                 case 4: // "How old was actor X...?" (Slider)
                     const randomOffset = Math.floor(Math.random() * 13);
@@ -485,6 +484,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                     break;
             }
             currentQuestion.choices = choices;
+            usedQuestions.add(questionId);
             questionGenerated = true;
         }
         if (!questionGenerated) {
@@ -550,6 +550,34 @@ document.addEventListener('DOMContentLoaded', async () => {
         }
         distractors.delete(correctAge);
         return Array.from(distractors).map(String);
+    }
+
+    function generateSortedRandomChoices(correctAnswer) {
+        const choices = new Array(4);
+        const correctIndex = Math.floor(Math.random() * 4);
+        choices[correctIndex] = correctAnswer;
+
+        // Fill to the left
+        for (let i = correctIndex - 1; i >= 0; i--) {
+            const gap = Math.floor(Math.random() * 3) + 2; // 2-4
+            choices[i] = choices[i + 1] - gap;
+        }
+
+        // Fill to the right
+        for (let i = correctIndex + 1; i < 4; i++) {
+            const gap = Math.floor(Math.random() * 3) + 2; // 2-4
+            choices[i] = choices[i - 1] + gap;
+        }
+
+        const minAge = 18;
+        if (choices[0] < minAge) {
+            const shift = minAge - choices[0];
+            for (let i = 0; i < 4; i++) {
+                choices[i] += shift;
+            }
+        }
+
+        return choices.map(String);
     }
 
     function getActorDistractors(correctActor, correctRole, production, count, correctAge) {
