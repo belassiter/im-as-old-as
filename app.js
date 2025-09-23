@@ -39,6 +39,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     const questionPoster = document.getElementById('question-poster');
 
     let actors, productions, roles;
+    let minYear, maxYear;
     let currentQuestion = {};
     let players = [];
     let currentPlayerIndex = 0;
@@ -77,6 +78,10 @@ document.addEventListener('DOMContentLoaded', async () => {
         const parsedActors = parseCsv(actorsText);
         productions = parseCsv(productionsText);
         const allRolesArray = parseCsv(rolesText);
+
+        const releaseYears = productions.map(p => parseInt(p.release_date.split('-')[0])).filter(y => !isNaN(y));
+        minYear = Math.min(...releaseYears);
+        maxYear = Math.max(...releaseYears);
 
         // Create a Map for all actors with a unique key (imdb_id-name) to handle potential duplicate imdb_ids
         const allActorsMap = new Map();
@@ -259,6 +264,30 @@ document.addEventListener('DOMContentLoaded', async () => {
         const count = playerCountSlider.value;
         playerCountValue.textContent = count;
         generatePlayerNameInputs(count);
+
+        const yearRangeValueSpan = document.getElementById('year-range-value');
+        const yearRangeSlider = document.getElementById('year-range-slider');
+
+        if (!yearRangeSlider.noUiSlider) {
+            noUiSlider.create(yearRangeSlider, {
+                start: [minYear, maxYear],
+                connect: true,
+                range: {
+                    'min': minYear,
+                    'max': maxYear
+                },
+                step: 1,
+                tooltips: true,
+                format: {
+                    to: value => Math.round(value),
+                    from: value => Math.round(value)
+                }
+            });
+
+            yearRangeSlider.noUiSlider.on('update', (values, handle) => {
+                yearRangeValueSpan.textContent = `${values[0]} - ${values[1]}`;
+            });
+        }
     }
 
     function showRoundStartScreen() {
@@ -286,6 +315,12 @@ document.addEventListener('DOMContentLoaded', async () => {
             `;
             finalScores.appendChild(li);
         });
+
+        const maxScore = questionsPerRound * roundPoints.reduce((a, b) => a + b, 0);
+        const maxScoreEl = document.createElement('p');
+        maxScoreEl.classList.add('mt-3');
+        maxScoreEl.textContent = `Maximum score for one player: ${maxScore} points`;
+        finalScores.appendChild(maxScoreEl);
     }
 
     function generatePlayerNameInputs(count) {
@@ -340,16 +375,32 @@ document.addEventListener('DOMContentLoaded', async () => {
     }
 
     function generateQuestion(difficulty) {
+        const yearRangeSlider = document.getElementById('year-range-slider');
+        let [minYear, maxYear] = yearRangeSlider.noUiSlider.get();
+
         let questionGenerated = false;
         let attempts = 0;
-        while (!questionGenerated && attempts < 100) {
+        const maxAttempts = roles.length * 2; // Set a realistic limit based on available data
+
+        while (!questionGenerated && attempts < maxAttempts) {
             attempts++;
             const randomRole = roles[Math.floor(Math.random() * roles.length)];
             const actor = actors.get(`${randomRole.actor_imdb_id}-${randomRole.actor_name}`);
             const production = productions.find(p => p.imdb_id === randomRole.production_imdb_id);
 
-            // Ensure actor and production are found for the random role
-            if (!actor || !production || !actor['birthday (YYYY-MM-DD)'] || !production.production_start) {
+            if (!actor || !production || !actor['birthday (YYYY-MM-DD)'] || !production.production_start || !production.release_date) {
+                continue;
+            }
+
+            const releaseYear = parseInt(production.release_date.split('-')[0]);
+            if (releaseYear < minYear || releaseYear > maxYear) {
+                if (attempts === maxAttempts -1) {
+                    // If we are about to exhaust attempts, expand the range and restart
+                    minYear = Math.max(minYear - 2, minYear);
+                    maxYear = Math.min(maxYear + 2, maxYear);
+                    yearRangeSlider.noUiSlider.set([minYear, maxYear]);
+                    attempts = 0; // Reset attempts to try again with the new range
+                }
                 continue;
             }
 
@@ -383,7 +434,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                     choices.sort();
                     break;
                 case 1: // "Actor X was Y years old for which movie?"
-                    distractors = getProductionDistractors(actor.imdb_id, production, 3, roles);
+                    distractors = getProductionDistractors(actor.imdb_id, production, 3, minYear, maxYear);
                     if (distractors.length < 3) continue;
                     currentQuestion.question = `Actor <strong>${actor.name}</strong> was ${age} years old during the start of production for which movie?`;
                     currentQuestion.answer = `<em>${production.title}</em> as ${randomRole.character}`;
@@ -423,7 +474,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
                     ageSlider.min = sliderMin;
                     ageSlider.max = sliderMax;
-                    ageSlider.value = Math.floor((sliderMin + sliderMax) / 2); // Start in the middle
+                    ageSlider.value = Math.floor((sliderMin + sliderMax) / 2);
 
                     currentQuestion.question = `How old was <strong>${actor.name}</strong> as ${randomRole.character} at the start of production for <em>${production.title}</em>?`;
                     currentQuestion.answer = age;
@@ -453,7 +504,6 @@ document.addEventListener('DOMContentLoaded', async () => {
         confirmAgeBtn.classList.remove('d-none');
         feedbackEl.innerHTML = '';
         questionPoster.classList.add('d-none');
-
 
         if (currentQuestion.type === 'slider') {
             choicesEl.classList.add('d-none');
@@ -518,9 +568,18 @@ document.addEventListener('DOMContentLoaded', async () => {
         return potentialDistractors.slice(0, count).map(d => d.role);
     }
 
-    function getProductionDistractors(actorId, correctProduction, count) {
+    function getProductionDistractors(actorId, correctProduction, count, minYear, maxYear) {
         const distractors = new Set();
-        const actorRoles = roles.filter(r => r.actor_imdb_id === actorId && r.production_imdb_id !== correctProduction.imdb_id);
+        let actorRoles = roles.filter(r => r.actor_imdb_id === actorId && r.production_imdb_id !== correctProduction.imdb_id);
+
+        // Filter roles by year range
+        actorRoles = actorRoles.filter(role => {
+            const production = productions.find(p => p.imdb_id === role.production_imdb_id);
+            if (!production || !production.release_date) return false;
+            const releaseYear = parseInt(production.release_date.split('-')[0]);
+            return releaseYear >= minYear && releaseYear <= maxYear;
+        });
+
         while (distractors.size < count && actorRoles.length > 0) {
             const randomRole = actorRoles.splice(Math.floor(Math.random() * actorRoles.length), 1)[0];
             distractors.add(randomRole);
