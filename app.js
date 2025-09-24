@@ -48,13 +48,14 @@ document.addEventListener('DOMContentLoaded', async () => {
     let questionsAnsweredInRound = 0;
     let usedQuestions = new Set();
     let usedFranchises = new Set();
+    let usedActorsForImdbQuestions = new Set();
     const colors = ['#fd7e14', '#198754', '#0d6efd', '#6f42c1'];
     const roundTitles = [
         "Actors and Roles",
         "How old were they?",
         "Filmography age",
         "Production age",
-        "Franchise Box Office",
+        "Ordering Box Office & IMDb ratings",
         "Production age: hard mode"
     ];
     const roundPoints = [1, 3, 4, 5, 10, 10];
@@ -242,8 +243,14 @@ document.addEventListener('DOMContentLoaded', async () => {
                 } else {
                     dragItem.classList.add('list-group-item-danger');
                 }
-                const correctMovie = currentQuestion.movies.find(m => m.id === correctMovieId);
-                matchListItems[i].innerHTML = `${currentQuestion.revenues[i]} - <em>${correctMovie.title}</em>`;
+                
+                const correctMovieInfo = currentQuestion.movies.find(m => m.id === correctMovieId);
+                let titleToShow = correctMovieInfo.title;
+                if (currentQuestion.subType === 'box-office') {
+                    titleToShow = `<em>${titleToShow}</em> (as ${correctMovieInfo.character})`;
+                }
+                
+                matchListItems[i].innerHTML = `${currentQuestion.revenues[i]} - ${titleToShow}`;
             }
 
             synchronizeHeights(dragList, matchList);
@@ -281,6 +288,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
             usedQuestions.clear();
             usedFranchises.clear();
+            usedActorsForImdbQuestions.clear();
             playerSetup.classList.add('d-none');
             gameContainer.classList.remove('d-none');
 
@@ -351,6 +359,10 @@ document.addEventListener('DOMContentLoaded', async () => {
     }
 
     function showRoundStartScreen() {
+        if (currentRound === 5) {
+            usedFranchises.clear();
+            usedActorsForImdbQuestions.clear();
+        }
         roundStartTitle.textContent = `Round ${currentRound}: ${roundTitles[currentRound - 1]}`;
         const points = roundPoints[currentRound - 1];
         roundStartDescription.textContent = `Questions worth ${getPointsString(points)}.`;
@@ -441,63 +453,160 @@ document.addEventListener('DOMContentLoaded', async () => {
         let questionGenerated = false;
 
         if (difficulty === 5) {
-            // Special logic for Franchise round
-            let franchiseFound = false;
-            let localMinYear = currentMinYear;
-            let localMaxYear = currentMaxYear;
-            const allFranchises = [...new Set(productions.map(p => p.franchise).filter(f => f))];
-            shuffleArray(allFranchises);
+            if (Math.random() < 0.5) {
+                // Franchise box office question
+                let franchiseFound = false;
+                let localMinYear = currentMinYear;
+                let localMaxYear = currentMaxYear;
+                const allFranchises = [...new Set(productions.map(p => p.franchise).filter(f => f))];
+                shuffleArray(allFranchises);
 
-            while (!franchiseFound) {
-                for (const franchise of allFranchises) {
-                    if (usedFranchises.has(franchise)) {
-                        continue;
+                while (!franchiseFound) {
+                    for (const franchise of allFranchises) {
+                        if (usedFranchises.has(franchise)) {
+                            continue;
+                        }
+
+                        const franchiseMovies = productions.filter(p =>
+                            p.franchise === franchise &&
+                            p.box_office_us && p.box_office_us !== 'N/A' &&
+                            parseInt(p.release_date.split('-')[0]) >= localMinYear &&
+                            parseInt(p.release_date.split('-')[0]) <= localMaxYear
+                        );
+
+                        if (franchiseMovies.length >= 4) {
+                            shuffleArray(franchiseMovies);
+                            const selectedMovies = franchiseMovies.slice(0, 4);
+                            currentQuestion.poster = selectedMovies[Math.floor(Math.random() * selectedMovies.length)].poster;
+                            const parseRevenue = (revenue) => parseInt(revenue.replace(/[^\d]/g, ''));
+                            selectedMovies.sort((a, b) => parseRevenue(a.box_office_us) - parseRevenue(b.box_office_us));
+
+                            currentQuestion.question = `Match the US Box Office revenue for these movies in the <strong>${franchise}</strong> franchise.`
+                            currentQuestion.type = 'drag-and-match';
+                            currentQuestion.subType = 'box-office';
+                            currentQuestion.movies = selectedMovies.map(p => {
+                                const role = roles.find(r => r.production_imdb_id === p.imdb_id);
+                                return {
+                                    id: p.imdb_id,
+                                    title: p.title,
+                                    character: role ? role.character : ''
+                                };
+                            });
+                            currentQuestion.revenues = selectedMovies.map(p => p.box_office_us);
+                            currentQuestion.correctOrder = selectedMovies.map(p => p.imdb_id);
+                            currentQuestion.score = 10;
+                            shuffleArray(currentQuestion.movies);
+                            usedFranchises.add(franchise);
+                            franchiseFound = true;
+                            questionGenerated = true;
+                            break;
+                        }
                     }
 
-                    const franchiseMovies = productions.filter(p =>
-                        p.franchise === franchise &&
-                        p.box_office_us && p.box_office_us !== 'N/A' &&
-                        parseInt(p.release_date.split('-')[0]) >= localMinYear &&
-                        parseInt(p.release_date.split('-')[0]) <= localMaxYear
-                    );
+                    if (!franchiseFound) {
+                        localMinYear = Math.max(absoluteMinYear, localMinYear - 2);
+                        localMaxYear = Math.min(absoluteMaxYear, localMaxYear + 2);
 
-                    if (franchiseMovies.length >= 4) {
-                        shuffleArray(franchiseMovies);
-                        const selectedMovies = franchiseMovies.slice(0, 4);
-                        const parseRevenue = (revenue) => parseInt(revenue.replace(/[^\d]/g, ''));
-                        selectedMovies.sort((a, b) => parseRevenue(a.box_office_us) - parseRevenue(b.box_office_us));
-
-                        currentQuestion.question = `Match the US Box Office revenue for these movies in the <strong>${franchise}</strong> franchise.`
-                        currentQuestion.type = 'drag-and-match';
-                        currentQuestion.movies = selectedMovies.map(p => ({ id: p.imdb_id, title: p.title }));
-                        currentQuestion.revenues = selectedMovies.map(p => p.box_office_us);
-                        currentQuestion.correctOrder = selectedMovies.map(p => p.imdb_id);
-                        currentQuestion.score = 10;
-                        shuffleArray(currentQuestion.movies);
-                        usedFranchises.add(franchise);
-                        franchiseFound = true;
-                        questionGenerated = true;
-                        break;
+                        if (localMinYear === absoluteMinYear && localMaxYear === absoluteMaxYear) {
+                            const availableFranchises = allFranchises.filter(f => {
+                                const movies = productions.filter(p => p.franchise === f && p.box_office_us && p.box_office_us !== 'N/A');
+                                return movies.length >= 4;
+                            });
+                            if (availableFranchises.every(f => usedFranchises.has(f))) {
+                                usedFranchises.clear();
+                                shuffleArray(allFranchises); // Reshuffle to try again with a new order
+                            } else if (allFranchises.filter(f => !usedFranchises.has(f)).length === 0) {
+                                // This case handles when there are available franchises, but they don't meet the 4-movie criteria within the fully expanded year range.
+                                // This is a fallback to prevent an infinite loop.
+                                usedFranchises.clear();
+                                shuffleArray(allFranchises);
+                            }
+                        }
                     }
                 }
+            } else {
+                // Actor IMDb rating question
+                let actorFound = false;
+                let localMinYear = currentMinYear;
+                let localMaxYear = currentMaxYear;
 
-                if (!franchiseFound) {
-                    localMinYear = Math.max(absoluteMinYear, localMinYear - 2);
-                    localMaxYear = Math.min(absoluteMaxYear, localMaxYear + 2);
+                const allActorIds = [...new Set(roles.map(r => r.actor_imdb_id))];
+                shuffleArray(allActorIds);
 
-                    if (localMinYear === absoluteMinYear && localMaxYear === absoluteMaxYear) {
-                        const availableFranchises = allFranchises.filter(f => {
-                            const movies = productions.filter(p => p.franchise === f && p.box_office_us && p.box_office_us !== 'N/A');
-                            return movies.length >= 4;
+                while (!actorFound) {
+                    for (const actorId of allActorIds) {
+                        if (usedActorsForImdbQuestions.has(actorId)) {
+                            continue;
+                        }
+
+                        const actorRoles = roles.filter(r => r.actor_imdb_id === actorId);
+                        const validRoles = actorRoles.filter(r => {
+                            const p = productions.find(prod => prod.imdb_id === r.production_imdb_id);
+                            if (!p || !p.release_date || !p.imdb_rating || p.imdb_rating === 'N/A') return false;
+                            const releaseYear = parseInt(p.release_date.split('-')[0]);
+                            return releaseYear >= localMinYear && releaseYear <= localMaxYear;
                         });
-                        if (availableFranchises.every(f => usedFranchises.has(f))) {
-                            usedFranchises.clear();
-                            shuffleArray(allFranchises); // Reshuffle to try again with a new order
-                        } else if (allFranchises.filter(f => !usedFranchises.has(f)).length === 0) {
-                            // This case handles when there are available franchises, but they don't meet the 4-movie criteria within the fully expanded year range.
-                            // This is a fallback to prevent an infinite loop.
-                            usedFranchises.clear();
-                            shuffleArray(allFranchises);
+
+                        if (validRoles.length >= 4) {
+                            shuffleArray(validRoles);
+                            const selectedRoles = validRoles.slice(0, 4);
+                            const actor = actors.get(`${selectedRoles[0].actor_imdb_id}-${selectedRoles[0].actor_name}`);
+
+                            const selectedItems = selectedRoles.map(r => {
+                                const p = productions.find(prod => prod.imdb_id === r.production_imdb_id);
+                                return {
+                                    id: p.imdb_id,
+                                    title: p.title,
+                                    character: r.character,
+                                    imdb_rating: p.imdb_rating,
+                                    poster: p.poster
+                                };
+                            });
+
+                            selectedItems.sort((a, b) => parseFloat(a.imdb_rating) - parseFloat(b.imdb_rating));
+
+                            currentQuestion.poster = selectedItems[Math.floor(Math.random() * selectedItems.length)].poster;
+                            currentQuestion.question = `Order these films from <strong>${actor.name}</strong>, based on IMDb rating (1-10 scale)`;
+                            currentQuestion.type = 'drag-and-match';
+                            currentQuestion.subType = 'imdb-rating';
+                            currentQuestion.score = 10;
+                            currentQuestion.correctOrder = selectedItems.map(item => item.id);
+                            currentQuestion.revenues = selectedItems.map(item => `${item.imdb_rating} ⭐`);
+
+                            let draggableItems = selectedItems.map(item => ({
+                                id: item.id,
+                                title: `${item.character} in <em>${item.title}</em>`
+                            }));
+                            draggableItems.sort((a, b) => a.title.replace(/<\/?em>/g, '').localeCompare(b.title.replace(/<\/?em>/g, '')));
+                            currentQuestion.movies = draggableItems;
+
+                            usedActorsForImdbQuestions.add(actorId);
+                            actorFound = true;
+                            questionGenerated = true;
+                            break;
+                        }
+                    }
+
+                    if (!actorFound) {
+                        localMinYear = Math.max(absoluteMinYear, localMinYear - 2);
+                        localMaxYear = Math.min(absoluteMaxYear, localMaxYear + 2);
+
+                        if (localMinYear === absoluteMinYear && localMaxYear === absoluteMaxYear) {
+                            const availableActors = allActorIds.filter(id => {
+                                const actorRoles = roles.filter(r => r.actor_imdb_id === id);
+                                const validRoles = actorRoles.filter(r => {
+                                    const p = productions.find(prod => prod.imdb_id === r.production_imdb_id);
+                                    return p && p.release_date && p.imdb_rating && p.imdb_rating !== 'N/A';
+                                });
+                                return validRoles.length >= 4;
+                            });
+                            if (availableActors.every(id => usedActorsForImdbQuestions.has(id))) {
+                                usedActorsForImdbQuestions.clear();
+                                shuffleArray(allActorIds);
+                            } else if (allActorIds.filter(id => !usedActorsForImdbQuestions.has(id)).length === 0) {
+                                usedActorsForImdbQuestions.clear();
+                                shuffleArray(allActorIds);
+                            }
                         }
                     }
                 }
@@ -563,6 +672,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                         currentQuestion.answer = `<em>${production.title}</em> as ${randomRole.character}`;
                         currentQuestion.difficulty = 3;
                         currentQuestion.score = 4;
+                        currentQuestion.poster = production.poster;
                         choices = distractors1.map(p => `<em>${p.production_title}</em> as ${p.character}`);
                         choices.push(currentQuestion.answer);
                         shuffleArray(choices);
@@ -573,6 +683,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                         currentQuestion.answer = `${age}`;
                         currentQuestion.difficulty = 4;
                         currentQuestion.score = 5;
+                        currentQuestion.poster = production.poster;
                         break;
                     case 3: // "What role did..."
                         const distractors3 = getRoleDistractors(actor.imdb_id, production.imdb_id, randomRole.character, 3, roles);
@@ -600,6 +711,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                         currentQuestion.type = 'slider';
                         currentQuestion.difficulty = 6; // now round 6
                         currentQuestion.score = 10;
+                        currentQuestion.poster = production.poster;
                         choices = []; // No choices for slider
                         break;
                 }
@@ -629,6 +741,11 @@ document.addEventListener('DOMContentLoaded', async () => {
         feedbackEl.innerHTML = '';
         questionPoster.classList.add('d-none');
 
+        if (currentQuestion.poster) {
+            questionPoster.src = currentQuestion.poster;
+            questionPoster.classList.remove('d-none');
+        }
+
         if (currentQuestion.type === 'slider') {
             choicesEl.classList.add('d-none');
             sliderContainer.classList.remove('d-none');
@@ -649,7 +766,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                 const li = document.createElement('li');
                 li.classList.add('list-group-item');
                 li.dataset.id = movie.id;
-                li.textContent = movie.title;
+                li.innerHTML = movie.title;
                 dragList.appendChild(li);
             });
 
@@ -668,10 +785,6 @@ document.addEventListener('DOMContentLoaded', async () => {
             synchronizeHeights(dragList, matchList);
 
         } else {
-            if (currentQuestion.poster) {
-                questionPoster.src = currentQuestion.poster;
-                questionPoster.classList.remove('d-none');
-            }
             currentQuestion.choices.forEach(choice => {
                 const choiceEl = document.createElement('button');
                 choiceEl.type = 'button';
