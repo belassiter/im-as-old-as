@@ -1,0 +1,26 @@
+{
+  "name": "im-as-old-as",
+  "version": "1.0.0",
+  "description": "I'm as old as who? An app to explore which of your favorite movie actors were your age during your youth",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "data-entry": "node server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/belassiter/im-as-old-as.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/belassiter/im-as-old-as/issues"
+  },
+  "homepage": "https://github.com/belassiter/im-as-old-as#readme",
+  "dependencies": {
+    "express": "^4.19.2",
+    "node-fetch": "^2.7.0",
+    "string-similarity": "^4.0.4"
+  }
+}

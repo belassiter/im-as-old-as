@@ -41,3 +41,7 @@ jobs:
           README.md
           LICENSE
           deploy.yml
+          server.js
+          data-entry.js
+          data-entry.html
+          node_modules/**

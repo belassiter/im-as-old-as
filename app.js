@@ -1,3 +1,25 @@
+let actors, productions, roles;
+let absoluteMinYear, absoluteMaxYear;
+let currentQuestion = {};
+let players = [];
+let currentPlayerIndex = 0;
+let currentRound = 1;
+let questionsPerRound = 3;
+let questionsAnsweredInRound = 0;
+let usedQuestions = new Set();
+let usedFranchises = new Set();
+let usedActorsForImdbQuestions = new Set();
+const colors = ['#fd7e14', '#198754', '#0d6efd', '#6f42c1'];
+const roundTitles = [
+    "Actors and Roles",
+    "How old were they?",
+    "Filmography age",
+    "Production age",
+    "Ordering Box Office & IMDb ratings",
+    "Production age: hard mode"
+];
+const roundPoints = [1, 3, 4, 5, 10, 10];
+
 document.addEventListener('DOMContentLoaded', async () => {
     const resultsDiv = document.getElementById('results');
     const searchInput = document.getElementById('searchInput');
@@ -37,28 +59,6 @@ document.addEventListener('DOMContentLoaded', async () => {
     const finalScores = document.getElementById('final-scores');
     const newGameBtn = document.getElementById('new-game-btn');
     const questionPoster = document.getElementById('question-poster');
-
-    let actors, productions, roles;
-    let absoluteMinYear, absoluteMaxYear;
-    let currentQuestion = {};
-    let players = [];
-    let currentPlayerIndex = 0;
-    let currentRound = 1;
-    let questionsPerRound = 3;
-    let questionsAnsweredInRound = 0;
-    let usedQuestions = new Set();
-    let usedFranchises = new Set();
-    let usedActorsForImdbQuestions = new Set();
-    const colors = ['#fd7e14', '#198754', '#0d6efd', '#6f42c1'];
-    const roundTitles = [
-        "Actors and Roles",
-        "How old were they?",
-        "Filmography age",
-        "Production age",
-        "Ordering Box Office & IMDb ratings",
-        "Production age: hard mode"
-    ];
-    const roundPoints = [1, 3, 4, 5, 10, 10];
 
     function getPointsString(points) {
         return points === 1 ? '1 point' : `${points} points`;

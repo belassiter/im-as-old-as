@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Data Entry</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+    <div class="container mt-5">
+        <h1>Movie Search</h1>
+        <form id="search-form">
+            <div class="mb-3">
+                <label for="title" class="form-label">Movie Title</label>
+                <input type="text" class="form-control" id="title" required>
+            </div>
+            <div class="mb-3">
+                <label for="year" class="form-label">Year (Optional)</label>
+                <input type="number" class="form-control" id="year">
+            </div>
+            <button type="submit" class="btn btn-primary">Search</button>
+        </form>
+
+        <div id="results" class="mt-4"></div>
+
+        <div id="movie-details" class="mt-4" style="display: none;">
+            <div class="card mb-3">
+                <div class="row g-0">
+                    <div class="col-md-4">
+                        <img src="${highResPoster !== 'N/A' ? highResPoster : 'https://via.placeholder.com/300x450'}" class="img-fluid rounded-start" alt="Poster" style="max-width: 300px;">
+                        <div class="mt-2">
+                            <div class="row d-flex align-items-stretch">
+                                <div class="col-6">
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="checkbox" value="" id="poster-url-overwrite">
+                                        <label class="form-check-label" for="poster-url-overwrite">Poster URL</label>
+                                    </div>
+                                    <input type="text" class="form-control" id="poster-url" value="${highResPoster !== 'N/A' ? highResPoster : ''}">
+                                </div>
+                                <div class="col-6">
+                                    <label class="form-label">&nbsp;</label>
+                                    <div class="p-2 border rounded bg-light h-100" id="poster-url-csv" style="display: none;"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-8">
+                        <div class="card-body">
+                            <div class="row d-flex align-items-stretch mb-3">
+                                <div class="col-6">
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="checkbox" value="" id="movie-title-overwrite">
+                                        <label class="form-check-label" for="movie-title-overwrite">Title</label>
+                                    </div>
+                                    <input type="text" class="form-control" id="movie-title" value="${movie.Title}">
+                                </div>
+                                <div class="col-6">
+                                    <label class="form-label">&nbsp;</label>
+                                    <div class="p-2 border rounded bg-light h-100" id="movie-title-csv" style="display: none;"></div>
+                                </div>
+                            </div>
+                            <div class="row d-flex align-items-stretch mb-3">
+                                <div class="col-6">
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="checkbox" value="" id="movie-year-overwrite">
+                                        <label class="form-check-label" for="movie-year-overwrite">Year</label>
+                                    </div>
+                                    <input type="number" class="form-control" id="movie-year" value="${movie.Year}">
+                                </div>
+                                <div class="col-6">
+                                    <label class="form-label">&nbsp;</label>
+                                    <div class="p-2 border rounded bg-light h-100" id="movie-year-csv" style="display: none;"></div>
+                                </div>
+                            </div>
+                            <p class="card-text"><strong>IMDb ID:</strong> <span id="movie-imdb-id">${movie.imdbID}</span></p>
+                            
+                            <div class="row d-flex align-items-stretch mb-3">
+                                <div class="col-6">
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="checkbox" value="" id="movie-type-overwrite">
+                                        <label class="form-check-label" for="movie-type-overwrite">Type</label>
+                                    </div>
+                                    <select class="form-select" id="movie-type">
+                                        <option value="Film" ${movie.Type === 'movie' ? 'selected' : ''}>Film</option>
+                                        <option value="Series" ${movie.Type === 'series' ? 'selected' : ''}>Series</option>
+                                        <option value="Episode" ${movie.Type === 'episode' ? 'selected' : ''}>Episode</option>
+                                        <option value="Game" ${movie.Type === 'game' ? 'selected' : ''}>Game</option>
+                                        <option value="Short" ${movie.Type === 'short' ? 'selected' : ''}>Short</option>
+                                        <option value="Other">Other</option>
+                                    </select>
+                                </div>
+                                <div class="col-6">
+                                    <label class="form-label">&nbsp;</label>
+                                    <div class="p-2 border rounded bg-light h-100" id="movie-type-csv" style="display: none;"></div>
+                                </div>
+                            </div>
+
+                            <div class="row d-flex align-items-stretch mb-3">
+                                <div class="col-6">
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="checkbox" value="" id="movie-franchise-overwrite">
+                                        <label class="form-check-label" for="movie-franchise-overwrite">Franchise</label>
+                                    </div>
+                                    <input type="text" class="form-control" id="movie-franchise" value="">
+                                </div>
+                                <div class="col-6">
+                                    <label class="form-label">&nbsp;</label>
+                                    <div class="p-2 border rounded bg-light h-100" id="movie-franchise-csv" style="display: none;"></div>
+                                </div>
+                            </div>
+
+                            <div class="row d-flex align-items-stretch mb-3">
+                                <div class="col-6">
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="checkbox" value="" id="production-start-overwrite">
+                                        <label class="form-check-label" for="production-start-overwrite">Production Start</label>
+                                    </div>
+                                    <input type="date" class="form-control" id="production-start" value="">
+                                </div>
+                                <div class="col-6">
+                                    <label class="form-label">&nbsp;</label>
+                                    <div class="p-2 border rounded bg-light h-100" id="production-start-csv" style="display: none;"></div>
+                                </div>
+                            </div>
+
+                            <div class="row d-flex align-items-stretch mb-3">
+                                <div class="col-6">
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="checkbox" value="" id="production-end-overwrite">
+                                        <label class="form-check-label" for="production-end-overwrite">Production End</label>
+                                    </div>
+                                    <input type="date" class="form-control" id="production-end" value="">
+                                </div>
+                                <div class="col-6">
+                                    <label class="form-label">&nbsp;</label>
+                                    <div class="p-2 border rounded bg-light h-100" id="production-end-csv" style="display: none;"></div>
+                                </div>
+                            </div>
+
+                            <div class="row d-flex align-items-stretch mb-3">
+                                <div class="col-6">
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="checkbox" value="" id="release-date-overwrite">
+                                        <label class="form-check-label" for="release-date-overwrite">Release Date</label>
+                                    </div>
+                                    <input type="date" class="form-control" id="release-date" value="${formatDate(movie.Released)}">
+                                </div>
+                                <div class="col-6">
+                                    <label class="form-label">&nbsp;</label>
+                                    <div class="p-2 border rounded bg-light h-100" id="release-date-csv" style="display: none;"></div>
+                                </div>
+                            </div>
+
+                            <div class="row d-flex align-items-stretch mb-3">
+                                <div class="col-6">
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="checkbox" value="" id="imdb-rating-overwrite">
+                                        <label class="form-check-label" for="imdb-rating-overwrite">IMDb Rating</label>
+                                    </div>
+                                    <input type="text" class="form-control" id="imdb-rating" value="${movie.imdbRating}">
+                                </div>
+                                <div class="col-6">
+                                    <label class="form-label">&nbsp;</label>
+                                    <div class="p-2 border rounded bg-light h-100" id="imdb-rating-csv" style="display: none;"></div>
+                                </div>
+                            </div>
+
+                            <div class="row d-flex align-items-stretch mb-3">
+                                <div class="col-6">
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="checkbox" value="" id="box-office-overwrite">
+                                        <label class="form-check-label" for="box-office-overwrite">Box Office (US)</label>
+                                    </div>
+                                    <input type="text" class="form-control" id="box-office" value="${movie.BoxOffice !== 'N/A' ? movie.BoxOffice : ''}">
+                                </div>
+                                <div class="col-6">
+                                    <label class="form-label">&nbsp;</label>
+                                    <div class="p-2 border rounded bg-light h-100" id="box-office-csv" style="display: none;"></div>
+                                </div>
+                            </div>
+
+                            <button class="btn btn-success mt-3" id="update-csvs-btn">Update CSVs</button>
+                            <a href="https://www.imdb.com/title/${movie.imdbID}" target="_blank" class="btn btn-info mt-3 ms-2">Open in IMDb</a>
+                            <div id="gemini-status" class="mt-2"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <h4 class="mt-4">Cast Members (from TMDb)</h4>
+            <ul class="list-group" id="cast-list">
+                ${tmdbCast.map(actor => `
+                    <li class="list-group-item d-flex justify-content-between align-items-center" 
+                        data-tmdb-id="${actor.id}" 
+                        data-imdb-id="${actor.imdb_id || ''}"
+                        data-actor-name="${actor.name}"
+                        data-character-name="${actor.character}"
+                        data-selected="true">
+                        <div>
+                            <span class="actor-name-field">${actor.name}</span> 
+                            (<span class="actor-imdb-id-field">${actor.imdb_id || 'N/A'}</span>) as 
+                            <span class="character-field">${actor.character}</span>
+                        </div>
+                        <div class="form-check form-switch">
+                            <input class="form-check-input role-checkbox" type="checkbox" id="role-checkbox-${actor.id}" checked>
+                            <label class="form-check-label" for="role-checkbox-${actor.id}"></label>
+                        </div>
+                    </li>
+                `).join('')}
+            </ul>
+        </div>
+    </div>
+
+    <script src="https://unpkg.com/string-similarity@4.0.1/umd/string-similarity.min.js"></script>
+    <script src="data-entry.js"></script>
+</body>
+</html>
