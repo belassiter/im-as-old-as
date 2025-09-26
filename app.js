@@ -92,13 +92,18 @@ document.addEventListener('DOMContentLoaded', async () => {
         productions = parseCsv(productionsText);
         const allRolesArray = parseCsv(rolesText);
 
+        // Helper to safely parse a release year from a release_date string like "YYYY-MM-DD"
+        function parseReleaseYear(releaseDate) {
+            if (!releaseDate) return NaN;
+            const s = String(releaseDate).trim();
+            if (s.length === 0) return NaN;
+            const parts = s.split('-');
+            const y = parseInt(parts[0]);
+            return isNaN(y) ? NaN : y;
+        }
+
         // Robustly extract release years; guard against missing/empty release_date values
-        const releaseYears = productions.map(p => {
-            if (!p || !p.release_date) return NaN;
-            const parts = String(p.release_date).split('-');
-            const year = parseInt(parts[0]);
-            return isNaN(year) ? NaN : year;
-        }).filter(y => !isNaN(y));
+        const releaseYears = productions.map(p => parseReleaseYear(p && p.release_date)).filter(y => !isNaN(y));
 
         if (releaseYears.length === 0) {
             console.warn('No valid release years found in productions data. Check productions.csv on the server.');
@@ -495,8 +500,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                         const franchiseMovies = productions.filter(p =>
                             p.franchise === franchise &&
                             p.box_office_us && p.box_office_us !== 'N/A' &&
-                            parseInt(p.release_date.split('-')[0]) >= localMinYear &&
-                            parseInt(p.release_date.split('-')[0]) <= localMaxYear
+                            (function(){ const ry = parseReleaseYear(p && p.release_date); return !isNaN(ry) && ry >= localMinYear && ry <= localMaxYear; })()
                         );
 
                         if (franchiseMovies.length >= 4) {
@@ -565,11 +569,11 @@ document.addEventListener('DOMContentLoaded', async () => {
                         }
 
                         const actorRoles = roles.filter(r => r.actor_imdb_id === actorId);
-                        const validRoles = actorRoles.filter(r => {
+                            const validRoles = actorRoles.filter(r => {
                             const p = productions.find(prod => prod.imdb_id === r.production_imdb_id);
                             if (!p || !p.release_date || !p.imdb_rating || p.imdb_rating === 'N/A') return false;
-                            const releaseYear = parseInt(p.release_date.split('-')[0]);
-                            return releaseYear >= localMinYear && releaseYear <= localMaxYear;
+                            const releaseYear = parseReleaseYear(p.release_date);
+                            return !isNaN(releaseYear) && releaseYear >= localMinYear && releaseYear <= localMaxYear;
                         });
 
                         if (validRoles.length >= 4) {
@@ -650,7 +654,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                 }
 
                 const questionId = `${randomRole.actor_imdb_id}-${randomRole.production_imdb_id}-${randomRole.character}`;
-                const releaseYear = parseInt(production.release_date.split('-')[0]);
+                const releaseYear = parseReleaseYear(production.release_date);
 
                 if (releaseYear < currentMinYear || releaseYear > currentMaxYear || usedQuestions.has(questionId)) {
                     if (attempts >= maxAttempts) {
