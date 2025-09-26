@@ -313,6 +313,8 @@ document.addEventListener('DOMContentLoaded', async () => {
         });
 
     } catch (error) {
+        // Ensure the loading spinner is removed when an error occurs
+        hideLoading();
         showError('Error loading or processing data.');
         console.error(error);
     }
@@ -1063,9 +1065,10 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     function parseCsv(text) {
         const lines = text.split('\n').filter(line => line.trim() !== '');
-        const header = lines[0].split(',').map(h => h.trim());
+        // Normalize header names by trimming and removing surrounding quotes
+        const header = lines[0].split(',').map(h => h.trim().replace(/^"|"$/g, ''));
         const rows = lines.slice(1).map(line => {
-            const values = line.split(/,(?=(?:(?:[^"]*"){2})*[^"]*$)/);
+            const values = line.split(/,(?=(?:(?:[^"]*\"){2})*[^\"]*$)/);
             const row = {};
             header.forEach((h, i) => {
                 row[h] = values[i] ? values[i].trim().replace(/^"|"$/g, '') : '';
