@@ -20,12 +20,15 @@
     </div>
 
     <main class="container my-5">
-        <div class="btn-group mb-3" role="group" aria-label="Mode select">
-            <input type="radio" class="btn-check" name="mode" id="searchModeBtn" autocomplete="off">
-            <label class="btn btn-outline-primary" for="searchModeBtn">Search</label>
+        <div class="d-flex justify-content-start align-items-center mb-3">
+            <div class="btn-group" role="group" aria-label="Mode select">
+                <input type="radio" class="btn-check" name="mode" id="searchModeBtn" autocomplete="off">
+                <label class="btn btn-outline-primary" for="searchModeBtn">Search</label>
 
-            <input type="radio" class="btn-check" name="mode" id="gameModeBtn" autocomplete="off" checked>
-            <label class="btn btn-outline-primary" for="gameModeBtn">Game</label>
+                <input type="radio" class="btn-check" name="mode" id="gameModeBtn" autocomplete="off" checked>
+                <label class="btn btn-outline-primary" for="gameModeBtn">Game</label>
+            </div>
+            <button id="global-new-game-btn" class="btn btn-primary ms-2 d-none">New Game</button>
         </div>
 
         <div id="search-mode">
