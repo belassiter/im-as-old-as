@@ -154,7 +154,7 @@ document.addEventListener('DOMContentLoaded', async () => {
             if (questionsAnsweredInRound >= questionsPerRound * players.length) {
                 currentRound++;
                 questionsAnsweredInRound = 0;
-                if (currentRound > 6) { // Adjusted for 6 rounds
+                if (currentRound > 5) {
                     displayFinalScores();
                     return;
                 }
