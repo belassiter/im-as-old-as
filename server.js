@@ -1,3 +1,4 @@
+require('dotenv').config();
 const express = require('express');
 const fetch = require('node-fetch');
 const fs = require('fs'); // Import the file system module
@@ -5,11 +6,35 @@ const stringSimilarity = require('string-similarity');
 const app = express();
 const port = 3003;
 
-const OMDb_API_KEY = '1b86e424';
-const GEMINI_API_KEY = 'AIzaSyB-_FmqdcMjBbk6tn6Haqa9RmL0iGD66Wc';
+const OMDb_API_KEY = process.env.OMDB_API_KEY;
+const GEMINI_API_KEY = process.env.GEMINI_API_KEY;
+const TMDB_API_KEY = process.env.TMDB_API_KEY;
 
 app.use(express.static('.'));
 app.use(express.json());
+
+app.use((req, res, next) => {
+    res.header('Access-Control-Allow-Origin', '*');
+    next();
+});
+
+app.get('/omdb/rating/:imdbID', async (req, res) => {
+    const { imdbID } = req.params;
+    const url = `http://www.omdbapi.com/?i=${imdbID}&apikey=${OMDb_API_KEY}`;
+
+    try {
+        const response = await fetch(url);
+        const data = await response.json();
+        if (data.imdbRating) {
+            res.json({ imdbRating: data.imdbRating });
+        } else {
+            res.status(404).json({ error: 'IMDb rating not found' });
+        }
+    } catch (error) {
+        console.error('Error fetching from OMDb:', error);
+        res.status(500).json({ error: 'Failed to fetch data from OMDb' });
+    }
+});
 
 function parseCsvRow(row) {
     const result = [];
@@ -30,11 +55,34 @@ function parseCsvRow(row) {
     return result.map(val => val.replace(/^"|"$/g, '')); // remove leading/trailing quotes
 }
 
+async function rewriteCsvWithQuotes(filePath) {
+    try {
+        const fileContent = fs.readFileSync(filePath, 'utf-8');
+        const lines = fileContent.split(/\r?\n/).filter(line => line.trim() !== '');
+        if (lines.length === 0) return; // Nothing to rewrite
+
+        const header = parseCsvRow(lines[0]);
+        const newLines = [header.map(field => `"${field.replace(/"/g, '""')}"`).join(',')]; // Quote header too
+
+        for (let i = 1; i < lines.length; i++) {
+            const parsedValues = parseCsvRow(lines[i]);
+            // Ensure all values are trimmed, escaped, and quoted when writing back
+            const quotedValues = parsedValues.map(value => `"${value.trim().replace(/"/g, '""')}"`); // Trim, escape existing quotes and add new ones
+            newLines.push(quotedValues.join(','));
+        }
+
+        fs.writeFileSync(filePath, newLines.join('\n'), 'utf-8');
+        console.log(`Successfully rewrote ${filePath} with consistent quoting.`);
+    } catch (error) {
+        console.error(`Error rewriting ${filePath}:`, error);
+    }
+}
+
 app.get('/search', async (req, res) => {
     const { title, y: year } = req.query;
-    let url = `http://www.omdbapi.com/?apikey=${OMDb_API_KEY}&s=${title}`;
+    let url = `https://api.themoviedb.org/3/search/movie?api_key=${TMDB_API_KEY}&query=${title}`;
     if (year) {
-        url += `&y=${year}`;
+        url += `&year=${year}`;
     }
 
     try {
@@ -42,29 +90,66 @@ app.get('/search', async (req, res) => {
         const data = await response.json();
         res.json(data);
     } catch (error) {
-        console.error('Error fetching from OMDb:', error);
-        res.status(500).json({ error: 'Failed to fetch data from OMDb' });
+        console.error('Error fetching from TMDb:', error);
+        res.status(500).json({ error: 'Failed to fetch data from TMDb' });
     }
 });
 
-app.get('/movie/:imdbID', async (req, res) => {
-    const { imdbID } = req.params;
-    const url = `http://www.omdbapi.com/?apikey=${OMDb_API_KEY}&i=${imdbID}&plot=full`;
+
+
+app.get('/tmdb/movie/:tmdbID', async (req, res) => {
+    const { tmdbID } = req.params;
 
     try {
-        const response = await fetch(url);
-        const data = await response.json();
-        res.json(data);
+        // 1. Get movie details from TMDb
+        const movieUrl = `https://api.themoviedb.org/3/movie/${tmdbID}?api_key=${TMDB_API_KEY}`;
+        const movieResponse = await fetch(movieUrl);
+        const movieData = await movieResponse.json();
+
+        // 2. Get external IDs from TMDb
+        const externalIdsUrl = `https://api.themoviedb.org/3/movie/${tmdbID}/external_ids?api_key=${TMDB_API_KEY}`;
+        const externalIdsResponse = await fetch(externalIdsUrl);
+        const externalIdsData = await externalIdsResponse.json();
+        const imdbID = externalIdsData.imdb_id;
+
+        // 3. Get credits from TMDb
+        const creditsUrl = `https://api.themoviedb.org/3/movie/${tmdbID}/credits?api_key=${TMDB_API_KEY}`;
+        const creditsResponse = await fetch(creditsUrl);
+        const creditsData = await creditsResponse.json();
+
+        // 4. Get release dates for content rating
+        const releaseDatesUrl = `https://api.themoviedb.org/3/movie/${tmdbID}/release_dates?api_key=${TMDB_API_KEY}`;
+        const releaseDatesResponse = await fetch(releaseDatesUrl);
+        const releaseDatesData = await releaseDatesResponse.json();
+        const usRelease = releaseDatesData.results.find(r => r.iso_3166_1 === 'US');
+        const rating = usRelease ? usRelease.release_dates[0].certification : 'N/A';
+
+        // 5. Construct the response
+        const response = {
+            title: movieData.title,
+            release_date: movieData.release_date,
+            vote_average: movieData.vote_average,
+            revenue: movieData.revenue,
+            imdb_id: imdbID,
+            poster_path: movieData.poster_path,
+            overview: movieData.overview,
+            genres: movieData.genres,
+            runtime: movieData.runtime,
+            credits: creditsData,
+            rating: rating,
+            media_type: 'movie' // Assuming type is movie
+        };
+
+        res.json(response);
+
     } catch (error) {
-        console.error('Error fetching from OMDb:', error);
-        res.status(500).json({ error: 'Failed to fetch data from OMDb' });
+        console.error('Error fetching from TMDb:', error);
+        res.status(500).json({ error: 'Failed to fetch data from TMDb' });
     }
 });
 
 app.get('/tmdb-movie-details/:imdbID', async (req, res) => {
     const { imdbID } = req.params;
-    const TMDB_API_KEY = '3f6115bbefe8f4faf26de86f75fdc9ee';
-
     try {
         // 1. Find TMDb movie_id from IMDb ID
         const findUrl = `https://api.themoviedb.org/3/find/${imdbID}?api_key=${TMDB_API_KEY}&external_source=imdb_id`;
@@ -77,33 +162,23 @@ app.get('/tmdb-movie-details/:imdbID', async (req, res) => {
 
         const tmdbMovieId = findData.movie_results[0].id;
 
-        // 2. Get movie credits (cast) using TMDb movie_id
+        // 2. Get credits from TMDb
         const creditsUrl = `https://api.themoviedb.org/3/movie/${tmdbMovieId}/credits?api_key=${TMDB_API_KEY}`;
         const creditsResponse = await fetch(creditsUrl);
         const creditsData = await creditsResponse.json();
 
-        // Filter cast to 7-20 members, prioritizing those with character names
-        let cast = creditsData.cast.filter(member => member.character).slice(0, 20);
-        if (cast.length < 7 && creditsData.cast.length >= 7) {
-            cast = creditsData.cast.slice(0, 7);
-        } else if (cast.length < 7 && creditsData.cast.length < 7) {
-            cast = creditsData.cast;
-        }
-
-        const castWithImdb = await Promise.all(cast.map(async member => {
-            const personDetailsUrl = `https://api.themoviedb.org/3/person/${member.id}/external_ids?api_key=${TMDB_API_KEY}`;
-            const personDetailsResponse = await fetch(personDetailsUrl);
-            const personDetailsData = await personDetailsResponse.json();
-            
+        // 3. Get external IDs for each cast member to find their IMDb ID
+        const castWithImdbIds = await Promise.all(creditsData.cast.map(async (actor) => {
+            const personDetailsUrl = `https://api.themoviedb.org/3/person/${actor.id}/external_ids?api_key=${TMDB_API_KEY}`;
+            const personResponse = await fetch(personDetailsUrl);
+            const personData = await personResponse.json();
             return {
-                name: member.name,
-                character: member.character,
-                id: member.id, // TMDb actor ID
-                imdb_id: personDetailsData.imdb_id || null // IMDb actor ID
+                ...actor,
+                imdb_id: personData.imdb_id,
             };
         }));
 
-        res.json(castWithImdb);
+        res.json(castWithImdbIds);
 
     } catch (error) {
         console.error('Error fetching from TMDb:', error);
@@ -112,9 +187,9 @@ app.get('/tmdb-movie-details/:imdbID', async (req, res) => {
 });
 
 
-
 async function google_web_search(query) {
-    const GEMINI_API_URL = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-pro-latest:generateContent?key=${GEMINI_API_KEY}`;
+    const GEMINI_API_URL = `https://generativelanguage.googleapis.com/v1/models/gemini-2.0-flash-lite-001:generateContent?key=${GEMINI_API_KEY}`;
+    console.log('GEMINI_API_URL:', GEMINI_API_URL);
 
     try {
         const response = await fetch(GEMINI_API_URL, {
@@ -145,6 +220,18 @@ async function google_web_search(query) {
         return ''; // Return empty string in case of an error
     }
 }
+
+app.get('/list-models', async (req, res) => {
+    const url = `https://generativelanguage.googleapis.com/v1/models?key=${GEMINI_API_KEY}`;
+    try {
+        const response = await fetch(url);
+        const data = await response.json();
+        res.json(data);
+    } catch (error) {
+        console.error('Error listing models:', error);
+        res.status(500).json({ error: 'Failed to list models' });
+    }
+});
 
 app.get('/gemini-movie-dates/:imdbID/:title/:year', async (req, res) => {
     const { imdbID, title, year } = req.params;
@@ -286,15 +373,15 @@ app.get('/check-production/:imdbID', (req, res) => {
 
     try {
         const productionsCsv = fs.readFileSync('productions.csv', 'utf-8');
-        const rows = productionsCsv.split('\n').slice(1);
-        const header = productionsCsv.split('\n')[0].split(',').map(h => h.trim());
+        const rows = productionsCsv.split(/\r?\n/);
+        const header = parseCsvRow(rows[0]);
 
-        const productionRow = rows.find(row => row.split(',')[0] === imdbID);
+        const productionRow = rows.slice(1).find(row => parseCsvRow(row)[0] === imdbID);
 
         if (productionRow) {
             const values = parseCsvRow(productionRow);
             const productionData = header.reduce((obj, key, index) => {
-                obj[key] = values[index] ? values[index].trim() : '';
+                obj[key.trim()] = values[index] ? values[index].trim() : '';
                 return obj;
             }, {});
             res.json(productionData);
@@ -307,6 +394,20 @@ app.get('/check-production/:imdbID', (req, res) => {
     }
 });
 
+const clientToCsvMap = {
+    'imdb_id': 'imdb_id',
+    'movie_title': 'title',
+    'movie_type': 'type',
+    'movie_franchise': 'franchise',
+    'production_start': 'production_start',
+    'production_end': 'production_end',
+    'release_date': 'release_date',
+    'imdb_rating': 'imdb_rating',
+    'box_office': 'box_office_us',
+    'poster_url': 'poster'
+};
+const csvToClientMap = Object.fromEntries(Object.entries(clientToCsvMap).map(a => a.reverse()));
+
 app.post('/save-production', (req, res) => {
     const productionData = req.body;
     const imdbID = productionData.imdb_id;
@@ -317,29 +418,31 @@ app.post('/save-production', (req, res) => {
 
     try {
         const productionsCsv = fs.readFileSync('productions.csv', 'utf-8');
-        const rows = productionsCsv.split('\n');
-        const header = rows[0].split(',').map(h => h.trim());
-        const rowIndex = rows.findIndex(row => row.split(',')[0] === imdbID);
+        const rows = productionsCsv.split(/\r?\n/);
+        const header = parseCsvRow(rows[0]);
+        const rowIndex = rows.findIndex(row => parseCsvRow(row)[0] === imdbID);
 
         if (rowIndex > -1) {
             // Update existing row
             const values = parseCsvRow(rows[rowIndex]);
             const newValues = header.map((key, index) => {
-                if (productionData.hasOwnProperty(key)) {
-                    return productionData[key];
+                const dataKey = csvToClientMap[key.trim()];
+                if (dataKey && productionData.hasOwnProperty(dataKey)) {
+                    return productionData[dataKey];
                 }
                 return values[index];
             });
-            rows[rowIndex] = newValues.map(v => `"${v}"`).join(',');
+            rows[rowIndex] = newValues.map(v => `"${(v || '').replace(/"/g, '""')}"`).join(',');
         } else {
             // Add new row
             const newValues = header.map(key => {
-                if (productionData.hasOwnProperty(key)) {
-                    return productionData[key];
+                const dataKey = csvToClientMap[key.trim()];
+                if (dataKey && productionData.hasOwnProperty(dataKey)) {
+                    return productionData[dataKey];
                 }
                 return '';
             });
-            rows.push(newValues.map(v => `"${v}"`).join(','));
+            rows.push(newValues.map(v => `"${(v || '').replace(/"/g, '""')}"`).join(','));
         }
 
         fs.writeFileSync('productions.csv', rows.join('\n'));
@@ -456,8 +559,15 @@ app.post('/save-actor', (req, res) => {
     }
 
     try {
-        const newActorRow = `
-"${imdb_id}","${name}","${birthday}"`;
+        const actorsCsv = fs.readFileSync('actors.csv', 'utf-8');
+        const rows = actorsCsv.split('\n');
+        const existingActorIds = new Set(rows.map(row => parseCsvRow(row)[0]));
+
+        if (existingActorIds.has(imdb_id)) {
+            return res.status(200).json({ message: 'Actor already exists' });
+        }
+
+        const newActorRow = `\n"${imdb_id}","${name}","${birthday}"`;
         fs.appendFileSync('actors.csv', newActorRow, 'utf-8');
         res.status(200).json({ message: 'Actor saved successfully' });
     } catch (error) {
@@ -508,6 +618,11 @@ app.post('/save-roles', (req, res) => {
 });
 
 function startServer(portToTry) {
+    // Rewrite CSVs with consistent quoting on startup
+    rewriteCsvWithQuotes('actors.csv');
+    rewriteCsvWithQuotes('productions.csv');
+    rewriteCsvWithQuotes('roles.csv');
+
     app.listen(portToTry, () => {
         console.log(`Server running at http://localhost:${portToTry}`);
         console.log(`Data entry GUI: http://localhost:${portToTry}/data-entry.html`);

@@ -19,6 +19,7 @@
   },
   "homepage": "https://github.com/belassiter/im-as-old-as#readme",
   "dependencies": {
+    "dotenv": "^17.2.2",
     "express": "^4.19.2",
     "node-fetch": "^2.7.0",
     "string-similarity": "^4.0.4"
