@@ -701,7 +701,16 @@ document.addEventListener('DOMContentLoaded', async () => {
                         currentQuestion.answer = `<em>${production.title}</em> as ${randomRole.character}`;
                         currentQuestion.difficulty = 3;
                         currentQuestion.score = 4;
-                        currentQuestion.poster = production.poster;
+                        
+                        const allProductionsInQuestion = [production, ...distractors1.map(r => productions.find(p => p.imdb_id === r.production_imdb_id))];
+                        const posters = allProductionsInQuestion.map(p => p ? p.poster : null).filter(p => p);
+
+                        if (posters.length > 0) {
+                            currentQuestion.poster = posters[Math.floor(Math.random() * posters.length)];
+                        } else {
+                            currentQuestion.poster = null;
+                        }
+
                         choices = distractors1.map(p => `<em>${p.production_title}</em> as ${p.character}`);
                         choices.push(currentQuestion.answer);
                         shuffleArray(choices);
