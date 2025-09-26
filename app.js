@@ -73,6 +73,15 @@ document.addEventListener('DOMContentLoaded', async () => {
             fetch('roles.csv')
         ]);
 
+        // Fail early with a clear error if any of the CSVs couldn't be fetched (404/500)
+        const failed = [];
+        if (!actorsRes.ok) failed.push(`actors.csv (${actorsRes.status})`);
+        if (!productionsRes.ok) failed.push(`productions.csv (${productionsRes.status})`);
+        if (!rolesRes.ok) failed.push(`roles.csv (${rolesRes.status})`);
+        if (failed.length > 0) {
+            throw new Error(`Failed to fetch required data files: ${failed.join(', ')}`);
+        }
+
         const [actorsText, productionsText, rolesText] = await Promise.all([
             actorsRes.text(),
             productionsRes.text(),
@@ -83,9 +92,23 @@ document.addEventListener('DOMContentLoaded', async () => {
         productions = parseCsv(productionsText);
         const allRolesArray = parseCsv(rolesText);
 
-        const releaseYears = productions.map(p => parseInt(p.release_date.split('-')[0])).filter(y => !isNaN(y));
-        absoluteMinYear = Math.min(...releaseYears);
-        absoluteMaxYear = Math.max(...releaseYears);
+        // Robustly extract release years; guard against missing/empty release_date values
+        const releaseYears = productions.map(p => {
+            if (!p || !p.release_date) return NaN;
+            const parts = String(p.release_date).split('-');
+            const year = parseInt(parts[0]);
+            return isNaN(year) ? NaN : year;
+        }).filter(y => !isNaN(y));
+
+        if (releaseYears.length === 0) {
+            console.warn('No valid release years found in productions data. Check productions.csv on the server.');
+            // Fallback to a reasonable default range if nothing valid found
+            absoluteMinYear = 1900;
+            absoluteMaxYear = new Date().getFullYear();
+        } else {
+            absoluteMinYear = Math.min(...releaseYears);
+            absoluteMaxYear = Math.max(...releaseYears);
+        }
 
         // Create a Map for all actors with a unique key (imdb_id-name) to handle potential duplicate imdb_ids
         const allActorsMap = new Map();
