@@ -100,7 +100,7 @@
                 <div id="year-range-slider"></div>
 
                 <div class="d-flex align-items-center mt-3">
-                    <button id="ready-btn" class="btn btn-success">Ready!</button>
+                    <button id="ready-btn" class="btn btn-success">Play!</button>
                     <span id="available-counts" class="ms-3 text-muted"></span>
                 </div>
             </div>
@@ -123,6 +123,7 @@
                                     <h5 class="card-title">Question for <span id="current-player-name"></span></h5>
                                 </div>
                                 <p id="question"></p>
+                                <pre id="question-debug" class="small text-muted mt-2 d-none" style="white-space:pre-wrap; word-break:break-word;"></pre>
                                 <div id="choices" class="list-group"></div>
                                 <div id="slider-container" class="d-none mt-3">
                                     <label for="ageSlider" class="form-label">Age: <span id="sliderValue">45</span></label>
@@ -159,8 +160,16 @@
     </main>
 
     <footer class="footer mt-auto py-3 bg-light">
-        <div class="container text-center">
-            <span class="text-muted">Code available at <a href="https://github.com/belassiter/im-as-old-as" target="_blank">GitHub</a>.</span>
+        <div class="container d-flex justify-content-center align-items-center gap-2">
+            <div class="d-flex align-items-center me-2">
+                <span class="text-muted me-1">Movie data courtesy of</span>
+                <a href="https://www.themoviedb.org/" target="_blank" rel="noopener noreferrer">
+                    <img src="https://www.themoviedb.org/assets/2/v4/logos/v2/blue_long_2-9665a76b1ae401a510ec1e0ca40ddcb3b0cfe45f1d51b77a308fea0845885648.svg" alt="TMDb" style="height:20px; vertical-align:middle;">
+                </a>
+            </div>
+            <div>
+                <span class="text-muted">Code available at <a href="https://github.com/belassiter/im-as-old-as" target="_blank">GitHub</a>.</span>
+            </div>
         </div>
     </footer>
 

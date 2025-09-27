@@ -9,6 +9,7 @@ let questionsAnsweredInRound = 0;
 let usedQuestions = new Set();
 let usedFranchises = new Set();
 let usedActorsForImdbQuestions = new Set();
+let _lastRoundBaselineRange = null; // saved user-chosen year range at start of a round; restored after the round
 const colors = ['#fd7e14', '#198754', '#0d6efd', '#6f42c1'];
 const roundTitles = [
     "Actors and Roles",
@@ -185,16 +186,15 @@ document.addEventListener('DOMContentLoaded', async () => {
             displayQuestion();
         });
 
-        choicesEl.addEventListener('click', (e) => {
-            const clickedElement = e.target.closest('.list-group-item');
-            if (clickedElement) {
-                // If structured choiceItems are present, use index-based logic so we can show ages
-                if (currentQuestion.choiceItems && typeof currentQuestion.answerIndex === 'number') {
+        // Helper to process a clicked choice element
+        function handleChoiceSelection(clickedElement) {
+            try {
+                if (!clickedElement) return;
+
+                if (currentQuestion.choiceItems && currentQuestion.answerIndex != null) {
                     const idx = clickedElement.dataset.index ? parseInt(clickedElement.dataset.index, 10) : -1;
-                    // Mark all choices: append the age to each label and indicate correct/incorrect
                     Array.from(choicesEl.children).forEach((child, i) => {
                         const ci = currentQuestion.choiceItems[i] || {};
-                        // Prefer actorName when present (for role questions); otherwise show age when defined
                         if (ci.actorName) {
                             child.innerHTML = `${ci.label} — <strong>${ci.actorName}</strong>`;
                         } else if (typeof ci.age !== 'undefined' && ci.age !== null) {
@@ -203,40 +203,47 @@ document.addEventListener('DOMContentLoaded', async () => {
                             child.innerHTML = ci.label || '';
                         }
                         child.classList.remove('list-group-item-success', 'list-group-item-danger');
-                        if (i === currentQuestion.answerIndex) child.classList.add('list-group-item-success');
+                        if (i === Number(currentQuestion.answerIndex)) child.classList.add('list-group-item-success');
                         else child.classList.add('list-group-item-danger');
                     });
-                    if (idx === currentQuestion.answerIndex) {
-                        players[currentPlayerIndex].score += currentQuestion.score;
-                        feedbackEl.innerHTML = `<div class="alert alert-success">Correct! You scored ${getPointsString(currentQuestion.score)}.</div>`;
+
+                    if (idx === Number(currentQuestion.answerIndex)) {
+                        players[currentPlayerIndex].score += currentQuestion.score || 0;
+                        feedbackEl.innerHTML = `<div class="alert alert-success">Correct! You scored ${getPointsString(currentQuestion.score || 0)}.</div>`;
                     } else {
-                        const sample = currentQuestion.choiceItems && currentQuestion.choiceItems[0];
-                        if (sample && sample.actorName) {
-                            feedbackEl.innerHTML = `<div class="alert alert-danger">Incorrect!</div>`;
-                        } else {
-                            feedbackEl.innerHTML = `<div class="alert alert-danger">Incorrect!</div>`;
-                        }
+                        feedbackEl.innerHTML = `<div class="alert alert-danger">Incorrect!</div>`;
                     }
                 } else {
                     const selectedAnswer = clickedElement.innerHTML;
                     if (selectedAnswer === currentQuestion.answer) {
                         clickedElement.classList.add('list-group-item-success');
-                        players[currentPlayerIndex].score += currentQuestion.score;
-                        feedbackEl.innerHTML = `<div class="alert alert-success">Correct! You scored ${getPointsString(currentQuestion.score)}.</div>`;
+                        players[currentPlayerIndex].score += currentQuestion.score || 0;
+                        feedbackEl.innerHTML = `<div class="alert alert-success">Correct! You scored ${getPointsString(currentQuestion.score || 0)}.</div>`;
                     } else {
                         clickedElement.classList.add('list-group-item-danger');
-                        // Highlight the correct answer
                         const correctChoice = Array.from(choicesEl.children).find(choice => choice.innerHTML === currentQuestion.answer);
-                        if (correctChoice) {
-                            correctChoice.classList.add('list-group-item-success');
-                        }
+                        if (correctChoice) correctChoice.classList.add('list-group-item-success');
                         feedbackEl.innerHTML = `<div class="alert alert-danger">Incorrect!</div>`;
                     }
                 }
-                displayPlayerScores();
-                // Disable further clicks
+            } catch (err) {
+                console.error('Error in handleChoiceSelection', err, { currentQuestion });
+                feedbackEl.innerHTML = `<div class="alert alert-warning">An error occurred while evaluating the answer. Continuing.</div>`;
+            } finally {
+                try { displayPlayerScores(); } catch (err) { console.error('displayPlayerScores failed', err); }
                 choicesEl.style.pointerEvents = 'none';
-                nextQuestionBtn.classList.remove('d-none');
+                try { nextQuestionBtn.classList.remove('d-none'); } catch (err) { console.error('failed to show nextQuestionBtn', err); }
+            }
+        }
+
+        choicesEl.addEventListener('click', (e) => {
+            console.debug('choicesEl received click', e.target);
+            try {
+                const clickedElement = e.target.closest('.list-group-item');
+                if (!clickedElement) return;
+                handleChoiceSelection(clickedElement);
+            } catch (err) {
+                console.error('Error handling delegated choice click', err);
             }
         });
 
@@ -385,6 +392,13 @@ document.addEventListener('DOMContentLoaded', async () => {
             roundStart.classList.add('d-none');
             questionCard.classList.remove('d-none');
             playerScoresContainer.classList.remove('d-none');
+            // Save the baseline year range for this round so any expansion is local to the round
+            const yearRangeSlider = document.getElementById('year-range-slider');
+            try {
+                _lastRoundBaselineRange = yearRangeSlider.noUiSlider.get().map(v => Number(v));
+            } catch (err) {
+                _lastRoundBaselineRange = null;
+            }
             generateQuestion(currentRound);
             displayQuestion();
         });
@@ -473,6 +487,16 @@ document.addEventListener('DOMContentLoaded', async () => {
         if (currentRound === 5) {
             usedFranchises.clear();
             usedActorsForImdbQuestions.clear();
+        }
+        // Restore baseline year range saved at the start of prior round (so expansions do not persist)
+        if (_lastRoundBaselineRange) {
+            const yearRangeSlider = document.getElementById('year-range-slider');
+            try {
+                yearRangeSlider.noUiSlider.set([_lastRoundBaselineRange[0], _lastRoundBaselineRange[1]]);
+            } catch (err) {
+                // ignore if slider not initialized
+            }
+            _lastRoundBaselineRange = null;
         }
         roundStartTitle.textContent = `Round ${currentRound}: ${roundTitles[currentRound - 1]}`;
         const points = roundPoints[currentRound - 1];
@@ -620,9 +644,30 @@ document.addEventListener('DOMContentLoaded', async () => {
     }
 
     function generateQuestion(difficulty) {
-        const yearRangeSlider = document.getElementById('year-range-slider');
+        try {
+            const yearRangeSlider = document.getElementById('year-range-slider');
         let [currentMinYear, currentMaxYear] = yearRangeSlider.noUiSlider.get();
         const selectedFranchises = getSelectedFranchises();
+        const selectedGenres = getSelectedGenres();
+
+        // Prepare a per-round filtered productions list that honors the selected filters
+        const filteredProductions = productions.filter(p => {
+            const releaseYear = p.release_date ? parseReleaseYear(p.release_date) : NaN;
+            if (isNaN(releaseYear) || releaseYear < currentMinYear || releaseYear > currentMaxYear) return false;
+
+            if (selectedGenres.length > 0) {
+                const genreIds = p.genre_ids ? p.genre_ids.split('|') : [];
+                const genreMatch = selectedGenres.some(sg => genreIds.includes(sg));
+                if (!genreMatch) return false;
+            }
+
+            if (selectedFranchises.length > 0) {
+                const franchise = p.franchise || '';
+                if (!selectedFranchises.includes(franchise)) return false;
+            }
+
+            return true;
+        });
 
         let questionGenerated = false;
         // For alternation between question types 1 and 2 across the session
@@ -631,47 +676,91 @@ document.addEventListener('DOMContentLoaded', async () => {
             generateQuestion._nextType = Math.random() < 0.5 ? 1 : 2;
         }
 
-    if (difficulty === 4) {
+        if (difficulty === 4) {
+            // Randomly choose franchise-based or actor-based IMDb rating question
             if (Math.random() < 0.5) {
                 // Franchise box office question
                 let franchiseFound = false;
                 let localMinYear = currentMinYear;
                 let localMaxYear = currentMaxYear;
-                const allFranchises = [...new Set(productions.map(p => p.franchise).filter(f => f))];
+                // Use franchises present in the currently filtered productions to respect user filters
+                const allFranchises = [...new Set(filteredProductions.map(p => p.franchise).filter(f => f))];
                 shuffleArray(allFranchises);
 
-                while (!franchiseFound) {
-                    for (const franchise of allFranchises) {
-                        if (usedFranchises.has(franchise)) {
-                            continue;
-                        }
+                let franchiseAttempts = 0;
+                const maxFranchiseAttempts = Math.max(12, allFranchises.length * 2);
 
-                        const franchiseMovies = productions.filter(p =>
+                while (!franchiseFound && franchiseAttempts < maxFranchiseAttempts) {
+                    franchiseAttempts++;
+                    for (const franchise of allFranchises) {
+                        if (usedFranchises.has(franchise)) continue;
+
+                        // Start from the filtered productions so franchise selection stays within the user's filters
+                        let franchiseMovies = filteredProductions.filter(p =>
                             p.franchise === franchise &&
                             p.box_office_us && p.box_office_us !== 'N/A' &&
-                            (function(){ const ry = parseReleaseYear(p && p.release_date); return !isNaN(ry) && ry >= localMinYear && ry <= localMaxYear; })()
+                            (function() { const ry = parseReleaseYear(p && p.release_date); return !isNaN(ry) && ry >= localMinYear && ry <= localMaxYear; })()
                         );
 
-                        if (franchiseMovies.length >= 4) {
-                            shuffleArray(franchiseMovies);
-                            const selectedMovies = franchiseMovies.slice(0, 4);
-                            currentQuestion.poster = selectedMovies[Math.floor(Math.random() * selectedMovies.length)].poster;
-                            const parseRevenue = (revenue) => parseInt(revenue.replace(/[^\d]/g, ''));
-                            selectedMovies.sort((a, b) => parseRevenue(a.box_office_us) - parseRevenue(b.box_office_us));
+                        // If the franchise has fewer than 4 movies, try to supplement with similar-genre, near-year movies
+                        let selectedMovies = franchiseMovies.slice();
+                        if (selectedMovies.length < 4) {
+                            const needed = 4 - selectedMovies.length;
 
-                            currentQuestion.question = `Match the US Box Office revenue for these movies in the <strong>${franchise}</strong> franchise.`
+                            // Build genre frequency from existing franchiseMovies
+                            const genreCounts = {};
+                            franchiseMovies.forEach(p => {
+                                const gids = p.genre_ids ? p.genre_ids.split('|') : [];
+                                gids.forEach(g => { genreCounts[g] = (genreCounts[g] || 0) + 1; });
+                            });
+                            const topGenres = Object.keys(genreCounts).sort((a,b) => (genreCounts[b]||0) - (genreCounts[a]||0));
+
+                            const years = franchiseMovies.map(p => parseReleaseYear(p.release_date)).filter(y => !isNaN(y));
+                            const avgYear = years.length ? Math.round(years.reduce((a,b) => a + b, 0) / years.length) : null;
+
+                            const existingIds = new Set(selectedMovies.map(m => m.imdb_id));
+                            // Allow supplement candidates from the full productions set (respecting local year bounds and box office availability)
+                            let candidates = productions.filter(p => {
+                                if (existingIds.has(p.imdb_id)) return false;
+                                if (!p.box_office_us || p.box_office_us === 'N/A') return false;
+                                const ry = parseReleaseYear(p.release_date);
+                                if (isNaN(ry) || ry < localMinYear || ry > localMaxYear) return false;
+                                return true;
+                            });
+
+                            const scored = candidates.map(p => {
+                                const gids = p.genre_ids ? p.genre_ids.split('|') : [];
+                                const genreMatches = topGenres.length ? gids.filter(g => topGenres.includes(g)).length : 0;
+                                const year = parseReleaseYear(p.release_date);
+                                const yearDiff = (avgYear !== null && !isNaN(year)) ? Math.abs(year - avgYear) : Infinity;
+                                return { p, genreMatches, yearDiff };
+                            });
+
+                            let preferred = scored.filter(c => c.genreMatches > 0).sort((a,b) => b.genreMatches - a.genreMatches || a.yearDiff - b.yearDiff);
+                            if (preferred.length < needed) {
+                                const others = scored.filter(c => c.genreMatches === 0).sort((a,b) => a.yearDiff - b.yearDiff);
+                                preferred = preferred.concat(others);
+                            }
+
+                            for (let i = 0; i < needed && i < preferred.length; i++) selectedMovies.push(preferred[i].p);
+                        }
+
+                        if (selectedMovies.length >= 4) {
+                            shuffleArray(selectedMovies);
+                            const chosen = selectedMovies.slice(0, 4);
+                            currentQuestion.poster = chosen[Math.floor(Math.random() * chosen.length)].poster;
+                            const parseRevenue = (revenue) => parseInt(revenue.replace(/[^\d]/g, ''));
+                            chosen.sort((a, b) => parseRevenue(a.box_office_us) - parseRevenue(b.box_office_us));
+
+                            currentQuestion.question = `Match the US Box Office revenue for these movies in the <strong>${franchise}</strong> franchise.`;
                             currentQuestion.type = 'drag-and-match';
                             currentQuestion.subType = 'box-office';
-                            currentQuestion.movies = selectedMovies.map(p => {
+                            currentQuestion.movies = chosen.map(p => {
                                 const role = roles.find(r => r.production_imdb_id === p.imdb_id);
-                                return {
-                                    id: p.imdb_id,
-                                    title: p.title,
-                                    character: role ? role.character : ''
-                                };
+                                return { id: p.imdb_id, title: p.title, character: role ? role.character : '' };
                             });
-                            currentQuestion.revenues = selectedMovies.map(p => p.box_office_us);
-                            currentQuestion.correctOrder = selectedMovies.map(p => p.imdb_id);
+                            currentQuestion.revenues = chosen.map(p => p.box_office_us);
+                            currentQuestion.correctOrder = chosen.map(p => p.imdb_id);
                             currentQuestion.score = 10;
                             shuffleArray(currentQuestion.movies);
                             usedFranchises.add(franchise);
@@ -692,14 +781,39 @@ document.addEventListener('DOMContentLoaded', async () => {
                             });
                             if (availableFranchises.every(f => usedFranchises.has(f))) {
                                 usedFranchises.clear();
-                                shuffleArray(allFranchises); // Reshuffle to try again with a new order
+                                shuffleArray(allFranchises);
                             } else if (allFranchises.filter(f => !usedFranchises.has(f)).length === 0) {
-                                // This case handles when there are available franchises, but they don't meet the 4-movie criteria within the fully expanded year range.
-                                // This is a fallback to prevent an infinite loop.
                                 usedFranchises.clear();
                                 shuffleArray(allFranchises);
                             }
                         }
+                    }
+                }
+
+                // Franchise fallback: pick 4 random box-office movies (respect per-round filters first, then global)
+                if (!franchiseFound) {
+                    let fallbackPool = filteredProductions.filter(p => p.box_office_us && p.box_office_us !== 'N/A');
+                    if (fallbackPool.length < 4) fallbackPool = productions.filter(p => p.box_office_us && p.box_office_us !== 'N/A');
+
+                    if (fallbackPool.length >= 4) {
+                        shuffleArray(fallbackPool);
+                        const chosen = fallbackPool.slice(0, 4);
+                        currentQuestion.poster = chosen[Math.floor(Math.random() * chosen.length)].poster;
+                        const parseRevenue = (revenue) => parseInt(revenue.replace(/[^\d]/g, ''));
+                        chosen.sort((a, b) => parseRevenue(a.box_office_us) - parseRevenue(b.box_office_us));
+
+                        currentQuestion.question = `Match the US Box Office revenue for these movies:`;
+                        currentQuestion.type = 'drag-and-match';
+                        currentQuestion.subType = 'box-office';
+                        currentQuestion.movies = chosen.map(p => {
+                            const role = roles.find(r => r.production_imdb_id === p.imdb_id);
+                            return { id: p.imdb_id, title: p.title, character: role ? role.character : '' };
+                        });
+                        currentQuestion.revenues = chosen.map(p => p.box_office_us);
+                        currentQuestion.correctOrder = chosen.map(p => p.imdb_id);
+                        currentQuestion.score = 10;
+                        shuffleArray(currentQuestion.movies);
+                        questionGenerated = true;
                     }
                 }
             } else {
@@ -708,17 +822,21 @@ document.addEventListener('DOMContentLoaded', async () => {
                 let localMinYear = currentMinYear;
                 let localMaxYear = currentMaxYear;
 
-                const allActorIds = [...new Set(roles.map(r => r.actor_imdb_id))];
+                // Limit actors to those with roles in the filtered productions
+                const allActorIds = [...new Set(roles.filter(r => filteredProductions.some(fp => fp.imdb_id === r.production_imdb_id)).map(r => r.actor_imdb_id))];
                 shuffleArray(allActorIds);
 
-                while (!actorFound) {
-                    for (const actorId of allActorIds) {
-                        if (usedActorsForImdbQuestions.has(actorId)) {
-                            continue;
-                        }
+                let actorAttempts = 0;
+                const maxActorAttempts = Math.max(12, allActorIds.length * 2);
 
-                        const actorRoles = roles.filter(r => r.actor_imdb_id === actorId);
-                            const validRoles = actorRoles.filter(r => {
+                while (!actorFound && actorAttempts < maxActorAttempts) {
+                    actorAttempts++;
+                    for (const actorId of allActorIds) {
+                        if (usedActorsForImdbQuestions.has(actorId)) continue;
+
+                        // Only consider roles that belong to the per-round filtered productions
+                        const actorRoles = roles.filter(r => r.actor_imdb_id === actorId && filteredProductions.some(fp => fp.imdb_id === r.production_imdb_id));
+                        const validRoles = actorRoles.filter(r => {
                             const p = productions.find(prod => prod.imdb_id === r.production_imdb_id);
                             if (!p || !p.release_date || !p.imdb_rating || p.imdb_rating === 'N/A') return false;
                             const releaseYear = parseReleaseYear(p.release_date);
@@ -732,13 +850,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
                             const selectedItems = selectedRoles.map(r => {
                                 const p = productions.find(prod => prod.imdb_id === r.production_imdb_id);
-                                return {
-                                    id: p.imdb_id,
-                                    title: p.title,
-                                    character: r.character,
-                                    imdb_rating: p.imdb_rating,
-                                    poster: p.poster
-                                };
+                                return { id: p.imdb_id, title: p.title, character: r.character, imdb_rating: p.imdb_rating, poster: p.poster };
                             });
 
                             selectedItems.sort((a, b) => parseFloat(a.imdb_rating) - parseFloat(b.imdb_rating));
@@ -751,10 +863,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                             currentQuestion.correctOrder = selectedItems.map(item => item.id);
                             currentQuestion.revenues = selectedItems.map(item => `${item.imdb_rating} ⭐`);
 
-                            let draggableItems = selectedItems.map(item => ({
-                                id: item.id,
-                                title: `${item.character} in <em>${item.title}</em>`
-                            }));
+                            let draggableItems = selectedItems.map(item => ({ id: item.id, title: `${item.character} in <em>${item.title}</em>` }));
                             draggableItems.sort((a, b) => a.title.replace(/<\/?em>/g, '').localeCompare(b.title.replace(/<\/?em>/g, '')));
                             currentQuestion.movies = draggableItems;
 
@@ -788,8 +897,32 @@ document.addEventListener('DOMContentLoaded', async () => {
                         }
                     }
                 }
+
+                // If we couldn't find a qualifying actor after bounded attempts, fallback to random box-office pool
+                if (!actorFound) {
+                    let fallbackPool = filteredProductions.filter(p => p.box_office_us && p.box_office_us !== 'N/A');
+                    if (fallbackPool.length < 4) fallbackPool = productions.filter(p => p.box_office_us && p.box_office_us !== 'N/A');
+
+                    if (fallbackPool.length >= 4) {
+                        shuffleArray(fallbackPool);
+                        const selectedItems = fallbackPool.slice(0, 4).map(p => ({ id: p.imdb_id, title: p.title, character: (roles.find(r => r.production_imdb_id === p.imdb_id) || {}).character || '', imdb_rating: p.imdb_rating || 'N/A', poster: p.poster }));
+
+                        selectedItems.sort((a, b) => parseFloat(a.imdb_rating || 0) - parseFloat(b.imdb_rating || 0));
+                        currentQuestion.poster = selectedItems[Math.floor(Math.random() * selectedItems.length)].poster;
+                        currentQuestion.question = `Order these films based on IMDb rating (fallback set)`;
+                        currentQuestion.type = 'drag-and-match';
+                        currentQuestion.subType = 'imdb-rating';
+                        currentQuestion.score = 10;
+                        currentQuestion.correctOrder = selectedItems.map(item => item.id);
+                        currentQuestion.revenues = selectedItems.map(item => `${item.imdb_rating} ⭐`);
+                        currentQuestion.movies = selectedItems.map(item => ({ id: item.id, title: `${item.character} in <em>${item.title}</em>` }));
+                        usedActorsForImdbQuestions.add(null);
+                        questionGenerated = true;
+                    }
+                }
             }
         } else {
+            // Other difficulty branches (multiple-choice/slider/role questions)
             let attempts = 0;
             const maxAttempts = roles.length * 2;
             // selectedType is fixed for retries: when difficulty 3/4 we'll pick an alternated type and retry that type on failure
@@ -806,9 +939,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
                 if (selectedFranchises.length > 0) {
                     const franchise = production.franchise || '';
-                    if (!selectedFranchises.includes(franchise)) {
-                        continue;
-                    }
+                    if (!selectedFranchises.includes(franchise)) continue;
                 }
 
                 const questionId = `${randomRole.actor_imdb_id}-${randomRole.production_imdb_id}-${randomRole.character}`;
@@ -849,10 +980,10 @@ document.addEventListener('DOMContentLoaded', async () => {
                 delete currentQuestion.answerIndex;
 
                 switch (questionType) {
-                    case 0: // "Which actor was..."
+                    case 0: { // "Which actor was..."
                         // Build structured choice items containing actor label and the age for the given production
                         const distractors0 = getActorDistractors(actor, randomRole, production, 3, age, roles, actors);
-                        if (distractors0.length < 3) continue;
+                        if (distractors0.length < 3) break;
                         currentQuestion.question = `Which actor was ${age} years old at the start of production for <em>${production.title}</em>?`;
                         currentQuestion.difficulty = 2;
                         currentQuestion.score = 3;
@@ -861,7 +992,6 @@ document.addEventListener('DOMContentLoaded', async () => {
                         // Assemble roles + actor objects (correct actor first)
                         const allActorEntries = [{ role: randomRole, actorObj: actor }].concat(distractors0.map(r => ({ role: r, actorObj: actors.get(`${r.actor_imdb_id}-${r.actor_name}`) })));
                         const prodStart = production.production_start ? new Date(production.production_start) : null;
-                        const birthdayMap = new Map();
 
                         // Create choice items with computed ages (if available)
                         let actorChoiceItems = allActorEntries.map(entry => {
@@ -872,12 +1002,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                                 itemAge = calculateAge(bday, prodStart);
                             }
                             const label = `<strong>${entry.role.actor_name}</strong> as ${entry.role.character}`;
-                            return {
-                                label,
-                                actorId: entry.role.actor_imdb_id,
-                                character: entry.role.character,
-                                age: itemAge
-                            };
+                            return { label, actorId: entry.role.actor_imdb_id, character: entry.role.character, age: itemAge };
                         });
 
                         // Shuffle and set structured items
@@ -888,10 +1013,11 @@ document.addEventListener('DOMContentLoaded', async () => {
                         // Backwards-compatible choices labels
                         choices = actorChoiceItems.map(ci => ci.label);
                         break;
-                    case 1: // "Actor X was Y years old for which movie?"
+                    }
+                    case 1: { // "Actor X was Y years old for which movie?"
                         // Build structured choice items so we can show the ages after a selection
                         const distractors1 = getProductionDistractors(actor.imdb_id, production, 3, currentMinYear, currentMaxYear);
-                        if (distractors1.length < 3) continue;
+                        if (distractors1.length < 3) break;
                         currentQuestion.question = `Actor <strong>${actor.name}</strong> was ${age} years old during the start of production for which movie?`;
                         currentQuestion.difficulty = 3;
                         currentQuestion.score = 4;
@@ -899,24 +1025,16 @@ document.addEventListener('DOMContentLoaded', async () => {
                         const allRoles = [ { role: randomRole, productionObj: production } ].concat(distractors1.map(r => ({ role: r, productionObj: productions.find(p => p.imdb_id === r.production_imdb_id) })));
 
                         // Prepare choice items: { label, productionId, character, age }
-                        const birthday = new Date(actor['birthday (YYYY-MM-DD)']);
+                        const bday = new Date(actor['birthday (YYYY-MM-DD)']);
                         let choiceItems = allRoles.map(entry => {
                             const p = entry.productionObj;
                             const prodStart = p && p.production_start ? new Date(p.production_start) : null;
-                            const itemAge = prodStart ? calculateAge(birthday, prodStart) : null;
-                            return {
-                                label: `<em>${entry.role.production_title}</em> as ${entry.role.character}`,
-                                productionId: p ? p.imdb_id : null,
-                                character: entry.role.character,
-                                age: itemAge
-                            };
+                            const itemAge = prodStart ? calculateAge(bday, prodStart) : null;
+                            return { label: `<em>${entry.role.production_title}</em> as ${entry.role.character}`, productionId: p ? p.imdb_id : null, character: entry.role.character, age: itemAge };
                         });
 
                         // Choose poster from available productions
-                        const posters = choiceItems.map(ci => {
-                            const p = productions.find(p => p.imdb_id === ci.productionId);
-                            return p ? p.poster : null;
-                        }).filter(Boolean);
+                        const posters = choiceItems.map(ci => { const p = productions.find(p => p.imdb_id === ci.productionId); return p ? p.poster : null; }).filter(Boolean);
                         currentQuestion.poster = posters.length > 0 ? posters[Math.floor(Math.random() * posters.length)] : null;
 
                         // Shuffle choice items and set answerIndex
@@ -927,7 +1045,8 @@ document.addEventListener('DOMContentLoaded', async () => {
                         // For backward compatibility also set choices to labels
                         choices = choiceItems.map(ci => ci.label);
                         break;
-                    case 2: // "How old was actor X...?" (MC)
+                    }
+                    case 2: { // "How old was actor X...?(MC)"
                         choices = generateSortedRandomChoices(age);
                         currentQuestion.question = `How old was <strong>${actor.name}</strong> as ${randomRole.character} at the start of production for <em>${production.title}</em>?`;
                         currentQuestion.answer = `${age}`;
@@ -935,16 +1054,17 @@ document.addEventListener('DOMContentLoaded', async () => {
                         currentQuestion.score = 5;
                         currentQuestion.poster = production.poster;
                         break;
-                    case 3: // "What role did..."
+                    }
+                    case 3: { // "What role did..."
                         // Build structured role choices that include the actor who played each role
                         const productionRoles = roles.filter(r => r.production_imdb_id === production.imdb_id);
                         // Exclude any roles without character or actor name
                         const usableRoles = productionRoles.filter(r => r.character && r.actor_name);
-                        if (usableRoles.length < 4) continue; // need at least 4 roles (1 correct + 3 distractors)
+                        if (usableRoles.length < 4) break; // need at least 4 roles (1 correct + 3 distractors)
 
                         // Find the correct role entry(s) matching the randomRole.character
                         const correctEntries = usableRoles.filter(r => r.character === randomRole.character && r.actor_imdb_id === randomRole.actor_imdb_id);
-                        if (correctEntries.length === 0) continue; // couldn't find the matching role record
+                        if (correctEntries.length === 0) break; // couldn't find the matching role record
 
                         // Build distractors: pick random roles excluding the correct one
                         const otherRoles = usableRoles.filter(r => !(r.character === randomRole.character && r.actor_imdb_id === randomRole.actor_imdb_id));
@@ -952,9 +1072,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                         const chosenDistractors = otherRoles.slice(0, 3);
 
                         // Assemble structured choice items: include label (role), actorName
-                        const actorChoiceItemsForRole = [
-                            { label: `${randomRole.character}`, actorName: correctEntries[0].actor_name, actorId: correctEntries[0].actor_imdb_id }
-                        ].concat(chosenDistractors.map(r => ({ label: `${r.character}`, actorName: r.actor_name, actorId: r.actor_imdb_id })));
+                        const actorChoiceItemsForRole = [ { label: `${randomRole.character}`, actorName: correctEntries[0].actor_name, actorId: correctEntries[0].actor_imdb_id } ].concat(chosenDistractors.map(r => ({ label: `${r.character}`, actorName: r.actor_name, actorId: r.actor_imdb_id })));
 
                         shuffleArray(actorChoiceItemsForRole);
                         currentQuestion.choiceItems = actorChoiceItemsForRole;
@@ -968,7 +1086,8 @@ document.addEventListener('DOMContentLoaded', async () => {
                         // Backwards-compatible choices
                         choices = actorChoiceItemsForRole.map(ci => ci.label);
                         break;
-                    case 4: // "How old was actor X...?" (Slider)
+                    }
+                    case 4: { // "How old was actor X...?" (Slider)
                         const randomOffset = Math.floor(Math.random() * 13);
                         const sliderMin = Math.max(10, age - randomOffset);
                         const sliderMax = sliderMin + 12;
@@ -983,18 +1102,44 @@ document.addEventListener('DOMContentLoaded', async () => {
                         currentQuestion.difficulty = 6; // now round 6
                         currentQuestion.score = 10;
                         currentQuestion.poster = production.poster;
-                        choices = []; // No choices for slider
+                        choices = [];
                         break;
+                    }
                 }
-                currentQuestion.choices = choices;
-                        usedQuestions.add(questionId);
-                        // (no count needed for alternation)
-                        questionGenerated = true;
+
+                if (choices && choices.length > 0) {
+                    currentQuestion.choices = choices;
+                }
+
+                // Only mark the question as generated if we actually populated choices/choiceItems
+                const hasChoices = (Array.isArray(currentQuestion.choiceItems) && currentQuestion.choiceItems.length > 0) ||
+                    (Array.isArray(currentQuestion.choices) && currentQuestion.choices.length > 0) ||
+                    currentQuestion.type === 'slider' || currentQuestion.type === 'drag-and-match';
+
+                if (hasChoices) {
+                    usedQuestions.add(questionId);
+                    questionGenerated = true;
+                }
             }
         }
 
         if (!questionGenerated) {
             showError("Couldn't generate a question with enough choices. Please check your data or criteria.");
+        }
+        // Debug log the generated question for diagnosis
+        try { console.debug('Generated question', { difficulty, currentRound, currentQuestion, questionGenerated }); } catch (e) {}
+        return;
+        } catch (err) {
+            console.error('generateQuestion failed', err);
+            // Fallback question so the UI still renders and the player can continue
+            currentQuestion = {
+                question: 'Error generating question — skipping',
+                choices: ['Continue'],
+                type: 'multiple-choice',
+                score: 0
+            };
+            // Ensure UI will show these choices
+            try { displayQuestion(); } catch (e) { console.error('displayQuestion failed after generateQuestion error', e); }
         }
     }
 
@@ -1003,7 +1148,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         currentPlayerNameEl.textContent = players[currentPlayerIndex].name;
         currentPlayerNameEl.style.color = players[currentPlayerIndex].color;
         roundNumberEl.textContent = currentRound;
-        questionEl.innerHTML = currentQuestion.question;
+    questionEl.innerHTML = currentQuestion.question;
         choicesEl.innerHTML = '';
         sliderContainer.classList.add('d-none');
         const dragAndMatchContainer = document.getElementById('drag-and-match-container');
@@ -1016,6 +1161,53 @@ document.addEventListener('DOMContentLoaded', async () => {
         if (currentQuestion.poster) {
             questionPoster.src = currentQuestion.poster;
             questionPoster.classList.remove('d-none');
+        }
+
+        // Normalize the currentQuestion object to protect against generator inconsistencies
+        try {
+            // If type wasn't set correctly (or was left as 'multiple-choice' with empty choices),
+            // infer the intended UI from the presence of fields.
+            if (!currentQuestion.type) {
+                if (Array.isArray(currentQuestion.movies) && Array.isArray(currentQuestion.revenues)) {
+                    currentQuestion.type = 'drag-and-match';
+                } else if (typeof currentQuestion.answer !== 'undefined' && (typeof currentQuestion.answer === 'number' || typeof currentQuestion.answer === 'string')) {
+                    // Slider questions have an `answer` number and typically no `choices`
+                    currentQuestion.type = 'slider';
+                } else if (Array.isArray(currentQuestion.choiceItems) && currentQuestion.choiceItems.length > 0) {
+                    currentQuestion.type = 'multiple-choice';
+                } else if (Array.isArray(currentQuestion.choices) && currentQuestion.choices.length > 0) {
+                    currentQuestion.type = 'multiple-choice';
+                }
+            }
+
+            // Ensure choices is always a real array for rendering logic (even if empty)
+            if (!Array.isArray(currentQuestion.choices)) {
+                if (Array.isArray(currentQuestion.choiceItems)) {
+                    currentQuestion.choices = currentQuestion.choiceItems.map(ci => ci.label || '');
+                } else {
+                    currentQuestion.choices = currentQuestion.choices || [];
+                }
+            }
+        } catch (err) {
+            console.error('Failed to normalize currentQuestion', err, currentQuestion);
+        }
+
+        // Populate debug panel only when developer flag is enabled to avoid showing JSON to players
+        try {
+            console.debug('displayQuestion currentQuestion', { currentRound, currentQuestion });
+            const debugEl = document.getElementById('question-debug');
+            if (debugEl) {
+                if (window.__showQuestionDebug === true) {
+                    debugEl.textContent = JSON.stringify(currentQuestion, null, 2);
+                    debugEl.classList.remove('d-none');
+                } else {
+                    debugEl.classList.add('d-none');
+                    // Clear contents to avoid being picked up by accessibility tools
+                    debugEl.textContent = '';
+                }
+            }
+        } catch (err) {
+            console.error('failed to populate debug view', err);
         }
 
         if (currentQuestion.type === 'slider') {
@@ -1076,7 +1268,33 @@ document.addEventListener('DOMContentLoaded', async () => {
                 });
             }
         }
+        // If no choices were rendered (generation bug), create a safe fallback so user can continue
+        try {
+            const hasChoicesRendered = choicesEl.children && choicesEl.children.length > 0;
+            const isInteractiveType = currentQuestion.type === 'slider' || currentQuestion.type === 'drag-and-match';
+            if (!hasChoicesRendered && !isInteractiveType) {
+                currentQuestion.choices = ['Continue'];
+                currentQuestion.answer = 'Continue';
+                const choiceEl = document.createElement('button');
+                choiceEl.type = 'button';
+                choiceEl.classList.add('list-group-item', 'list-group-item-action');
+                choiceEl.innerHTML = 'Continue';
+                choicesEl.appendChild(choiceEl);
+                console.warn('No choices generated for currentQuestion; inserting fallback Continue choice', currentQuestion);
+            }
+        } catch (err) {
+            console.error('failed to insert fallback choice', err);
+        }
         choicesEl.style.pointerEvents = 'auto';
+        // If this is the final question of the game, show 'Final Scoring' when the button is revealed
+        try {
+            const totalPerRound = questionsPerRound * (players.length || 1);
+            const isFinalQuestionOverall = (currentRound === roundTitles.length) && (questionsAnsweredInRound === totalPerRound - 1);
+            nextQuestionBtn.textContent = isFinalQuestionOverall ? 'Final Scoring' : 'Next Question';
+        } catch (err) {
+            // Fallback: default label
+            nextQuestionBtn.textContent = 'Next Question';
+        }
         nextQuestionBtn.classList.add('d-none');
     }
 
@@ -1448,7 +1666,13 @@ document.addEventListener('DOMContentLoaded', async () => {
     function updateSelectedItemsDisplay(type) {
         const display = document.getElementById(`selected-${type}s-display`);
         const allCheckbox = document.getElementById(`${type}-all`);
-        
+        const noneCheckbox = document.getElementById(`${type}-none`);
+
+        if (noneCheckbox && noneCheckbox.checked) {
+            display.textContent = 'None';
+            return;
+        }
+
         if (allCheckbox.checked) {
             display.textContent = 'All';
             return;
@@ -1490,7 +1714,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                 <label class="form-check-label" for="franchise-all"><strong>All Franchises</strong></label>
             </div>
             <div class="form-check">
-                <input class="form-check-input franchise-checkbox" type="checkbox" value="" id="franchise-none" checked data-label="No Franchises">
+                <input class="form-check-input franchise-checkbox" type="checkbox" value="" id="franchise-none" data-label="No Franchises">
                 <label class="form-check-label" for="franchise-none">No Franchises</label>
             </div>
             <hr>
@@ -1518,19 +1742,39 @@ document.addEventListener('DOMContentLoaded', async () => {
 
         const allCheckbox = document.getElementById('franchise-all');
         const franchiseCheckboxes = modalBody.querySelectorAll('.franchise-checkbox');
+        const noneCheckbox = document.getElementById('franchise-none');
 
         allCheckbox.addEventListener('change', (e) => {
             franchiseCheckboxes.forEach(cb => {
-                cb.checked = e.target.checked;
+                // Do not toggle the 'No Franchises' checkbox when toggling All
+                if (cb.id !== 'franchise-none') cb.checked = e.target.checked;
             });
+            // If All is checked, ensure No Franchises is unchecked
+            if (e.target.checked && noneCheckbox) noneCheckbox.checked = false;
         });
 
         modalBody.addEventListener('change', (e) => {
+            // If the user toggles the 'No Franchises' option, it should clear all others
+            if (e.target && e.target.id === 'franchise-none') {
+                if (e.target.checked) {
+                    franchiseCheckboxes.forEach(cb => {
+                        if (cb.id !== 'franchise-none') cb.checked = false;
+                    });
+                    if (allCheckbox) allCheckbox.checked = false;
+                }
+                return;
+            }
+
             if (e.target.classList.contains('franchise-checkbox')) {
+                // If any regular franchise checkbox is changed, ensure 'No Franchises' is unchecked
+                if (e.target.id !== 'franchise-none' && e.target.checked && noneCheckbox) {
+                    noneCheckbox.checked = false;
+                }
+
                 if (!e.target.checked) {
                     allCheckbox.checked = false;
                 } else {
-                    const allChecked = Array.from(franchiseCheckboxes).every(cb => cb.checked);
+                    const allChecked = Array.from(franchiseCheckboxes).filter(cb => cb.id !== 'franchise-none').every(cb => cb.checked);
                     if (allChecked) {
                         allCheckbox.checked = true;
                     }
