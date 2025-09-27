@@ -80,6 +80,21 @@ function parseCsvRow(row) {
     return result.map(val => val.replace(/^"|"$/g, '')); // remove leading/trailing quotes
 }
 
+function formatCurrency(value) {
+    if (!value) {
+        return '';
+    }
+    const numberValue = Number(String(value).replace(/[^0-9.]/g, ''));
+    if (isNaN(numberValue)) {
+        return value;
+    }
+    return new Intl.NumberFormat('en-US', {
+        style: 'currency',
+        currency: 'USD',
+        maximumFractionDigits: 0,
+    }).format(numberValue);
+}
+
 async function rewriteCsvWithQuotes(filePath) {
     try {
         const fileContent = fs.readFileSync(filePath, 'utf-8');
@@ -678,6 +693,156 @@ app.post('/save-roles', (req, res) => {
     } catch (error) {
         console.error('Error saving roles:', error);
         res.status(500).json({ error: 'Failed to save roles' });
+    }
+});
+
+app.get('/bulk-update', async (req, res) => {
+    res.writeHead(200, {
+        'Content-Type': 'text/event-stream',
+        'Cache-Control': 'no-cache',
+        'Connection': 'keep-alive',
+    });
+
+    const sendEvent = (data) => {
+        res.write(`data: ${JSON.stringify(data)}\n\n`);
+    };
+
+    try {
+        const actions = JSON.parse(req.query.actions);
+        const tmdbFields = ['poster-url', 'title', 'type', 'genres', 'release-date', 'budget'];
+        const omdbFields = ['imdb-rating', 'box-office-us'];
+        const geminiFields = ['production-start', 'production-end'];
+
+        const productionsCsv = fs.readFileSync('productions.csv', 'utf-8');
+        const rows = productionsCsv.split(/\r?\n/);
+        const header = parseCsvRow(rows[0]);
+        const dataRows = rows.slice(1);
+
+        const processAll = req.query.all === 'true';
+        const rowsToProcess = processAll ? dataRows : dataRows.slice(0, 10);
+        const totalRows = rowsToProcess.length;
+
+        for (let i = 0; i < rowsToProcess.length; i++) {
+            const row = parseCsvRow(rowsToProcess[i]);
+            const imdb_id = row[header.indexOf('imdb_id')];
+            const title = row[header.indexOf('title')];
+
+            const actionFieldToCsvColumn = {
+                'poster-url': 'poster',
+                'title': 'title',
+                'type': 'type',
+                'genres': 'genre_ids',
+                'release-date': 'release_date',
+                'imdb-rating': 'imdb_rating',
+                'box-office-us': 'box_office_us',
+                'budget': 'budget',
+                'production-start': 'production_start',
+                'production-end': 'production_end'
+            };
+
+            const shouldFetchTMDb = tmdbFields.some(f => actions[f] && (actions[f] === 'overwrite' || !row[header.indexOf(actionFieldToCsvColumn[f])]));
+            const shouldFetchOMDb = omdbFields.some(f => actions[f] && (actions[f] === 'overwrite' || !row[header.indexOf(actionFieldToCsvColumn[f])]));
+            const shouldFetchGemini = geminiFields.some(f => actions[f] && (actions[f] === 'overwrite' || !row[header.indexOf(actionFieldToCsvColumn[f])]));
+
+
+
+            try {
+                let tmdbData = {};
+                if (shouldFetchTMDb) {
+                    const findUrl = `https://api.themoviedb.org/3/find/${imdb_id}?api_key=${TMDB_API_KEY}&external_source=imdb_id`;
+                    const findResponse = await fetch(findUrl);
+                    const findData = await findResponse.json();
+                    if (!findData.movie_results || findData.movie_results.length === 0) {
+                        throw new Error('Movie not found on TMDb');
+                    }
+                    const tmdbMovieId = findData.movie_results[0].id;
+
+                    const movieUrl = `https://api.themoviedb.org/3/movie/${tmdbMovieId}?api_key=${TMDB_API_KEY}`;
+                    const movieResponse = await fetch(movieUrl);
+                    tmdbData = await movieResponse.json();
+                }
+
+                let omdbData = {};
+                if (shouldFetchOMDb) {
+                    const omdbUrl = `http://www.omdbapi.com/?i=${imdb_id}&apikey=${OMDb_API_KEY}`;
+                    const omdbResponse = await fetch(omdbUrl);
+                    omdbData = await omdbResponse.json();
+                }
+
+                let geminiData = {};
+                if (shouldFetchGemini) {
+                    const releaseYear = row[header.indexOf('release_date')].split('-')[0];
+                    const searchQuery = `What are the production start and end dates for the movie "${title}" (${releaseYear}) with IMDb ID ${imdb_id}? Please provide the dates in YYYY-MM-DD format. For example: "Production Start: 1999-01-18; Production End: 2000-05-07". If you can only find the month and year, use the first day of the month. If there are multiple filming periods, provide the start of the first period and the end of the last period.`
+                    const searchResults = await google_web_search(searchQuery);
+                    const startMatch = searchResults.match(/production start:?\s*(\d{4}-\d{2}-\d{2})/i);
+                    if (startMatch && startMatch[1]) {
+                        geminiData.productionStart = startMatch[1];
+                    }
+                    const endMatch = searchResults.match(/production end:?\s*(\d{4}-\d{2}-\d{2})/i);
+                    if (endMatch && endMatch[1]) {
+                        geminiData.productionEnd = endMatch[1];
+                    }
+                }
+
+                const updatedFields = [];
+
+                // Apply actions
+                Object.keys(actions).forEach(field => {
+                    const action = actions[field];
+                    let newValue;
+                    let csvColumnName = ''
+
+                    switch (field) {
+                        case 'poster-url': newValue = tmdbData.poster_path ? `https://image.tmdb.org/t/p/w500${tmdbData.poster_path}` : ''; csvColumnName = 'poster'; break;
+                        case 'title': newValue = tmdbData.title || ''; csvColumnName = 'title'; break;
+                        case 'type': newValue = (tmdbData.media_type === 'movie' ? 'Film' : 'Series'); csvColumnName = 'type'; break;
+                        case 'genres': newValue = (tmdbData.genres || []).map(g => g.id).join('|'); csvColumnName = 'genre_ids'; break;
+                        case 'release-date': newValue = tmdbData.release_date || ''; csvColumnName = 'release_date'; break;
+                        case 'imdb-rating': newValue = omdbData.imdbRating || ''; csvColumnName = 'imdb_rating'; break;
+                        case 'box-office-us': newValue = formatCurrency(omdbData.BoxOffice); csvColumnName = 'box_office_us'; break;
+                        case 'budget': newValue = formatCurrency(tmdbData.budget); csvColumnName = 'budget'; break;
+                        case 'production-start': newValue = geminiData.productionStart || ''; csvColumnName = 'production_start'; break;
+                        case 'production-end': newValue = geminiData.productionEnd || ''; csvColumnName = 'production_end'; break;
+                    }
+
+                    if (newValue !== undefined) {
+                        const colIndex = header.indexOf(csvColumnName);
+                        if (colIndex === -1) return;
+
+                        const oldValue = row[colIndex];
+
+                        if (action === 'overwrite' || (action === 'update-blanks' && (!oldValue || oldValue.trim() === ''))) {
+                            row[colIndex] = newValue;
+                            updatedFields.push(field);
+                        }
+                    }
+                });
+
+                let statusMessage = `${i + 1} of ${totalRows}: Processing ${title}.`;
+                if (updatedFields.length > 0) {
+                    statusMessage += ` Updated: ${updatedFields.join(', ')}.`;
+                } else {
+                    statusMessage += ' No changes applied.';
+                }
+                sendEvent({ message: statusMessage });
+
+                rows[i + 1] = row.map(v => `"${(v || '').replace(/"/g, '""')}"`).join(',');
+
+            } catch (error) {
+                console.error(`Failed to update ${title} (${imdb_id}):`, error.message);
+                sendEvent({ message: `Failed to update ${title}: ${error.message}` });
+                continue;
+            }
+        }
+
+        fs.writeFileSync('productions.csv', rows.join('\n'));
+        sendEvent({ message: 'done' });
+        res.end();
+
+    } catch (error) {
+        console.error('Bulk update failed:', error);
+        sendEvent({ error: 'Bulk update process failed on the server.' });
+        res.end();
     }
 });
 

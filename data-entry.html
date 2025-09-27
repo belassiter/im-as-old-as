@@ -8,22 +8,218 @@
 </head>
 <body>
     <div class="container mt-5">
-        <h1>Movie Search</h1>
-        <form id="search-form">
-            <div class="mb-3">
-                <label for="title" class="form-label">Movie Title</label>
-                <input type="text" class="form-control" id="title" required>
-            </div>
-            <div class="mb-3">
-                <label for="year" class="form-label">Year (Optional)</label>
-                <input type="number" class="form-control" id="year">
-            </div>
-            <button type="submit" class="btn btn-primary">Search</button>
-        </form>
+        <div class="d-flex justify-content-start align-items-center mb-3">
+            <div class="btn-group" role="group" aria-label="Mode select">
+                <input type="radio" class="btn-check" name="mode" id="addModeBtn" autocomplete="off" checked>
+                <label class="btn btn-outline-primary" for="addModeBtn">Add</label>
 
-        <div id="results" class="mt-4"></div>
+                <input type="radio" class="btn-check" name="mode" id="bulkUpdateModeBtn" autocomplete="off">
+                <label class="btn btn-outline-primary" for="bulkUpdateModeBtn">Bulk Update</label>
+            </div>
+        </div>
 
-        <div id="movie-details" class="mt-4" style="display: none;">
+        <div id="add-mode-container">
+            <h1>Movie Search</h1>
+            <form id="search-form">
+                <div class="mb-3">
+                    <label for="title" class="form-label">Movie Title</label>
+                    <input type="text" class="form-control" id="title" required>
+                </div>
+                <div class="mb-3">
+                    <label for="year" class="form-label">Year (Optional)</label>
+                    <input type="number" class="form-control" id="year">
+                </div>
+                <button type="submit" class="btn btn-primary">Search</button>
+            </form>
+
+            <div id="results" class="mt-4"></div>
+
+            <div id="movie-details" class="mt-4" style="display: none;">
+            </div>
+        </div>
+
+        <div id="bulk-update-container" class="d-none">
+            <h3>Bulk Update Productions</h3>
+            <div class="mb-3">
+                <button type="button" class="btn btn-secondary btn-sm" id="select-all-no-change">Select All: No change</button>
+                <button type="button" class="btn btn-secondary btn-sm" id="select-all-update-blanks">Select All: Update blanks</button>
+                <button type="button" class="btn btn-secondary btn-sm" id="select-all-overwrite">Select All: Overwrite</button>
+            </div>
+            <form id="bulk-update-form">
+                <div class="row mb-3 align-items-center">
+                    <div class="col-md-3"><label class="form-label text-primary">Poster URL</label></div>
+                    <div class="col-md-9">
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="radio" name="poster-url-action" value="no-change">
+                            <label class="form-check-label">No change</label>
+                        </div>
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="radio" name="poster-url-action" value="update-blanks" checked>
+                            <label class="form-check-label">Update blanks</label>
+                        </div>
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="radio" name="poster-url-action" value="overwrite">
+                            <label class="form-check-label">Overwrite</label>
+                        </div>
+                    </div>
+                </div>
+                <div class="row mb-3 align-items-center">
+                    <div class="col-md-3"><label class="form-label text-primary">Title</label></div>
+                    <div class="col-md-9">
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="radio" name="title-action" value="no-change">
+                            <label class="form-check-label">No change</label>
+                        </div>
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="radio" name="title-action" value="update-blanks" checked>
+                            <label class="form-check-label">Update blanks</label>
+                        </div>
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="radio" name="title-action" value="overwrite">
+                            <label class="form-check-label">Overwrite</label>
+                        </div>
+                    </div>
+                </div>
+                <div class="row mb-3 align-items-center">
+                    <div class="col-md-3"><label class="form-label text-primary">Type</label></div>
+                    <div class="col-md-9">
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="radio" name="type-action" value="no-change">
+                            <label class="form-check-label">No change</label>
+                        </div>
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="radio" name="type-action" value="update-blanks" checked>
+                            <label class="form-check-label">Update blanks</label>
+                        </div>
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="radio" name="type-action" value="overwrite">
+                            <label class="form-check-label">Overwrite</label>
+                        </div>
+                    </div>
+                </div>
+                <div class="row mb-3 align-items-center">
+                    <div class="col-md-3"><label class="form-label text-primary">Genres</label></div>
+                    <div class="col-md-9">
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="radio" name="genres-action" value="no-change">
+                            <label class="form-check-label">No change</label>
+                        </div>
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="radio" name="genres-action" value="update-blanks" checked>
+                            <label class="form-check-label">Update blanks</label>
+                        </div>
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="radio" name="genres-action" value="overwrite">
+                            <label class="form-check-label">Overwrite</label>
+                        </div>
+                    </div>
+                </div>
+                <div class="row mb-3 align-items-center">
+                    <div class="col-md-3"><label class="form-label text-primary">Release Date</label></div>
+                    <div class="col-md-9">
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="radio" name="release-date-action" value="no-change">
+                            <label class="form-check-label">No change</label>
+                        </div>
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="radio" name="release-date-action" value="update-blanks" checked>
+                            <label class="form-check-label">Update blanks</label>
+                        </div>
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="radio" name="release-date-action" value="overwrite">
+                            <label class="form-check-label">Overwrite</label>
+                        </div>
+                    </div>
+                </div>
+                <div class="row mb-3 align-items-center">
+                    <div class="col-md-3"><label class="form-label text-primary">Budget</label></div>
+                    <div class="col-md-9">
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="radio" name="budget-action" value="no-change">
+                            <label class="form-check-label">No change</label>
+                        </div>
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="radio" name="budget-action" value="update-blanks" checked>
+                            <label class="form-check-label">Update blanks</label>
+                        </div>
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="radio" name="budget-action" value="overwrite">
+                            <label class="form-check-label">Overwrite</label>
+                        </div>
+                    </div>
+                </div>
+                <div class="row mb-3 align-items-center">
+                    <div class="col-md-3"><label class="form-label text-warning">IMDb Rating</label></div>
+                    <div class="col-md-9">
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="radio" name="imdb-rating-action" value="no-change" checked>
+                            <label class="form-check-label">No change</label>
+                        </div>
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="radio" name="imdb-rating-action" value="update-blanks">
+                            <label class="form-check-label">Update blanks</label>
+                        </div>
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="radio" name="imdb-rating-action" value="overwrite">
+                            <label class="form-check-label">Overwrite</label>
+                        </div>
+                    </div>
+                </div>
+                <div class="row mb-3 align-items-center">
+                    <div class="col-md-3"><label class="form-label text-warning">Box Office (US)</label></div>
+                    <div class="col-md-9">
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="radio" name="box-office-action" value="no-change" checked>
+                            <label class="form-check-label">No change</label>
+                        </div>
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="radio" name="box-office-action" value="update-blanks">
+                            <label class="form-check-label">Update blanks</label>
+                        </div>
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="radio" name="box-office-action" value="overwrite">
+                            <label class="form-check-label">Overwrite</label>
+                        </div>
+                    </div>
+                </div>
+                <div class="row mb-3 align-items-center">
+                    <div class="col-md-3"><label class="form-label text-danger">Production Start</label></div>
+                    <div class="col-md-9">
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="radio" name="production-start-action" value="no-change" checked>
+                            <label class="form-check-label">No change</label>
+                        </div>
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="radio" name="production-start-action" value="update-blanks">
+                            <label class="form-check-label">Update blanks</label>
+                        </div>
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="radio" name="production-start-action" value="overwrite">
+                            <label class="form-check-label">Overwrite</label>
+                        </div>
+                    </div>
+                </div>
+                <div class="row mb-3 align-items-center">
+                    <div class="col-md-3"><label class="form-label text-danger">Production End</label></div>
+                    <div class="col-md-9">
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="radio" name="production-end-action" value="no-change" checked>
+                            <label class="form-check-label">No change</label>
+                        </div>
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="radio" name="production-end-action" value="update-blanks">
+                            <label class="form-check-label">Update blanks</label>
+                        </div>
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="radio" name="production-end-action" value="overwrite">
+                            <label class="form-check-label">Overwrite</label>
+                        </div>
+                    </div>
+                </div>
+                <button type="submit" class="btn btn-primary mt-3" id="start-bulk-update-btn">Update 10</button>
+                <button type="button" class="btn btn-warning mt-3" id="start-bulk-update-all-btn">Update All</button>
+            </form>
+            <div id="bulk-update-status" class="mt-3"></div>
         </div>
     </div>
 

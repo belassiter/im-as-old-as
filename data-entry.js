@@ -33,6 +33,84 @@ document.addEventListener('DOMContentLoaded', async () => {
     } catch (error) {
         console.error('Error loading genres data:', error);
     }
+
+    const addModeBtn = document.getElementById('addModeBtn');
+    const bulkUpdateModeBtn = document.getElementById('bulkUpdateModeBtn');
+    const addModeContainer = document.getElementById('add-mode-container');
+    const bulkUpdateContainer = document.getElementById('bulk-update-container');
+
+    addModeBtn.addEventListener('change', () => {
+        addModeContainer.classList.remove('d-none');
+        bulkUpdateContainer.classList.add('d-none');
+    });
+
+    bulkUpdateModeBtn.addEventListener('change', () => {
+        addModeContainer.classList.add('d-none');
+        bulkUpdateContainer.classList.remove('d-none');
+    });
+
+    document.getElementById('select-all-no-change').addEventListener('click', () => {
+        document.querySelectorAll('#bulk-update-form input[type="radio"][value="no-change"]').forEach(radio => radio.checked = true);
+    });
+
+    document.getElementById('select-all-update-blanks').addEventListener('click', () => {
+        document.querySelectorAll('#bulk-update-form input[type="radio"][value="update-blanks"]').forEach(radio => radio.checked = true);
+    });
+
+    document.getElementById('select-all-overwrite').addEventListener('click', () => {
+        document.querySelectorAll('#bulk-update-form input[type="radio"][value="overwrite"]').forEach(radio => radio.checked = true);
+    });
+
+    document.getElementById('bulk-update-form').addEventListener('submit', (e) => {
+        e.preventDefault();
+        initiateBulkUpdate(false); // false for not all
+    });
+
+    document.getElementById('start-bulk-update-all-btn').addEventListener('click', () => {
+        initiateBulkUpdate(true); // true for all
+    });
+
+    function initiateBulkUpdate(all = false) {
+        const statusDiv = document.getElementById('bulk-update-status');
+        statusDiv.innerHTML = ''; // Clear previous logs
+
+        const actions = {};
+        const form = document.getElementById('bulk-update-form');
+        form.querySelectorAll('.row').forEach(row => {
+            const label = row.querySelector('label').textContent;
+            const fieldName = label.toLowerCase().replace(/ /g, '-').replace(/\(|\)/g, '');
+            const selectedAction = row.querySelector('input[type="radio"]:checked').value;
+            if (selectedAction !== 'no-change') {
+                actions[fieldName] = selectedAction;
+            }
+        });
+
+        const params = { actions: JSON.stringify(actions) };
+        if (all) {
+            params.all = true;
+        }
+        const queryString = new URLSearchParams(params).toString();
+        const evtSource = new EventSource(`/bulk-update?${queryString}`);
+
+        evtSource.onmessage = function(event) {
+            const data = JSON.parse(event.data);
+            if (data.error) {
+                statusDiv.innerHTML += `<div class="alert alert-danger">${data.error}</div>`;
+                evtSource.close();
+            } else if (data.message === 'done') {
+                statusDiv.innerHTML += `<div class="alert alert-success">Bulk update complete!</div>`;
+                evtSource.close();
+            } else {
+                statusDiv.innerHTML += `<div>${data.message}</div>`;
+            }
+        };
+
+        evtSource.onerror = function(err) {
+            statusDiv.innerHTML += `<div class="alert alert-danger">An error occurred with the bulk update connection.</div>`;
+            console.error("EventSource failed:", err);
+            evtSource.close();
+        };
+    }
 });
 
 async function checkAndHighlightRoles(production_imdb_id, production_title, cast) {
@@ -546,7 +624,7 @@ document.getElementById('results').addEventListener('click', async (e) => {
                                                 <input class="form-check-input" type="checkbox" value="" id="box-office-overwrite">
                                                 <label class="form-check-label" for="box-office-overwrite">Box Office (US)</label>
                                             </div>
-                                            <input type="text" class="form-control" id="box-office" value="${movie.revenue || ''}">
+                                            <input type="text" class="form-control" id="box-office" value="">
                                         </div>
                                         <div class="col-6">
                                             <label class="form-label">&nbsp;</label>
