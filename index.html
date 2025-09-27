@@ -86,10 +86,23 @@
                 <h5 class="mt-3">Questions per round: <span id="questions-per-round-value">3</span></h5>
                 <input type="range" class="form-range" min="1" max="5" id="questions-per-round-slider" value="3">
 
+                <div class="mt-3 d-flex align-items-center">
+                    <button type="button" class="btn btn-secondary" data-bs-toggle="modal" data-bs-target="#genreModal">Select Genres</button>
+                    <span id="selected-genres-display" class="ms-2 text-muted">All</span>
+                </div>
+
+                <div class="mt-3 d-flex align-items-center">
+                    <button type="button" class="btn btn-secondary" data-bs-toggle="modal" data-bs-target="#franchiseModal">Select Franchises</button>
+                    <span id="selected-franchises-display" class="ms-2 text-muted">All</span>
+                </div>
+
                 <h5 class="mt-3">Film release year range: <span id="year-range-value">1990 - 2010</span></h5>
                 <div id="year-range-slider"></div>
 
-                <button id="ready-btn" class="btn btn-success mt-3">Ready!</button>
+                <div class="d-flex align-items-center mt-3">
+                    <button id="ready-btn" class="btn btn-success">Ready!</button>
+                    <span id="available-counts" class="ms-3 text-muted"></span>
+                </div>
             </div>
 
             <div id="game-container" class="d-none">
@@ -155,5 +168,41 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/noUiSlider/15.7.0/nouislider.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/sortablejs@latest/Sortable.min.js"></script>
     <script src="app.js"></script>
+
+    <!-- Genre Modal -->
+    <div class="modal fade" id="genreModal" tabindex="-1" aria-labelledby="genreModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-scrollable">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="genreModalLabel">Select Genres</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body" id="genre-modal-body">
+                    <!-- Genre checkboxes will be populated here -->
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Done</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Franchise Modal -->
+    <div class="modal fade" id="franchiseModal" tabindex="-1" aria-labelledby="franchiseModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-scrollable">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="franchiseModalLabel">Select Franchises</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body" id="franchise-modal-body">
+                    <!-- Franchise checkboxes will be populated here -->
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Done</button>
+                </div>
+            </div>
+        </div>
+    </div>
 </body>
 </html>

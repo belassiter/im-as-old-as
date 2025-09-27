@@ -68,10 +68,11 @@ document.addEventListener('DOMContentLoaded', async () => {
     showLoading();
 
     try {
-        const [actorsRes, productionsRes, rolesRes] = await Promise.all([
+        const [actorsRes, productionsRes, rolesRes, genresRes] = await Promise.all([
             fetch('actors.csv'),
             fetch('productions.csv'),
-            fetch('roles.csv')
+            fetch('roles.csv'),
+            fetch('genres.csv')
         ]);
 
         // Fail early with a clear error if any of the CSVs couldn't be fetched (404/500)
@@ -79,27 +80,42 @@ document.addEventListener('DOMContentLoaded', async () => {
         if (!actorsRes.ok) failed.push(`actors.csv (${actorsRes.status})`);
         if (!productionsRes.ok) failed.push(`productions.csv (${productionsRes.status})`);
         if (!rolesRes.ok) failed.push(`roles.csv (${rolesRes.status})`);
+        if (!genresRes.ok) failed.push(`genres.csv (${genresRes.status})`);
         if (failed.length > 0) {
             throw new Error(`Failed to fetch required data files: ${failed.join(', ')}`);
         }
 
-        const [actorsText, productionsText, rolesText] = await Promise.all([
+        const [actorsText, productionsText, rolesText, genresText] = await Promise.all([
             actorsRes.text(),
             productionsRes.text(),
-            rolesRes.text()
+            rolesRes.text(),
+            genresRes.text()
         ]);
 
         const parsedActors = parseCsv(actorsText);
         productions = parseCsv(productionsText);
         const allRolesArray = parseCsv(rolesText);
+        const genres = parseCsv(genresText);
+
+        populateGenreModal(genres, productions);
+        populateFranchiseModal(productions);
 
         // Helper to safely parse a release year from a release_date string like "YYYY-MM-DD"
         function parseReleaseYear(releaseDate) {
             if (!releaseDate) return NaN;
             const s = String(releaseDate).trim();
             if (s.length === 0) return NaN;
+            console.log('Parsing release date:', s); // for debugging
             const parts = s.split('-');
+            if (parts.length !== 3) {
+                console.warn('Invalid date format:', s);
+                return NaN;
+            }
             const y = parseInt(parts[0]);
+            if (String(y).length !== 4) {
+                console.warn('Invalid year format:', y);
+                return NaN;
+            }
             return isNaN(y) ? NaN : y;
         }
 
@@ -438,7 +454,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                     'max': absoluteMaxYear
                 },
                 step: 1,
-                tooltips: true,
+                tooltips: false,
                 format: {
                     to: value => Math.round(value),
                     from: value => Math.round(value)
@@ -447,8 +463,10 @@ document.addEventListener('DOMContentLoaded', async () => {
 
             yearRangeSlider.noUiSlider.on('update', (values, handle) => {
                 yearRangeValueSpan.textContent = `${values[0]} - ${values[1]}`;
+                updateAvailableCounts();
             });
         }
+        updateAvailableCounts();
     }
 
     function showRoundStartScreen() {
@@ -539,9 +557,72 @@ document.addEventListener('DOMContentLoaded', async () => {
         });
     }
 
+    function getSelectedGenres() {
+        const allCheckbox = document.getElementById('genre-all');
+        if (allCheckbox && allCheckbox.checked) {
+            return []; // All genres
+        }
+        const selected = [];
+        document.querySelectorAll('#genre-modal-body .genre-checkbox:checked').forEach(cb => {
+            selected.push(...cb.value.split('|'));
+        });
+        return selected;
+    }
+
+    function getSelectedFranchises() {
+        const allCheckbox = document.getElementById('franchise-all');
+        if (allCheckbox && allCheckbox.checked) {
+            return []; // All franchises
+        }
+        const selected = [];
+        document.querySelectorAll('#franchise-modal-body .franchise-checkbox:checked').forEach(cb => {
+            selected.push(...cb.value.split('|'));
+        });
+        return selected;
+    }
+
+    function updateAvailableCounts() {
+        const yearRangeSlider = document.getElementById('year-range-slider');
+        const [minYear, maxYear] = yearRangeSlider.noUiSlider.get();
+
+        const selectedGenres = getSelectedGenres();
+        const selectedFranchises = getSelectedFranchises();
+
+        const filteredProductions = productions.filter(p => {
+            const releaseYear = p.release_date ? parseInt(p.release_date.split('-')[0]) : 0;
+            const yearMatch = releaseYear >= minYear && releaseYear <= maxYear;
+            if (!yearMatch) return false;
+
+            if (selectedGenres.length > 0) {
+                const genreIds = p.genre_ids ? p.genre_ids.split('|') : [];
+                const genreMatch = selectedGenres.some(sg => genreIds.includes(sg));
+                if (!genreMatch) return false;
+            }
+
+            if (selectedFranchises.length > 0) {
+                const franchise = p.franchise || '';
+                if (!selectedFranchises.includes(franchise)) return false;
+            }
+
+            return true;
+        });
+
+        const filteredProductionIds = new Set(filteredProductions.map(p => p.imdb_id));
+
+        const filteredRoles = roles.filter(r => filteredProductionIds.has(r.production_imdb_id));
+        const filteredRoleCount = filteredRoles.length;
+
+        const filteredActorIds = new Set(filteredRoles.map(r => r.actor_imdb_id));
+        const filteredActorCount = filteredActorIds.size;
+
+        const availableCountsEl = document.getElementById('available-counts');
+        availableCountsEl.textContent = `Available: ${filteredProductions.length} Movies, ${filteredRoleCount} Roles, ${filteredActorCount} Actors.`;
+    }
+
     function generateQuestion(difficulty) {
         const yearRangeSlider = document.getElementById('year-range-slider');
         let [currentMinYear, currentMaxYear] = yearRangeSlider.noUiSlider.get();
+        const selectedFranchises = getSelectedFranchises();
 
         let questionGenerated = false;
         // For alternation between question types 1 and 2 across the session
@@ -721,6 +802,13 @@ document.addEventListener('DOMContentLoaded', async () => {
 
                 if (!actor || !production || !actor['birthday (YYYY-MM-DD)'] || !production.production_start || !production.release_date) {
                     continue;
+                }
+
+                if (selectedFranchises.length > 0) {
+                    const franchise = production.franchise || '';
+                    if (!selectedFranchises.includes(franchise)) {
+                        continue;
+                    }
                 }
 
                 const questionId = `${randomRole.actor_imdb_id}-${randomRole.production_imdb_id}-${randomRole.character}`;
@@ -1257,11 +1345,11 @@ document.addEventListener('DOMContentLoaded', async () => {
     }
 
     function parseCsv(text) {
-        const lines = text.split('\n').filter(line => line.trim() !== '');
+        const lines = text.split(/\r?\n/).filter(line => line.trim() !== '');
         // Normalize header names by trimming and removing surrounding quotes
         const header = lines[0].split(',').map(h => h.trim().replace(/^"|"$/g, ''));
         const rows = lines.slice(1).map(line => {
-            const values = line.split(/,(?=(?:(?:[^"]*\"){2})*[^\"]*$)/);
+            const values = line.split(/,(?=(?:(?:[^"']*"){2})*[^"]*$)/);
             const row = {};
             header.forEach((h, i) => {
                 row[h] = values[i] ? values[i].trim().replace(/^"|"$/g, '') : '';
@@ -1290,5 +1378,169 @@ document.addEventListener('DOMContentLoaded', async () => {
         errorEl.textContent = message;
         playerSetup.prepend(errorEl);
         setTimeout(() => errorEl.remove(), 3000);
+    }
+
+    function populateGenreModal(genres, productions) {
+        const modalBody = document.getElementById('genre-modal-body');
+        const genreCounts = new Map();
+        genres.forEach(g => genreCounts.set(g.id, 0));
+
+        productions.forEach(p => {
+            if (p.genre_ids) {
+                const ids = p.genre_ids.split('|');
+                ids.forEach(id => {
+                    if (genreCounts.has(id)) {
+                        genreCounts.set(id, genreCounts.get(id) + 1);
+                    }
+                });
+            }
+        });
+
+        const majorGenres = [];
+        const minorGenreIds = [];
+        genres.forEach(genre => {
+            if ((genreCounts.get(genre.id) || 0) >= 10) {
+                majorGenres.push(genre);
+            } else {
+                minorGenreIds.push(genre.id);
+            }
+        });
+
+        let content = '<div class="form-check"><input class="form-check-input" type="checkbox" value="all" id="genre-all" checked><label class="form-check-label" for="genre-all"><strong>All Genres</strong></label></div><hr>';
+        majorGenres.forEach(genre => {
+            content += `<div class="form-check"><input class="form-check-input genre-checkbox" type="checkbox" value="${genre.id}" id="genre-${genre.id}" checked data-label="${genre.name}"><label class="form-check-label" for="genre-${genre.id}">${genre.name}</label></div>`;
+        });
+
+        if (minorGenreIds.length > 0) {
+            content += `<div class="form-check"><input class="form-check-input genre-checkbox" type="checkbox" value="${minorGenreIds.join('|')}" id="genre-other" checked data-label="Other"><label class="form-check-label" for="genre-other">Other</label></div>`;
+        }
+
+        modalBody.innerHTML = content;
+
+        const allCheckbox = document.getElementById('genre-all');
+        const genreCheckboxes = modalBody.querySelectorAll('.genre-checkbox');
+
+        allCheckbox.addEventListener('change', (e) => {
+            genreCheckboxes.forEach(cb => {
+                cb.checked = e.target.checked;
+            });
+        });
+
+        modalBody.addEventListener('change', (e) => {
+            if (e.target.classList.contains('genre-checkbox')) {
+                if (!e.target.checked) {
+                    allCheckbox.checked = false;
+                } else {
+                    const allChecked = Array.from(genreCheckboxes).every(cb => cb.checked);
+                    if (allChecked) {
+                        allCheckbox.checked = true;
+                    }
+                }
+            }
+        });
+
+        document.querySelector('#genreModal .btn-primary').addEventListener('click', () => {
+            updateSelectedItemsDisplay('genre');
+            updateAvailableCounts();
+        });
+    }
+
+    function updateSelectedItemsDisplay(type) {
+        const display = document.getElementById(`selected-${type}s-display`);
+        const allCheckbox = document.getElementById(`${type}-all`);
+        
+        if (allCheckbox.checked) {
+            display.textContent = 'All';
+            return;
+        }
+
+        const selected = [];
+        document.querySelectorAll(`#${type}-modal-body .${type}-checkbox:checked`).forEach(cb => {
+            selected.push(cb.dataset.label);
+        });
+
+        if (selected.length === 0) {
+            display.textContent = 'None';
+        } else if (selected.length > 3) {
+            display.textContent = `${selected.slice(0, 3).join(', ')}, ...`;
+        } else {
+            display.textContent = selected.join(', ');
+        }
+    }
+
+    function populateFranchiseModal(productions) {
+        const modalBody = document.getElementById('franchise-modal-body');
+        
+        const franchiseCounts = productions.reduce((counts, p) => {
+            const franchise = p.franchise || ''; // Treat empty franchise as a key
+            if (!/^\d{4}-\d{2}-\d{2}$/.test(franchise)) {
+                counts[franchise] = (counts[franchise] || 0) + 1;
+            }
+            return counts;
+        }, {});
+
+        const majorFranchises = Object.keys(franchiseCounts).filter(f => f && franchiseCounts[f] >= 3);
+        majorFranchises.sort();
+
+        const otherFranchises = Object.keys(franchiseCounts).filter(f => f && franchiseCounts[f] < 3);
+
+        let content = `
+            <div class="form-check">
+                <input class="form-check-input" type="checkbox" value="all" id="franchise-all" checked>
+                <label class="form-check-label" for="franchise-all"><strong>All Franchises</strong></label>
+            </div>
+            <div class="form-check">
+                <input class="form-check-input franchise-checkbox" type="checkbox" value="" id="franchise-none" checked data-label="No Franchises">
+                <label class="form-check-label" for="franchise-none">No Franchises</label>
+            </div>
+            <hr>
+        `;
+
+        majorFranchises.forEach(franchise => {
+            content += `
+                <div class="form-check">
+                    <input class="form-check-input franchise-checkbox" type="checkbox" value="${franchise}" id="franchise-${franchise.replace(/\s+/g, '-')}" checked data-label="${franchise}">
+                    <label class="form-check-label" for="franchise-${franchise.replace(/\s+/g, '-')}">${franchise}</label>
+                </div>
+            `;
+        });
+
+        if (otherFranchises.length > 0) {
+            content += `
+                <div class="form-check">
+                    <input class="form-check-input franchise-checkbox" type="checkbox" value="${otherFranchises.join('|')}" id="franchise-other" checked data-label="Other franchises (<3 movies)">
+                    <label class="form-check-label" for="franchise-other">Other franchises (&lt;3 movies)</label>
+                </div>
+            `;
+        }
+
+        modalBody.innerHTML = content;
+
+        const allCheckbox = document.getElementById('franchise-all');
+        const franchiseCheckboxes = modalBody.querySelectorAll('.franchise-checkbox');
+
+        allCheckbox.addEventListener('change', (e) => {
+            franchiseCheckboxes.forEach(cb => {
+                cb.checked = e.target.checked;
+            });
+        });
+
+        modalBody.addEventListener('change', (e) => {
+            if (e.target.classList.contains('franchise-checkbox')) {
+                if (!e.target.checked) {
+                    allCheckbox.checked = false;
+                } else {
+                    const allChecked = Array.from(franchiseCheckboxes).every(cb => cb.checked);
+                    if (allChecked) {
+                        allCheckbox.checked = true;
+                    }
+                }
+            }
+        });
+
+        document.querySelector('#franchiseModal .btn-primary').addEventListener('click', () => {
+            updateSelectedItemsDisplay('franchise');
+            updateAvailableCounts();
+        });
     }
 });
