@@ -167,6 +167,7 @@ app.get('/tmdb/movie/:tmdbID', async (req, res) => {
             release_date: movieData.release_date,
             vote_average: movieData.vote_average,
             revenue: movieData.revenue,
+            budget: movieData.budget,
             imdb_id: imdbID,
             poster_path: movieData.poster_path,
             overview: movieData.overview,
@@ -336,6 +337,30 @@ app.get('/get-actors', (req, res) => {
     }
 });
 
+app.get('/get-genres', (req, res) => {
+    try {
+        const genresCsv = fs.readFileSync('genres.csv', 'utf-8');
+        const rows = genresCsv.split('\n').filter(line => line.trim() !== '');
+        const header = rows[0].split(',').map(h => h.trim());
+        const genresData = [];
+
+        for (let i = 1; i < rows.length; i++) {
+            const values = parseCsvRow(rows[i]);
+            if (values.length === header.length) {
+                const genre = header.reduce((obj, key, index) => {
+                    obj[key] = values[index] ? values[index].trim() : '';
+                    return obj;
+                }, {});
+                genresData.push(genre);
+            }
+        }
+        res.json(genresData);
+    } catch (error) {
+        console.error('Error getting genres data:', error);
+        res.status(500).json({ error: 'Failed to get genres data' });
+    }
+});
+
 app.post('/check-role', (req, res) => {
 
     const { production_imdb_id, character_name } = req.body;
@@ -435,12 +460,14 @@ const clientToCsvMap = {
     'imdb_id': 'imdb_id',
     'movie_title': 'title',
     'movie_type': 'type',
+    'movie_genres': 'genre_ids',
     'movie_franchise': 'franchise',
     'production_start': 'production_start',
     'production_end': 'production_end',
     'release_date': 'release_date',
     'imdb_rating': 'imdb_rating',
     'box_office': 'box_office_us',
+    'budget': 'budget',
     'poster_url': 'poster'
 };
 const csvToClientMap = Object.fromEntries(Object.entries(clientToCsvMap).map(a => a.reverse()));

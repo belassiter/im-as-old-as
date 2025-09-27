@@ -3,6 +3,7 @@
 // Global set to track newly added actors in the current session
 const newlyAddedActors = new Set();
 const actors = new Map();
+const genres = new Map();
 
 document.addEventListener('DOMContentLoaded', async () => {
     try {
@@ -20,6 +21,17 @@ document.addEventListener('DOMContentLoaded', async () => {
     } catch (error) {
         console.error('Error loading actors data:', error);
         console.log('Failed to parse actors data as JSON.');
+    }
+
+    try {
+        const response = await fetch('/get-genres');
+        const genresData = await response.json();
+        genresData.forEach(genre => {
+            genres.set(genre.id, genre.name);
+        });
+        console.log('Genres data loaded:', genres);
+    } catch (error) {
+        console.error('Error loading genres data:', error);
     }
 });
 
@@ -354,13 +366,12 @@ document.getElementById('results').addEventListener('click', async (e) => {
                 throw new Error(errorMsg);
             }
             const movie = await movieResponse.json();
+            console.log('Movie data received:', movie);
 
             const prodResponse = await fetch(`/check-production/${movie.imdb_id}`);
             const prodData = await prodResponse.json();
 
-            if (movie.imdb_id) {
-                fetchOmdbData(movie.imdb_id, prodData);
-            }
+
 
             const tmdbCastResponse = await fetch(`/tmdb-movie-details/${movie.imdb_id}`);
             const tmdbCast = await tmdbCastResponse.json();
@@ -432,6 +443,22 @@ document.getElementById('results').addEventListener('click', async (e) => {
                                     <div class="row d-flex align-items-stretch mb-3">
                                         <div class="col-6">
                                             <div class="form-check">
+                                                <input class="form-check-input" type="checkbox" value="" id="movie-genres-overwrite">
+                                                <label class="form-check-label" for="movie-genres-overwrite">Genres</label>
+                                            </div>
+                                            <select class="form-select" id="movie-genres" multiple>
+                                                ${Array.from(genres.entries()).map(([id, name]) => `<option value="${id}" ${movie.genres.some(g => g.id == id) ? 'selected' : ''}>${name}</option>`).join('')}
+                                            </select>
+                                        </div>
+                                        <div class="col-6">
+                                            <label class="form-label">&nbsp;</label>
+                                            <div class="p-2 border rounded bg-light h-100" id="movie-genres-csv" style="display: none;"></div>
+                                        </div>
+                                    </div>
+
+                                    <div class="row d-flex align-items-stretch mb-3">
+                                        <div class="col-6">
+                                            <div class="form-check">
                                                 <input class="form-check-input" type="checkbox" value="" id="movie-franchise-overwrite">
                                                 <label class="form-check-label" for="movie-franchise-overwrite">Franchise</label>
                                             </div>
@@ -496,6 +523,20 @@ document.getElementById('results').addEventListener('click', async (e) => {
                                         <div class="col-6">
                                             <label class="form-label">&nbsp;</label>
                                             <div class="p-2 border rounded bg-light h-100" id="imdb-rating-csv" style="display: none;"></div>
+                                        </div>
+                                    </div>
+
+                                    <div class="row d-flex align-items-stretch mb-3">
+                                        <div class="col-6">
+                                            <div class="form-check">
+                                                <input class="form-check-input" type="checkbox" value="" id="budget-overwrite">
+                                                <label class="form-check-label" for="budget-overwrite">Budget</label>
+                                            </div>
+                                            <input type="text" class="form-control" id="budget" value="${movie.budget || ''}">
+                                        </div>
+                                        <div class="col-6">
+                                            <label class="form-label">&nbsp;</label>
+                                            <div class="p-2 border rounded bg-light h-100" id="budget-csv" style="display: none;"></div>
                                         </div>
                                     </div>
 
@@ -589,9 +630,9 @@ document.getElementById('results').addEventListener('click', async (e) => {
                     const actorsToSave = [];
 
                     const fields = [
-                        'movie-title', 'movie-type', 'movie-franchise',
+                        'movie-title', 'movie-type', 'movie-genres', 'movie-franchise',
                         'production-start', 'production-end', 'release-date',
-                        'imdb-rating', 'box-office', 'poster-url'
+                        'imdb-rating', 'box-office', 'budget', 'poster-url'
                     ];
 
                     fields.forEach(field => {
@@ -601,7 +642,10 @@ document.getElementById('results').addEventListener('click', async (e) => {
                             if (field === 'movie-type') {
                                 value = value.toLowerCase();
                             }
-                            if (field === 'box-office') {
+                            if (field === 'movie-genres') {
+                                value = Array.from(document.getElementById('movie-genres').selectedOptions).map(opt => opt.value).join('|');
+                            }
+                            if (field === 'box-office' || field === 'budget') {
                                 value = formatCurrency(value);
                             }
                             productionData[field.replace(/-/g, '_')] = value;
@@ -683,7 +727,9 @@ document.getElementById('results').addEventListener('click', async (e) => {
                     fetchGeminiData(movie.imdb_id, movie.title, new Date(movie.release_date).getFullYear());
                 });
 
-                document.getElementById('retry-omdb-btn').addEventListener('click', () => {
+                document.getElementById('retry-omdb-btn').addEventListener('click', async () => {
+                    const prodResponse = await fetch(`/check-production/${movie.imdb_id}`);
+                    const prodData = await prodResponse.json();
                     fetchOmdbData(movie.imdb_id, prodData);
                 });
 
@@ -691,15 +737,21 @@ document.getElementById('results').addEventListener('click', async (e) => {
                     fetchGeminiData(movie.imdb_id, movie.title, new Date(movie.release_date).getFullYear());
                 }
 
+                if (movie.imdb_id) {
+                    fetchOmdbData(movie.imdb_id, prodData);
+                }
+
                 checkAndHighlightRoles(movie.imdb_id, movie.title, tmdbCast);
 
                 highlightField('movie-title', movie.title, prodData.title);
                 highlightField('movie-type', movie.media_type === 'movie' ? 'Film' : 'Series', prodData.type);
+                highlightField('movie-genres', movie.genres.map(g => g.id).join('|'), prodData.genre_ids);
                 highlightField('movie-franchise', '', prodData.franchise);
                 highlightField('production-start', document.getElementById('production-start').value, prodData.production_start);
                 highlightField('production-end', document.getElementById('production-end').value, prodData.production_end);
                 highlightField('release-date', movie.release_date, prodData.release_date);
                 highlightField('imdb-rating', '', prodData.imdb_rating);
+                highlightField('budget', movie.budget, prodData.budget);
                 highlightField('box-office', movie.revenue, prodData.box_office_us);
                 highlightField('poster-url', posterUrl, prodData.poster);
 
