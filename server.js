@@ -740,9 +740,9 @@ app.get('/bulk-update', async (req, res) => {
                 'production-end': 'production_end'
             };
 
-            const shouldFetchTMDb = tmdbFields.some(f => actions[f] && (actions[f] === 'overwrite' || !row[header.indexOf(actionFieldToCsvColumn[f])]));
-            const shouldFetchOMDb = omdbFields.some(f => actions[f] && (actions[f] === 'overwrite' || !row[header.indexOf(actionFieldToCsvColumn[f])]));
-            const shouldFetchGemini = geminiFields.some(f => actions[f] && (actions[f] === 'overwrite' || !row[header.indexOf(actionFieldToCsvColumn[f])]));
+            const shouldFetchTMDb = tmdbFields.some(f => actions[f] && (actions[f] === 'overwrite' || !row[header.indexOf(actionFieldToCsvColumn[f])] || row[header.indexOf(actionFieldToCsvColumn[f])] === 'N/A'));
+            const shouldFetchOMDb = omdbFields.some(f => actions[f] && (actions[f] === 'overwrite' || !row[header.indexOf(actionFieldToCsvColumn[f])] || row[header.indexOf(actionFieldToCsvColumn[f])] === 'N/A'));
+            const shouldFetchGemini = geminiFields.some(f => actions[f] && (actions[f] === 'overwrite' || !row[header.indexOf(actionFieldToCsvColumn[f])] || row[header.indexOf(actionFieldToCsvColumn[f])] === 'N/A'));
 
 
 
@@ -811,7 +811,7 @@ app.get('/bulk-update', async (req, res) => {
 
                         const oldValue = row[colIndex];
 
-                        if (action === 'overwrite' || (action === 'update-blanks' && (!oldValue || oldValue.trim() === ''))) {
+                        if (action === 'overwrite' || (action === 'update-blanks' && (!oldValue || oldValue.trim() === '' || oldValue === 'N/A'))) {
                             row[colIndex] = newValue;
                             updatedFields.push(field);
                         }
@@ -824,7 +824,11 @@ app.get('/bulk-update', async (req, res) => {
                 } else {
                     statusMessage += ' No changes applied.';
                 }
-                sendEvent({ message: statusMessage });
+                sendEvent({ 
+                    message: statusMessage, 
+                    updatedFields: updatedFields,
+                    apisUsed: { tmdb: shouldFetchTMDb, omdb: shouldFetchOMDb, gemini: shouldFetchGemini }
+                });
 
                 rows[i + 1] = row.map(v => `"${(v || '').replace(/"/g, '""')}"`).join(',');
 

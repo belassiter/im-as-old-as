@@ -101,7 +101,22 @@ document.addEventListener('DOMContentLoaded', async () => {
                 statusDiv.innerHTML += `<div class="alert alert-success">Bulk update complete!</div>`;
                 evtSource.close();
             } else {
-                statusDiv.innerHTML += `<div>${data.message}</div>`;
+                let textColorClass = '';
+                if (data.updatedFields.length === 0) {
+                    textColorClass = 'text-secondary'; // gray
+                } else {
+                    const apis = Object.keys(data.apisUsed).filter(api => data.apisUsed[api]);
+                    if (apis.length > 1) {
+                        textColorClass = 'text-success'; // green
+                    } else if (apis[0] === 'tmdb') {
+                        textColorClass = 'text-primary'; // blue
+                    } else if (apis[0] === 'omdb') {
+                        textColorClass = 'text-warning'; // orange
+                    } else if (apis[0] === 'gemini') {
+                        textColorClass = 'text-danger'; // red
+                    }
+                }
+                statusDiv.innerHTML += `<div class="${textColorClass}">${data.message}</div>`;
             }
         };
 
