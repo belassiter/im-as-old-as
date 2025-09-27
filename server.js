@@ -22,17 +22,42 @@ app.get('/omdb/rating/:imdbID', async (req, res) => {
     const { imdbID } = req.params;
     const url = `http://www.omdbapi.com/?i=${imdbID}&apikey=${OMDb_API_KEY}`;
 
-    try {
-        const response = await fetch(url);
-        const data = await response.json();
-        if (data.imdbRating) {
-            res.json({ imdbRating: data.imdbRating });
-        } else {
-            res.status(404).json({ error: 'IMDb rating not found' });
+    let retries = 5;
+    let delay = 500; // start with 0.5 seconds
+
+    while (retries > 0) {
+        try {
+            const response = await fetch(url);
+
+            if (!response.ok && (response.status >= 500 && response.status <= 599)) {
+                throw new Error(`OMDb returned a server error: ${response.status}`);
+            }
+
+            const data = await response.json();
+
+            if (data.Response === 'True' && data.imdbRating && data.imdbRating !== 'N/A' && data.BoxOffice && data.BoxOffice !== 'N/A') {
+                return res.json({ imdbRating: data.imdbRating, BoxOffice: data.BoxOffice });
+            } else {
+                let errorMessage = 'OMDb response missing required fields.';
+                if (data.Error) {
+                    errorMessage = `OMDb API Error: ${data.Error}`;
+                    // Don't retry on "Movie not found!"
+                    if (data.Error === 'Movie not found!') {
+                        console.error(errorMessage);
+                        return res.status(404).json({ error: errorMessage });
+                    }
+                }
+                throw new Error(errorMessage);
+            }
+        } catch (error) {
+            console.error(`OMDb fetch error (attempt ${6 - retries}/5): ${error.message}`);
+            retries--;
+            if (retries === 0) {
+                return res.status(500).json({ error: 'Failed to fetch data from OMDb after multiple retries.' });
+            }
+            await new Promise(resolve => setTimeout(resolve, delay));
+            delay *= 2; // Exponential backoff
         }
-    } catch (error) {
-        console.error('Error fetching from OMDb:', error);
-        res.status(500).json({ error: 'Failed to fetch data from OMDb' });
     }
 });
 
@@ -92,6 +117,18 @@ app.get('/search', async (req, res) => {
     } catch (error) {
         console.error('Error fetching from TMDb:', error);
         res.status(500).json({ error: 'Failed to fetch data from TMDb' });
+    }
+});
+
+app.get('/tmdb/genres', async (req, res) => {
+    const url = `https://api.themoviedb.org/3/genre/movie/list?api_key=${TMDB_API_KEY}`;
+    try {
+        const response = await fetch(url);
+        const data = await response.json();
+        res.json(data);
+    } catch (error) {
+        console.error('Error fetching genres from TMDb:', error);
+        res.status(500).json({ error: 'Failed to fetch genres from TMDb' });
     }
 });
 

@@ -406,19 +406,6 @@ document.getElementById('results').addEventListener('click', async (e) => {
                                             <div class="p-2 border rounded bg-light h-100" id="movie-title-csv" style="display: none;"></div>
                                         </div>
                                     </div>
-                                    <div class="row d-flex align-items-stretch mb-3">
-                                        <div class="col-6">
-                                            <div class="form-check">
-                                                <input class="form-check-input" type="checkbox" value="" id="movie-year-overwrite">
-                                                <label class="form-check-label" for="movie-year-overwrite">Year</label>
-                                            </div>
-                                            <input type="number" class="form-control" id="movie-year" value="${new Date(movie.release_date).getFullYear() || ''}">
-                                        </div>
-                                        <div class="col-6">
-                                            <label class="form-label">&nbsp;</label>
-                                            <div class="p-2 border rounded bg-light h-100" id="movie-year-csv" style="display: none;"></div>
-                                        </div>
-                                    </div>
                                     <p class="card-text"><strong>IMDb ID:</strong> <span id="movie-imdb-id">${movie.imdb_id}</span></p>
                                     
                                     <div class="row d-flex align-items-stretch mb-3">
@@ -602,7 +589,7 @@ document.getElementById('results').addEventListener('click', async (e) => {
                     const actorsToSave = [];
 
                     const fields = [
-                        'movie-title', 'movie-year', 'movie-type', 'movie-franchise',
+                        'movie-title', 'movie-type', 'movie-franchise',
                         'production-start', 'production-end', 'release-date',
                         'imdb-rating', 'box-office', 'poster-url'
                     ];
@@ -707,7 +694,6 @@ document.getElementById('results').addEventListener('click', async (e) => {
                 checkAndHighlightRoles(movie.imdb_id, movie.title, tmdbCast);
 
                 highlightField('movie-title', movie.title, prodData.title);
-                highlightField('movie-year', new Date(movie.release_date).getFullYear(), prodData.year);
                 highlightField('movie-type', movie.media_type === 'movie' ? 'Film' : 'Series', prodData.type);
                 highlightField('movie-franchise', '', prodData.franchise);
                 highlightField('production-start', document.getElementById('production-start').value, prodData.production_start);
