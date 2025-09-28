@@ -1210,6 +1210,24 @@ document.addEventListener('DOMContentLoaded', async () => {
             console.error('failed to populate debug view', err);
         }
 
+        // Helper: move a list item up one position
+        function moveListItemUp(li) {
+            if (!li || !li.parentElement) return;
+            const prev = li.previousElementSibling;
+            if (prev) {
+                li.parentElement.insertBefore(li, prev);
+            }
+        }
+
+        // Helper: move a list item down one position
+        function moveListItemDown(li) {
+            if (!li || !li.parentElement) return;
+            const next = li.nextElementSibling;
+            if (next) {
+                li.parentElement.insertBefore(next, li);
+            }
+        }
+
         if (currentQuestion.type === 'slider') {
             choicesEl.classList.add('d-none');
             sliderContainer.classList.remove('d-none');
@@ -1228,9 +1246,36 @@ document.addEventListener('DOMContentLoaded', async () => {
 
             currentQuestion.movies.forEach(movie => {
                 const li = document.createElement('li');
-                li.classList.add('list-group-item');
+                li.classList.add('list-group-item', 'd-flex', 'justify-content-between', 'align-items-center');
                 li.dataset.id = movie.id;
-                li.innerHTML = movie.title;
+
+                // Title container
+                const titleSpan = document.createElement('span');
+                titleSpan.classList.add('drag-item-title', 'flex-grow-1', 'text-start');
+                titleSpan.innerHTML = movie.title;
+
+                // Controls container (up/down); visible and touch-friendly
+                const controls = document.createElement('div');
+                controls.classList.add('drag-controls', 'ms-2');
+
+                const upBtn = document.createElement('button');
+                upBtn.type = 'button';
+                upBtn.classList.add('btn', 'btn-sm', 'btn-outline-secondary', 'me-1', 'move-up');
+                upBtn.setAttribute('aria-label', 'Move up');
+                upBtn.innerHTML = '&#9650;'; // up triangle
+
+                const downBtn = document.createElement('button');
+                downBtn.type = 'button';
+                downBtn.classList.add('btn', 'btn-sm', 'btn-outline-secondary', 'move-down');
+                downBtn.setAttribute('aria-label', 'Move down');
+                downBtn.innerHTML = '&#9660;'; // down triangle
+
+                controls.appendChild(upBtn);
+                controls.appendChild(downBtn);
+
+                li.appendChild(titleSpan);
+                li.appendChild(controls);
+
                 dragList.appendChild(li);
             });
 
@@ -1244,6 +1289,23 @@ document.addEventListener('DOMContentLoaded', async () => {
             new Sortable(dragList, {
                 animation: 150,
                 ghostClass: 'blue-background-class'
+            });
+
+            // Click delegation for move up / move down buttons (improves mobile reliability)
+            dragList.addEventListener('click', (ev) => {
+                const up = ev.target.closest('.move-up');
+                const down = ev.target.closest('.move-down');
+                if (!up && !down) return;
+                ev.preventDefault();
+                const li = ev.target.closest('li');
+                if (!li) return;
+                if (up) {
+                    moveListItemUp(li);
+                } else if (down) {
+                    moveListItemDown(li);
+                }
+                // after programmatic move, re-sync heights so match column stays aligned
+                synchronizeHeights(dragList, matchList);
             });
 
             synchronizeHeights(dragList, matchList);
