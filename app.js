@@ -1228,6 +1228,18 @@ document.addEventListener('DOMContentLoaded', async () => {
             }
         }
 
+        // Helper: update visibility of move buttons (hide up on first, down on last)
+        function updateMoveButtons(list) {
+            if (!list) return;
+            const items = Array.from(list.querySelectorAll('li'));
+            items.forEach((li, idx) => {
+                const up = li.querySelector('.move-up');
+                const down = li.querySelector('.move-down');
+                if (up) up.style.display = (idx === 0) ? 'none' : '';
+                if (down) down.style.display = (idx === items.length - 1) ? 'none' : '';
+            });
+        }
+
         if (currentQuestion.type === 'slider') {
             choicesEl.classList.add('d-none');
             sliderContainer.classList.remove('d-none');
@@ -1286,9 +1298,13 @@ document.addEventListener('DOMContentLoaded', async () => {
                 matchList.appendChild(li);
             });
 
-            new Sortable(dragList, {
+            const sortableInstance = new Sortable(dragList, {
                 animation: 150,
-                ghostClass: 'blue-background-class'
+                ghostClass: 'blue-background-class',
+                onEnd: () => {
+                    // After a drag reorder completes, ensure up/down button visibility is correct
+                    updateMoveButtons(dragList);
+                }
             });
 
             // Click delegation for move up / move down buttons (improves mobile reliability)
@@ -1306,7 +1322,12 @@ document.addEventListener('DOMContentLoaded', async () => {
                 }
                 // after programmatic move, re-sync heights so match column stays aligned
                 synchronizeHeights(dragList, matchList);
+                // update visibility of buttons since first/last may have changed
+                updateMoveButtons(dragList);
             });
+
+            // Initial visibility update for move buttons
+            updateMoveButtons(dragList);
 
             synchronizeHeights(dragList, matchList);
 
